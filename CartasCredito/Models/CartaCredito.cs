@@ -30,7 +30,7 @@ namespace CartasCredito.Models
 		public int AgenteAduanalId { get; set; }
 		public string AgenteAduanal { get; set; }
 		public int MonedaId { get; set; }
-		public string TipoDotacion { get; set; }
+		public string TipoPago { get; set; }
 		public string Responsable { get; set; }
 		public int CompradorId { get; set; }
 		public string Comprador { get; set; }
@@ -172,7 +172,7 @@ namespace CartasCredito.Models
 							item.EmpresaId = int.TryParse(row[idx].ToString(), out int empidval) ? empidval : 0; idx++;
 							item.AgenteAduanalId = int.TryParse(row[idx].ToString(), out int agadidval) ? agadidval : 0; idx++;
 							item.MonedaId = int.TryParse(row[idx].ToString(), out int mndidval) ? mndidval : 0; idx++;
-							item.TipoDotacion = row[idx].ToString(); idx++;
+							item.TipoPago = row[idx].ToString(); idx++;
 							item.Responsable = row[idx].ToString(); idx++;
 							item.CompradorId = int.TryParse(row[idx].ToString(), out int cmprdidval) ? cmprdidval : 0; idx++;
 							item.PorcentajeTolerancia = int.TryParse(row[idx].ToString(), out int prctolval) ? prctolval : 0; idx++;
@@ -274,7 +274,7 @@ namespace CartasCredito.Models
 							item.EmpresaId = int.Parse(row[idx].ToString()); idx++;
 							item.AgenteAduanalId = int.Parse(row[idx].ToString()); idx++;
 							item.MonedaId = int.Parse(row[idx].ToString()); idx++;
-							item.TipoDotacion = row[idx].ToString(); idx++;
+							item.TipoPago = row[idx].ToString(); idx++;
 							item.Responsable = row[idx].ToString(); idx++;
 							item.CompradorId = int.Parse(row[idx].ToString()); idx++;
 							item.PorcentajeTolerancia = int.Parse(row[idx].ToString()); idx++;
@@ -491,7 +491,7 @@ namespace CartasCredito.Models
 						rsp.EmpresaId = int.Parse(row[idx].ToString()); idx++;
 						rsp.AgenteAduanalId = int.Parse(row[idx].ToString()); idx++;
 						rsp.MonedaId = int.Parse(row[idx].ToString()); idx++;
-						rsp.TipoDotacion = row[idx].ToString(); idx++;
+						rsp.TipoPago = row[idx].ToString(); idx++;
 						rsp.Responsable = row[idx].ToString(); idx++;
 						rsp.CompradorId = int.Parse(row[idx].ToString()); idx++;
 						rsp.PorcentajeTolerancia = int.Parse(row[idx].ToString()); idx++;

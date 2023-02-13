@@ -2509,7 +2509,7 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@AgenteAduanalId", modelo.AgenteAduanalId); pix++;
 				@params[pix] = new SqlParameter("@MonedaId", modelo.MonedaId); pix++;
-				@params[pix] = new SqlParameter("@TipoDotacion", modelo.TipoDotacion); pix++;
+				@params[pix] = new SqlParameter("@TipoPago", modelo.TipoPago); pix++;
 				@params[pix] = new SqlParameter("@Responsable", modelo.Responsable); pix++;
 				@params[pix] = new SqlParameter("@CompradorId", modelo.CompradorId); pix++;
 				@params[pix] = new SqlParameter("@PorcTolerancia", modelo.PorcentajeTolerancia); pix++;
@@ -2652,7 +2652,7 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@AgenteAduanalId", modelo.AgenteAduanalId); pix++;
 				@params[pix] = new SqlParameter("@MonedaId", modelo.MonedaId); pix++;
-				@params[pix] = new SqlParameter("@TipoDotacion", modelo.TipoDotacion); pix++;
+				@params[pix] = new SqlParameter("@TipoPago", modelo.TipoPago); pix++;
 				@params[pix] = new SqlParameter("@Responsable", modelo.Responsable); pix++;
 				@params[pix] = new SqlParameter("@CompradorId", modelo.CompradorId); pix++;
 				@params[pix] = new SqlParameter("@PorcTolerancia", modelo.PorcentajeTolerancia); pix++;
