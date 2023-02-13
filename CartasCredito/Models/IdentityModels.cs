@@ -1,6 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System.Configuration;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using dll_Gis;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -21,7 +23,7 @@ namespace CartasCredito.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base(GetConnectionString(), throwIfV1Schema: false)
         {
         }
 
@@ -29,5 +31,14 @@ namespace CartasCredito.Models
         {
             return new ApplicationDbContext();
         }
-    }
+
+		public static string GetConnectionString()
+		{
+			Funciones fn = new Funciones();
+			string connstringEnc = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
+			string connstring = fn.Desencriptar(connstringEnc);
+
+			return connstring;
+		}
+	}
 }

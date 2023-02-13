@@ -54,12 +54,18 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.9\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.9\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -186,15 +192,51 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\api\AgentesAduanalesController.cs" />
+    <Compile Include="Controllers\api\BancosController.cs" />
+    <Compile Include="Controllers\api\CartasCreditoController.cs" />
+    <Compile Include="Controllers\api\ComisionesController.cs" />
+    <Compile Include="Controllers\api\CompradoresController.cs" />
+    <Compile Include="Controllers\api\ContactosController.cs" />
+    <Compile Include="Controllers\api\DivisionesController.cs" />
+    <Compile Include="Controllers\api\DocumentosController.cs" />
+    <Compile Include="Controllers\api\EmpresasController.cs" />
+    <Compile Include="Controllers\api\LineasDeCreditoController.cs" />
+    <Compile Include="Controllers\api\MonedasController.cs" />
+    <Compile Include="Controllers\api\ProveedoresController.cs" />
+    <Compile Include="Controllers\api\ProyectosController.cs" />
+    <Compile Include="Controllers\api\TiposActivoController.cs" />
+    <Compile Include="Controllers\api\TiposCoberturaController.cs" />
+    <Compile Include="Controllers\api\TiposComisionController.cs" />
+    <Compile Include="Controllers\api\TiposPersonaFiscalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AgenteAduanal.cs" />
+    <Compile Include="Models\Banco.cs" />
+    <Compile Include="Models\CartaCredito.cs" />
+    <Compile Include="Models\Comision.cs" />
+    <Compile Include="Models\Comprador.cs" />
+    <Compile Include="Models\Contacto.cs" />
     <Compile Include="Models\DataAccess.cs" />
+    <Compile Include="Models\Division.cs" />
+    <Compile Include="Models\Documento.cs" />
+    <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />
+    <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LineaDeCredito.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Moneda.cs" />
+    <Compile Include="Models\Proveedor.cs" />
+    <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\RespuestaFormato.cs" />
+    <Compile Include="Models\TipoActivo.cs" />
+    <Compile Include="Models\TipoCobertura.cs" />
+    <Compile Include="Models\TipoComision.cs" />
+    <Compile Include="Models\TipoPersonaFiscal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
