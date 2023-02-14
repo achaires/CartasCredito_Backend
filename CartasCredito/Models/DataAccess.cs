@@ -2815,8 +2815,8 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
 				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
-				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd")); pix++;
-				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd")); pix++;
+				//@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd")); pix++;
+				//@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd")); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
 				{
