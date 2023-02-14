@@ -62,6 +62,7 @@ namespace CartasCredito.Models
 
 							item.Id = int.Parse(row[idx].ToString()); idx++;
 							item.BancoId = int.Parse(row[idx].ToString()); idx++;
+							item.TipoComisionId = int.Parse(row[idx].ToString()); idx++;
 							item.Nombre = row[idx].ToString(); idx++;
 							item.Descripcion = row[idx].ToString(); idx++;
 							item.Costo = decimal.TryParse(row[idx].ToString(), out decimal costoVal) ? costoVal : 0M; idx++;
@@ -135,6 +136,7 @@ namespace CartasCredito.Models
 
 						rsp.Id = int.Parse(row[idx].ToString()); idx++;
 						rsp.BancoId = int.Parse(row[idx].ToString()); idx++;
+						rsp.TipoComisionId = int.Parse(row[idx].ToString()); idx++;
 						rsp.Nombre = row[idx].ToString(); idx++;
 						rsp.Descripcion = row[idx].ToString(); idx++;
 						rsp.Costo = decimal.TryParse(row[idx].ToString(), out decimal costoVal) ? costoVal : 0M; idx++;

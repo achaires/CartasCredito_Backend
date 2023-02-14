@@ -42,6 +42,7 @@ namespace CartasCredito.Controllers.api
 					SwiftApertura = modelo.SwiftApertura,
 					SwiftOtro = modelo.SwiftOtro,
 					PorcentajeIVA = modelo.PorcentajeIVA,
+					TipoComisionId = modelo.TipoComisionId,
 					CreadoPor = usr
 				};
 
@@ -74,6 +75,7 @@ namespace CartasCredito.Controllers.api
 				m.SwiftApertura = modelo.SwiftApertura;
 				m.SwiftOtro = modelo.SwiftOtro;
 				m.PorcentajeIVA = modelo.PorcentajeIVA;
+				m.TipoComisionId = modelo.TipoComisionId;
 				m.Activo = m.Activo;
 
 				rsp = Comision.Update(m);
