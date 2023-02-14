@@ -15,9 +15,9 @@ namespace CartasCredito.Controllers.api
 	public class CartasCreditoController : ApiController
 	{
 		// GET api/<controller>
-		public IEnumerable<CartaCredito> Get(CartasCreditoFiltrarDTO model)
+		public IEnumerable<CartaCredito> Get(DateTime fechaInicio, DateTime fechaFin)
 		{
-			return CartaCredito.Get(model.FechaInicio, model.FechaFin, 1);
+			return CartaCredito.Get(fechaInicio, fechaFin, 1);
 		}
 
 		// GET api/<controller>/5

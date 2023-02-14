@@ -150,7 +150,7 @@ namespace CartasCredito.Models
 							rsp.Eliminado = null;
 						}
 
-						rsp.Contactos = Contacto.GetManyByModelNombreAndId(rsp.Id, "Banco");
+						rsp.Contactos = Contacto.GetManyByModelNombreAndId(rsp.Id, "Bancos");
 					}
 				}
 			}

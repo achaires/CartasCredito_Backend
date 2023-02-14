@@ -28,6 +28,9 @@ namespace CartasCredito.Models.DTOs
 
 		public CartasCreditoFiltrarDTO()
 		{
+			NumCarta = "";
+			TipoCarta = "";
+
 			DateTime dateNow = DateTime.Now;
 			FechaInicio = new DateTime(dateNow.Year, dateNow.Month, 1);
 			FechaFin = dateNow;

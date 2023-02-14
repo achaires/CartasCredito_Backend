@@ -82,7 +82,7 @@ namespace CartasCredito.Models
 
 							idx++;
 
-							item.Contacto = Contacto.GetByModelNombreAndId(item.Id, "AgenteAduanal");
+							item.Contacto = Contacto.GetByModelNombreAndId(item.Id, "Agente");
 
 							res.Add(item);
 						}
@@ -153,7 +153,7 @@ namespace CartasCredito.Models
 							rsp.Eliminado = null;
 						}
 
-						rsp.Contacto = Contacto.GetByModelNombreAndId(id, "AgenteAduanal");
+						rsp.Contacto = Contacto.GetByModelNombreAndId(id, "Agente");
 					}
 				}
 			}

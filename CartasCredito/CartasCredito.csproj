@@ -203,6 +203,7 @@
     <Compile Include="Controllers\api\EmpresasController.cs" />
     <Compile Include="Controllers\api\LineasDeCreditoController.cs" />
     <Compile Include="Controllers\api\MonedasController.cs" />
+    <Compile Include="Controllers\api\OperacionesController.cs" />
     <Compile Include="Controllers\api\ProveedoresController.cs" />
     <Compile Include="Controllers\api\ProyectosController.cs" />
     <Compile Include="Controllers\api\TiposActivoController.cs" />

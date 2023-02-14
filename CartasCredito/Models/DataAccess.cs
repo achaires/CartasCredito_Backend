@@ -2768,9 +2768,7 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				//DateTime fechaInicio = DateTime.Now.AddDays(-10);
-				//DateTime fechaFin = DateTime.Now;
-
+				
 				SqlParameter[] @params = new SqlParameter[3];
 				@params[pix] = new SqlParameter("@Activo", activo); pix++;
 				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
