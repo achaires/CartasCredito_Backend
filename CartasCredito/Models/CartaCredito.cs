@@ -548,6 +548,46 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static RespuestaFormato UpdateStatus(string ccid, int newStatus)
+		{
+			RespuestaFormato rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Upd_CartaCreditoStatus(ccid, newStatus, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var row = dt.Rows[0];
+						string id = row[3].ToString();
+
+						if (id.Length > 0)
+						{
+							rsp.Flag = true;
+							rsp.DataInt = 1;
+							rsp.DataString = id;
+						}
+					}
+				}
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
+			}
+			catch (Exception ex)
+			{
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
+			}
+
+			return rsp;
+		}
+
 		public static RespuestaFormato UpdateSwiftFile(string ccid, string numeroCartaComercial, string swiftFilename)
 		{
 			RespuestaFormato rsp = new RespuestaFormato();

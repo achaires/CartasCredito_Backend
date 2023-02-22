@@ -2759,6 +2759,46 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Upd_CartaCreditoStatus(string ccid, int newStatus, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[2];
+				@params[pix] = new SqlParameter("@Estatus", newStatus); pix++;
+				@params[pix] = new SqlParameter("@CartaComercialId", ccid); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_CartaCreditoStatus", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+					else
+					{
+						string ccId = dt.Rows[0][3].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
 		public Boolean Cons_CartasCredito(out DataTable dt, out String msgError, DateTime fechaInicio, DateTime fechaFin, int activo = -1)
 		{
 			bool boolProcess = true;

@@ -19,5 +19,15 @@ namespace CartasCredito.Controllers.api
 		{
 			return CartaCredito.Filtrar(filtros);
 		}
+
+		[Route("api/operaciones/cambiarestatus/{id}")]
+		[HttpPost]
+		public RespuestaFormato CambiarEstatus(string id, [FromBody] CartaCredito modelo)
+		{
+			var cc = CartaCredito.GetById(id);
+			var rsp = CartaCredito.UpdateStatus(id, modelo.Estatus);
+
+			return rsp;
+		}
 	}
 }
