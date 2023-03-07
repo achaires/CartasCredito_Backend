@@ -66,7 +66,7 @@ namespace CartasCredito.Controllers.api
 				modelo.Nombre = modeloInput.Nombre;
 				modelo.Descripcion = modeloInput.Descripcion;
 				modelo.TotalLinea = modeloInput.TotalLinea;
-				modelo.Activo = modeloInput.Activo;
+				modelo.Activo = modelo.Activo;
 
 				rsp = Banco.Update(modelo);
 			}

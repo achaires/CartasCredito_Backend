@@ -194,6 +194,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\AgentesAduanalesController.cs" />
     <Compile Include="Controllers\api\BancosController.cs" />
+    <Compile Include="Controllers\api\CartaCreditoComisionesController.cs" />
     <Compile Include="Controllers\api\CartasCreditoController.cs" />
     <Compile Include="Controllers\api\ComisionesController.cs" />
     <Compile Include="Controllers\api\CompradoresController.cs" />
@@ -204,6 +205,8 @@
     <Compile Include="Controllers\api\LineasDeCreditoController.cs" />
     <Compile Include="Controllers\api\MonedasController.cs" />
     <Compile Include="Controllers\api\OperacionesController.cs" />
+    <Compile Include="Controllers\api\PagosComisionesController.cs" />
+    <Compile Include="Controllers\api\PagosController.cs" />
     <Compile Include="Controllers\api\ProveedoresController.cs" />
     <Compile Include="Controllers\api\ProyectosController.cs" />
     <Compile Include="Controllers\api\TiposActivoController.cs" />
@@ -219,18 +222,28 @@
     <Compile Include="Models\AgenteAduanal.cs" />
     <Compile Include="Models\Banco.cs" />
     <Compile Include="Models\CartaCredito.cs" />
+    <Compile Include="Models\CartaCreditoComision.cs" />
     <Compile Include="Models\Comision.cs" />
     <Compile Include="Models\Comprador.cs" />
     <Compile Include="Models\Contacto.cs" />
+    <Compile Include="Models\CustomDateTimeConverter.cs" />
     <Compile Include="Models\DataAccess.cs" />
     <Compile Include="Models\Division.cs" />
     <Compile Include="Models\Documento.cs" />
+    <Compile Include="Models\DTOs\CartaCreditoAdjuntarSwiftDTO.cs" />
+    <Compile Include="Models\DTOs\CartaCreditoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />
+    <Compile Include="Models\DTOs\PagoComisionInsertDTO.cs" />
+    <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
+    <Compile Include="Models\DTOs\PagosPFEFiltrarDTO.cs" />
+    <Compile Include="Models\DTOs\PagoUpdateDTO.cs" />
     <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LineaDeCredito.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Moneda.cs" />
+    <Compile Include="Models\Pago.cs" />
+    <Compile Include="Models\PeriodoContable.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\RespuestaFormato.cs" />
@@ -244,12 +257,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-46c126c1.js" />
-    <Content Include="assets\index-9522e215.css" />
+    <Content Include="assets\index-4405b77d.js" />
+    <Content Include="assets\index-a0ea1bc7.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="dll_Gis.dll" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -306,6 +320,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

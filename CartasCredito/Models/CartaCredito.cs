@@ -74,6 +74,9 @@ namespace CartasCredito.Models
 		public string CreadoPor { get; set; }
 		public int Estatus { get; set; }
 		public bool Activo { get; set; }
+		public List<Pago> Pagos { get; set; }
+		public List<CartaCreditoComision> Comisiones { get; set; }
+
 		//public List<Enmienda> Enmiendas { get; set; }
 
 		/*
@@ -210,6 +213,7 @@ namespace CartasCredito.Models
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.Creado = DateTime.Parse(row[idx].ToString()); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
+//							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
 							//item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
 
 							res.Add(item);
@@ -525,7 +529,20 @@ namespace CartasCredito.Models
 						rsp.ConfirmacionBancoNotificador = row[idx].ToString(); idx++;
 						rsp.Estatus = int.Parse(row[idx].ToString()); idx++;
 						rsp.TipoEmision = row[idx].ToString(); idx++;
-						rsp.DocumentoSwift = row[idx].ToString(); idx++;
+
+
+						var docSwiftUrlBase = Utility.HostUrl + "/Uploads/";
+
+						if (row[idx].ToString() != "")
+						{
+							rsp.DocumentoSwift = docSwiftUrlBase + row[idx].ToString();
+						} else
+						{
+							rsp.DocumentoSwift = "";
+						}
+												
+						idx++;
+
 						rsp.CreadoPor = row[idx].ToString(); idx++;
 						rsp.Creado = DateTime.Parse(row[idx].ToString()); idx++;
 						rsp.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
@@ -536,6 +553,33 @@ namespace CartasCredito.Models
 						rsp.BancoCorresponsal = row[idx].ToString(); idx++;
 						rsp.Empresa = row[idx].ToString(); idx++;
 						rsp.Comprador = row[idx].ToString(); idx++;
+
+						rsp.Pagos = Pago.GetByCartaCreditoId(rsp.Id);
+						rsp.Comisiones = CartaCreditoComision.GetByCartaCreditoId(rsp.Id);
+
+						decimal totalPagosEfectuados = 0;
+						foreach (var lp in rsp.Pagos)
+						{
+							if ( lp.Estatus == 3 )
+							{
+								totalPagosEfectuados += lp.MontoPago;
+							}
+							
+						}
+
+						rsp.PagosEfectuados = totalPagosEfectuados;
+
+						decimal totalPagosProgramados = 0;
+						foreach (var lp in rsp.Pagos)
+						{
+							if (lp.Estatus == 1)
+							{
+								totalPagosProgramados += lp.MontoPago;
+							}
+
+						}
+
+						rsp.PagosProgramados = totalPagosProgramados;
 					}
 				}
 			}

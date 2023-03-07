@@ -2855,8 +2855,8 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
 				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
-				//@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd")); pix++;
-				//@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd")); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd")); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
 				{
@@ -2910,6 +2910,490 @@ namespace CartasCredito.Models
 			{
 				boolProcess = false;
 				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region Pagos
+		public Boolean Ins_Pago(Pago modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[6];
+				int pix = 0;
+
+				@params[pix] = new SqlParameter("@NumeroPago", modelo.NumeroPago); pix++;
+				@params[pix] = new SqlParameter("@NumeroFactura", modelo.NumeroFactura); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
+				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
+				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
+				//@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_Pago", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Upd_Pago(Pago modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[6];
+				int pix = 0;
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@NumeroFactura", modelo.NumeroFactura); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
+				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_Pago", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagosByCartaCreditoId(string cartaCreditoId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@CartaCreditoId", cartaCreditoId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagosByCartaCreditoId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagosProgramados(out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[0];
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagosProgramados", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagosVencidos(out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[0];
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagosVencidos", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_Pagos(out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[0];
+
+				if (!bd.ExecuteProcedure(conexion, "cons_Pagos", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagoById(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagoById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagosFiltrar(PagosPFEFiltrarDTO filtrarDTO, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = String.Empty;
+
+			try
+			{
+				int pix = 0;
+
+				SqlParameter[] @params = new SqlParameter[4];
+
+				@params[pix] = new SqlParameter("@FechaInicio", filtrarDTO.FechaInicio); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", filtrarDTO.FechaFin); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", filtrarDTO.EmpresaId); pix++;
+				@params[pix] = new SqlParameter("@Activo", filtrarDTO.Activo); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagosFiltrar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay registros";
+					}
+				}
+
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region CartaComisiones
+		public Boolean Cons_ComisionesByCartaCreditoId(string cartaCreditoId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@CartaCreditoId", cartaCreditoId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_ComisionesByCartaCreditoId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_CartaCreditoComision(CartaCreditoComision modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[7];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
+				@params[pix] = new SqlParameter("@ComisionId", modelo.ComisionId); pix++;
+				@params[pix] = new SqlParameter("@FechaCargo", modelo.FechaCargo?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", modelo.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@Monto", modelo.Monto); pix++;
+				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
+				@params[pix] = new SqlParameter("@NumReferencia", modelo.PagoId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_CartaCreditoComision", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_CartaComisionById(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+
+				int i = 0;
+				@params[0] = new SqlParameter("@Id", id);
+
+				i++;
+				if (!bd.ExecuteProcedure(conexion, "cons_CartaComisionById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos a mostrar";
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Ins_PagoComision(Pago modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[7];
+				int pix = 0;
+
+				@params[pix] = new SqlParameter("@FechaPago", modelo.FechaPago?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
+				@params[pix] = new SqlParameter("@ComisionId", modelo.ComisionId); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", modelo.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@TipoCambio", modelo.TipoCambio); pix++;
+				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+				@params[pix] = new SqlParameter("@Comentarios", modelo.Comentarios); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_PagoComision", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_PagoByComisionId(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PagoByComisionId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
 			}
 
 			return boolProcess;
