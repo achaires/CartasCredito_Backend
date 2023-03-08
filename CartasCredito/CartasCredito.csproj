@@ -238,6 +238,7 @@
     <Compile Include="Models\DTOs\PagosPFEFiltrarDTO.cs" />
     <Compile Include="Models\DTOs\PagoUpdateDTO.cs" />
     <Compile Include="Models\Empresa.cs" />
+    <Compile Include="Models\Enmienda.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LineaDeCredito.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

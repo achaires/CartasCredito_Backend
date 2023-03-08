@@ -3399,5 +3399,136 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 		#endregion
+
+		#region Enmiendas
+		public Boolean Upd_Enmienda(Enmienda modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+
+				SqlParameter[] @params = new SqlParameter[17];
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@DocumentoSwift", modelo.DocumentoSwift); pix++;
+				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
+				@params[pix] = new SqlParameter("@ImporteLC", modelo.ImporteLC); pix++;
+				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@DescripcionMercancia", modelo.DescripcionMercancia); pix++;
+				@params[pix] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales); pix++;
+				@params[pix] = new SqlParameter("@InstruccionesEspeciales", modelo.InstruccionesEspeciales); pix++;
+				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
+				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+				@params[pix] = new SqlParameter("@Prev_ImporteLC", modelo.Prev_ImporteLC); pix++;
+				@params[pix] = new SqlParameter("@Prev_FechaLimiteEmbarque", modelo.Prev_FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@Prev_FechaVencimiento", modelo.Prev_FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@Prev_DescripcionMercancia", modelo.Prev_DescripcionMercancia); pix++;
+				@params[pix] = new SqlParameter("@Prev_ConsideracionesAdicionales", modelo.Prev_ConsideracionesAdicionales); pix++;
+				@params[pix] = new SqlParameter("@Prev_InstruccionesEspeciales", modelo.Prev_InstruccionesEspeciales); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_Enmienda", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Ins_Enmienda(Enmienda modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[8];
+
+				@params[0] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId);
+				@params[1] = new SqlParameter("@ImporteLC", modelo.ImporteLC);
+				@params[2] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss"));
+				@params[3] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss"));
+				@params[4] = new SqlParameter("@DescripcionMercancia", modelo.DescripcionMercancia);
+				@params[5] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales);
+				@params[6] = new SqlParameter("@InstruccionesEspeciales", modelo.InstruccionesEspeciales);
+				@params[7] = new SqlParameter("@CreadoPor", modelo.CreadoPor);
+
+				if (!bd.ExecuteProcedure(conexion, "ins_Enmienda", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_EnmiendasByCartaCreditoId(out DataTable dt, out String msgError, string cartaCreditoId)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@CartaCreditoId", cartaCreditoId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_EnmiendasByCartaCreditoId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
 	}
 }

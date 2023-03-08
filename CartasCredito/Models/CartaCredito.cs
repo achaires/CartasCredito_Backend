@@ -1,4 +1,5 @@
 ﻿using CartasCredito.Models.DTOs;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -43,9 +44,12 @@ namespace CartasCredito.Models
 		public decimal PagosProgramados { get; set; }
 		public decimal MontoDispuesto { get; set; }
 		public decimal SaldoInsoluto { get; set; }
+		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaApertura { get; set; }
 		public string Incoterm { get; set; }
+		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaLimiteEmbarque { get; set; }
+		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaVencimiento { get; set; }
 		public string EmbarquesParciales { get; set; }
 		public string Transbordos { get; set; }
