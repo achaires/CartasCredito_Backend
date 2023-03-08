@@ -202,6 +202,7 @@
     <Compile Include="Controllers\api\DivisionesController.cs" />
     <Compile Include="Controllers\api\DocumentosController.cs" />
     <Compile Include="Controllers\api\EmpresasController.cs" />
+    <Compile Include="Controllers\api\EnmiendasController.cs" />
     <Compile Include="Controllers\api\LineasDeCreditoController.cs" />
     <Compile Include="Controllers\api\MonedasController.cs" />
     <Compile Include="Controllers\api\OperacionesController.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Models\DTOs\CartaCreditoAdjuntarSwiftDTO.cs" />
     <Compile Include="Models\DTOs\CartaCreditoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />
+    <Compile Include="Models\DTOs\EnmiendaInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagosPFEFiltrarDTO.cs" />
@@ -258,8 +260,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-4405b77d.js" />
-    <Content Include="assets\index-a0ea1bc7.css" />
+    <Content Include="assets\index-45ca473f.js" />
+    <Content Include="assets\index-c561186e.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
