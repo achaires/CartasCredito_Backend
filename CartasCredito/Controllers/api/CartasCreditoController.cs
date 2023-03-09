@@ -41,7 +41,8 @@ namespace CartasCredito.Controllers.api
 			{
 				rsp.Flag = false;
 				rsp.DataString = ex.Message;
-				rsp.Errors.Add(ex.Message);
+				rsp.Errors.Add("Ocurrió un error al intentar guardar la Carta de Crédito. Verifique los datos ingresados");
+				//rsp.Errors.Add(ex.Message);
 			}
 
 			return rsp;
