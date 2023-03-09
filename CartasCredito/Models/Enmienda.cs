@@ -150,7 +150,7 @@ namespace CartasCredito.Models
 							item.Prev_DescripcionMercancia = row[idx].ToString(); idx++;
 							item.Prev_ConsideracionesAdicionales = row[idx].ToString(); idx++;
 							item.Prev_InstruccionesEspeciales = row[idx].ToString(); idx++;
-							item.RowNum = int.TryParse(row[idx].ToString(), out int rownumval) ? rownumval : 0;
+							//item.RowNum = int.TryParse(row[idx].ToString(), out int rownumval) ? rownumval : 0;
 
 							res.Add(item);
 						}

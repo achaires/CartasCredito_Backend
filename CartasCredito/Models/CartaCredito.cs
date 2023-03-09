@@ -81,7 +81,7 @@ namespace CartasCredito.Models
 		public List<Pago> Pagos { get; set; }
 		public List<CartaCreditoComision> Comisiones { get; set; }
 
-		//public List<Enmienda> Enmiendas { get; set; }
+		public List<Enmienda> Enmiendas { get; set; }
 
 		/*
 		public decimal TotalPagosEfectuados()
@@ -218,7 +218,7 @@ namespace CartasCredito.Models
 							item.Creado = DateTime.Parse(row[idx].ToString()); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
 //							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
-							//item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
+							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
 
 							res.Add(item);
 						}
@@ -320,7 +320,7 @@ namespace CartasCredito.Models
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.Creado = DateTime.Parse(row[idx].ToString()); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
-							//item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
+							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
 
 							res.Add(item);
 						}
@@ -560,6 +560,7 @@ namespace CartasCredito.Models
 
 						rsp.Pagos = Pago.GetByCartaCreditoId(rsp.Id);
 						rsp.Comisiones = CartaCreditoComision.GetByCartaCreditoId(rsp.Id);
+						rsp.Enmiendas = Enmienda.GetByCartaCreditoId(rsp.Id);
 
 						decimal totalPagosEfectuados = 0;
 						foreach (var lp in rsp.Pagos)
