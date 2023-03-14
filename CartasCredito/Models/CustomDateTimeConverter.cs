@@ -10,7 +10,7 @@ namespace CartasCredito.Models
 	{
 		public CustomDateTimeConverter()
 		{
-			base.DateTimeFormat = "yyyy-MM-dd";
+			base.DateTimeFormat = "dddd, MMM dd, yyy";
 		}
 
 	}

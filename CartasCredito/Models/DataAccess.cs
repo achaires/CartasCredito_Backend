@@ -2641,10 +2641,11 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[42];
+				SqlParameter[] @params = new SqlParameter[43];
 
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.Id); pix++;
-				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCarta); pix++;
+				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCartaId); pix++;
 				@params[pix] = new SqlParameter("@TipoActivoId", modelo.TipoActivoId); pix++;
 				@params[pix] = new SqlParameter("@BancoId", modelo.BancoId); pix++;
 				@params[pix] = new SqlParameter("@ProyectoId", modelo.ProyectoId); pix++;
@@ -3414,7 +3415,7 @@ namespace CartasCredito.Models
 				SqlParameter[] @params = new SqlParameter[17];
 
 				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
-				@params[pix] = new SqlParameter("@DocumentoSwift", modelo.DocumentoSwift); pix++;
+				//@params[pix] = new SqlParameter("@DocumentoSwift", modelo.DocumentoSwift); pix++;
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
 				@params[pix] = new SqlParameter("@ImporteLC", modelo.ImporteLC); pix++;
 				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;

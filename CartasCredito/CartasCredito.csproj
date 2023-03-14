@@ -199,6 +199,7 @@
     <Compile Include="Controllers\api\ComisionesController.cs" />
     <Compile Include="Controllers\api\CompradoresController.cs" />
     <Compile Include="Controllers\api\ContactosController.cs" />
+    <Compile Include="Controllers\api\DashboardController.cs" />
     <Compile Include="Controllers\api\DivisionesController.cs" />
     <Compile Include="Controllers\api\DocumentosController.cs" />
     <Compile Include="Controllers\api\EmpresasController.cs" />
@@ -235,6 +236,7 @@
     <Compile Include="Models\DTOs\CartaCreditoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />
     <Compile Include="Models\DTOs\EnmiendaInsertDTO.cs" />
+    <Compile Include="Models\DTOs\EnmiendaUpdateDTO.cs" />
     <Compile Include="Models\DTOs\PagoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagosPFEFiltrarDTO.cs" />

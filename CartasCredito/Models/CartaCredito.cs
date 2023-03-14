@@ -441,14 +441,13 @@ namespace CartasCredito.Models
 					if (dt.Rows.Count > 0)
 					{
 						var row = dt.Rows[0];
-						int id = 0;
-						Int32.TryParse(row[3].ToString(), out id);
+						string id = row[3].ToString();
 
-						if (id > 0)
+						if (id.Length > 0)
 						{
 							rsp.Flag = true;
-							rsp.DataInt = id;
-							rsp.DataString = row[3].ToString();
+							rsp.DataInt = 1;
+							rsp.DataString = id;
 						}
 					}
 				}

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
@@ -60,8 +61,45 @@ namespace CartasCredito.Controllers.api
 		}
 
 		// PUT api/<controller>/5
-		public void Put(int id, [FromBody] string value)
+		public RespuestaFormato Put(int id, [FromBody] EnmiendaUpdateDTO dtoEnmienda)
 		{
+			var rsp = new RespuestaFormato();
+			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+
+			try
+			{
+				//var modelo = Enmienda.GetById(id);
+				var cc = CartaCredito.GetById(dtoEnmienda.CartaCreditoId);
+				var modelo = cc.Enmiendas.Find(enm => enm.Id == dtoEnmienda.Id);
+
+				modelo.Estatus = dtoEnmienda.Estatus;
+				modelo.Prev_ImporteLC = cc.MontoOriginalLC;
+				modelo.Prev_FechaVencimiento = cc.FechaVencimiento;
+				modelo.Prev_FechaVencimiento = cc.FechaLimiteEmbarque;
+				modelo.Prev_DescripcionMercancia = cc.DescripcionMercancia;
+				modelo.Prev_ConsideracionesAdicionales = cc.ConsideracionesAdicionales;
+				modelo.Prev_InstruccionesEspeciales = cc.InstruccionesEspeciales;
+
+				cc.Estatus = dtoEnmienda.Estatus;
+				cc.MontoOriginalLC = dtoEnmienda.ImporteLC;
+				cc.FechaVencimiento = dtoEnmienda.FechaVencimiento;
+				cc.FechaLimiteEmbarque = dtoEnmienda.FechaLimiteEmbarque;
+				cc.DescripcionMercancia = dtoEnmienda.DescripcionMercancia;
+				cc.ConsideracionesAdicionales = dtoEnmienda.ConsideracionesAdicionales;
+				cc.InstruccionesEspeciales = dtoEnmienda.InstruccionesEspeciales;
+
+				Enmienda.Update(modelo);
+
+				rsp = CartaCredito.Update(cc);
+			}
+			catch (Exception ex)
+			{
+				rsp.Flag = false;
+				rsp.DataString = ex.Message;
+				rsp.Errors.Add(ex.Message);
+			}
+
+			return rsp;
 		}
 
 		// DELETE api/<controller>/5
