@@ -10,6 +10,7 @@ namespace CartasCredito.Models
 	{
 		public int Id { get; set; }
 		public int EmpresaId { get; set; }
+		public string Empresa { get; set; }
 		public string Nombre { get; set; }
 		public string Descripcion { get; set; }
 		public bool Activo { get; set; }
@@ -81,6 +82,8 @@ namespace CartasCredito.Models
 							}
 
 							idx++;
+
+							item.Empresa = row[idx].ToString();
 
 							item.Contacto = Contacto.GetByModelNombreAndId(item.Id, "Agente");
 
