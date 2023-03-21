@@ -211,6 +211,7 @@
     <Compile Include="Controllers\api\PagosController.cs" />
     <Compile Include="Controllers\api\ProveedoresController.cs" />
     <Compile Include="Controllers\api\ProyectosController.cs" />
+    <Compile Include="Controllers\api\ReportesController.cs" />
     <Compile Include="Controllers\api\TiposActivoController.cs" />
     <Compile Include="Controllers\api\TiposCoberturaController.cs" />
     <Compile Include="Controllers\api\TiposComisionController.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagosPFEFiltrarDTO.cs" />
     <Compile Include="Models\DTOs\PagoUpdateDTO.cs" />
+    <Compile Include="Models\DTOs\SolicitudReporteDTO.cs" />
     <Compile Include="Models\Empresa.cs" />
     <Compile Include="Models\Enmienda.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Models\PeriodoContable.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
+    <Compile Include="Models\Reporte.cs" />
     <Compile Include="Models\RespuestaFormato.cs" />
     <Compile Include="Models\TipoActivo.cs" />
     <Compile Include="Models\TipoCobertura.cs" />
