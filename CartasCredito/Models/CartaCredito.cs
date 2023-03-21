@@ -44,12 +44,9 @@ namespace CartasCredito.Models
 		public decimal PagosProgramados { get; set; }
 		public decimal MontoDispuesto { get; set; }
 		public decimal SaldoInsoluto { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaApertura { get; set; }
 		public string Incoterm { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaLimiteEmbarque { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaVencimiento { get; set; }
 		public string EmbarquesParciales { get; set; }
 		public string Transbordos { get; set; }
@@ -80,7 +77,6 @@ namespace CartasCredito.Models
 		public bool Activo { get; set; }
 		public List<Pago> Pagos { get; set; }
 		public List<CartaCreditoComision> Comisiones { get; set; }
-
 		public List<Enmienda> Enmiendas { get; set; }
 
 		/*
@@ -556,6 +552,7 @@ namespace CartasCredito.Models
 						rsp.BancoCorresponsal = row[idx].ToString(); idx++;
 						rsp.Empresa = row[idx].ToString(); idx++;
 						rsp.Comprador = row[idx].ToString(); idx++;
+						rsp.InstruccionesEspeciales = row[idx].ToString(); idx++;
 
 						rsp.Pagos = Pago.GetByCartaCreditoId(rsp.Id);
 						rsp.Comisiones = CartaCreditoComision.GetByCartaCreditoId(rsp.Id);

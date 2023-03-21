@@ -13,9 +13,9 @@ namespace CartasCredito.Models
 		public int Id { get; set; }
 		public string CartaCreditoId { get; set; }
 		public decimal ImporteLC { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaLimiteEmbarque { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime FechaVencimiento { get; set; }
 		public string DescripcionMercancia { get; set; }
 		public string ConsideracionesAdicionales { get; set; }
@@ -26,9 +26,9 @@ namespace CartasCredito.Models
 		public string CreadoPor { get; set; }
 		public bool Activo { get; set; }
 		public decimal Prev_ImporteLC { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime Prev_FechaLimiteEmbarque { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		// [JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime Prev_FechaVencimiento { get; set; }
 		public string Prev_DescripcionMercancia { get; set; }
 		public string Prev_ConsideracionesAdicionales { get; set; }

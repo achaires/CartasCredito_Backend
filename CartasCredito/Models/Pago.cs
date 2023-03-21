@@ -16,9 +16,9 @@ namespace CartasCredito.Models
 		public int? MonedaId { get; set; }
 		public decimal? TipoCambio { get; set; }
 
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime? FechaVencimiento { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime? FechaPago { get; set; }
 		public decimal MontoPago { get; set; }
 		public decimal MontoPagado { get; set; }

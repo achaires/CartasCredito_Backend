@@ -2641,7 +2641,7 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[43];
+				SqlParameter[] @params = new SqlParameter[44];
 
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.Id); pix++;
 				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
@@ -2686,6 +2686,7 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@ConfirmacionBancoNotificador", modelo.ConfirmacionBancoNotificador); pix++;
 				@params[pix] = new SqlParameter("@TipoEmision", modelo.TipoEmision); pix++;
 				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
+				@params[pix] = new SqlParameter("@InstruccionesEspeciales", modelo.InstruccionesEspeciales); pix++;
 
 
 				if (!bd.ExecuteProcedure(conexion, "upd_CartaCredito", @params, out dt, 1000))

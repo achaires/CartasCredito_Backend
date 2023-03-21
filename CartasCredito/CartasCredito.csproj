@@ -262,8 +262,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-45ca473f.js" />
-    <Content Include="assets\index-c561186e.css" />
+    <Content Include="assets\index-4f7caf7a.css" />
+    <Content Include="assets\index-dc81cc69.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -275,6 +275,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="assets\dxicons-19b5ebb1.woff2" />
+    <Content Include="assets\dxicons-85cb4bbe.woff" />
+    <Content Include="assets\dxicons-b47ce9f0.ttf" />
     <Content Include="assets\OpenSans-Regular-a0707e10.ttf" />
     <Content Include="assets\Rubik-VariableFont_wght-f9840d46.ttf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
