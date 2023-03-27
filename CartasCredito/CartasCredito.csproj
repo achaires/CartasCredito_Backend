@@ -265,8 +265,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-4f7caf7a.css" />
-    <Content Include="assets\index-dc81cc69.js" />
+    <Content Include="assets\index-149d4c18.css" />
+    <Content Include="assets\index-bd6adff5.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />

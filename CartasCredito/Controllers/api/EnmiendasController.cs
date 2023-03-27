@@ -16,20 +16,9 @@ namespace CartasCredito.Controllers.api
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class EnmiendasController : ApiController
 	{
-		// GET api/<controller>
-		public IEnumerable<string> Get()
-		{
-			return new string[] { "value1", "value2" };
-		}
-
-		// GET api/<controller>/5
-		public string Get(int id)
-		{
-			return "value";
-		}
-
-		// POST api/<controller>
-		public RespuestaFormato Post([FromBody] EnmiendaInsertDTO dtoEnmienda)
+		[HttpPost]
+		[Route("api/enmiendas")]
+		public RespuestaFormato Save([FromBody] EnmiendaInsertDTO dtoEnmienda)
 		{
 			var rsp = new RespuestaFormato();
 			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
@@ -60,12 +49,80 @@ namespace CartasCredito.Controllers.api
 			return rsp;
 		}
 
-		// PUT api/<controller>/5
-		public RespuestaFormato Put(int id, [FromBody] EnmiendaUpdateDTO dtoEnmienda)
+		[HttpPost]
+		[Route("api/enmiendas/aprobar/{id}")]
+		public RespuestaFormato Aprobar(int id)
 		{
 			var rsp = new RespuestaFormato();
 			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
 
+			try
+			{
+				var modeloEnmienda = Enmienda.GetById(id);
+				var cc = CartaCredito.GetById(modeloEnmienda.CartaCreditoId);
+
+				modeloEnmienda.Estatus = 2;
+				modeloEnmienda.Prev_ImporteLC = cc.MontoOriginalLC;
+				modeloEnmienda.Prev_FechaVencimiento = cc.FechaVencimiento;
+				modeloEnmienda.Prev_FechaVencimiento = cc.FechaLimiteEmbarque;
+				modeloEnmienda.Prev_DescripcionMercancia = cc.DescripcionMercancia;
+				modeloEnmienda.Prev_ConsideracionesAdicionales = cc.ConsideracionesAdicionales;
+				modeloEnmienda.Prev_InstruccionesEspeciales = cc.InstruccionesEspeciales;
+
+				cc.Estatus = 2;
+
+				if ( modeloEnmienda.ImporteLC != null && modeloEnmienda.ImporteLC > 0 )
+				{
+					cc.MontoOriginalLC = (decimal)modeloEnmienda.ImporteLC;
+				}
+
+				if ( modeloEnmienda.FechaVencimiento != null  )
+				{
+					cc.FechaVencimiento = (DateTime)modeloEnmienda.FechaVencimiento;
+				}
+
+				if ( modeloEnmienda.FechaLimiteEmbarque != null )
+				{
+					cc.FechaLimiteEmbarque = (DateTime)modeloEnmienda.FechaLimiteEmbarque;
+				}
+				
+				if ( modeloEnmienda.DescripcionMercancia.Trim().Length > 5 )
+				{
+					cc.DescripcionMercancia = modeloEnmienda.DescripcionMercancia;
+				}
+
+				if (modeloEnmienda.ConsideracionesAdicionales.Trim().Length > 5)
+				{
+					cc.ConsideracionesAdicionales = modeloEnmienda.ConsideracionesAdicionales;
+				}
+
+				if ( modeloEnmienda.InstruccionesEspeciales.Trim().Length > 5 )
+				{
+					cc.InstruccionesEspeciales = modeloEnmienda.InstruccionesEspeciales;
+				}
+
+				Enmienda.Update(modeloEnmienda);
+
+				rsp = CartaCredito.Update(cc);
+			}
+			catch (Exception ex)
+			{
+				rsp.Flag = false;
+				rsp.DataString = ex.Message;
+				rsp.Errors.Add(ex.Message);
+			}
+
+			return rsp;
+		}
+
+		[HttpPut]
+		[Route("api/enmiendas/{id}")]
+		public RespuestaFormato Update(int id, [FromBody] EnmiendaUpdateDTO dtoEnmienda)
+		{
+			var rsp = new RespuestaFormato();
+			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+
+			/*
 			try
 			{
 				//var modelo = Enmienda.GetById(id);
@@ -98,11 +155,14 @@ namespace CartasCredito.Controllers.api
 				rsp.DataString = ex.Message;
 				rsp.Errors.Add(ex.Message);
 			}
+			*/
 
 			return rsp;
 		}
 
 		// DELETE api/<controller>/5
+		[HttpDelete]
+		[Route("api/enmiendas/{id}")]
 		public void Delete(int id)
 		{
 		}

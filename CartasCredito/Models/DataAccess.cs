@@ -2857,8 +2857,8 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
 				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
-				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd")); pix++;
-				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd")); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
 				{
@@ -3419,16 +3419,16 @@ namespace CartasCredito.Models
 				//@params[pix] = new SqlParameter("@DocumentoSwift", modelo.DocumentoSwift); pix++;
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
 				@params[pix] = new SqlParameter("@ImporteLC", modelo.ImporteLC); pix++;
-				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@DescripcionMercancia", modelo.DescripcionMercancia); pix++;
 				@params[pix] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales); pix++;
 				@params[pix] = new SqlParameter("@InstruccionesEspeciales", modelo.InstruccionesEspeciales); pix++;
 				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
 				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
 				@params[pix] = new SqlParameter("@Prev_ImporteLC", modelo.Prev_ImporteLC); pix++;
-				@params[pix] = new SqlParameter("@Prev_FechaLimiteEmbarque", modelo.Prev_FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				@params[pix] = new SqlParameter("@Prev_FechaVencimiento", modelo.Prev_FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@Prev_FechaLimiteEmbarque", modelo.Prev_FechaLimiteEmbarque?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@Prev_FechaVencimiento", modelo.Prev_FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@Prev_DescripcionMercancia", modelo.Prev_DescripcionMercancia); pix++;
 				@params[pix] = new SqlParameter("@Prev_ConsideracionesAdicionales", modelo.Prev_ConsideracionesAdicionales); pix++;
 				@params[pix] = new SqlParameter("@Prev_InstruccionesEspeciales", modelo.Prev_InstruccionesEspeciales); pix++;
@@ -3468,8 +3468,8 @@ namespace CartasCredito.Models
 
 				@params[0] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId);
 				@params[1] = new SqlParameter("@ImporteLC", modelo.ImporteLC);
-				@params[2] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss"));
-				@params[3] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss"));
+				@params[2] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque?.ToString("yyyy-MM-dd HH:mm:ss"));
+				@params[3] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss"));
 				@params[4] = new SqlParameter("@DescripcionMercancia", modelo.DescripcionMercancia);
 				@params[5] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales);
 				@params[6] = new SqlParameter("@InstruccionesEspeciales", modelo.InstruccionesEspeciales);
@@ -3510,6 +3510,40 @@ namespace CartasCredito.Models
 				@params[0] = new SqlParameter("@CartaCreditoId", cartaCreditoId);
 
 				if (!bd.ExecuteProcedure(conexion, "cons_EnmiendasByCartaCreditoId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_EnmiendaById(out DataTable dt, out String msgError, int id)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_EnmiendaById", @params, out dt, 1000))
 				{
 					boolProcess = false;
 					msgError = bd._error.ToString();
