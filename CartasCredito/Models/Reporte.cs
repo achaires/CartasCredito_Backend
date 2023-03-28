@@ -71,5 +71,60 @@ namespace CartasCredito.Models
 
 			return res;
 		}
+
+		public static List<CartaCreditoComision> GetReporteComisionesPorTipoComision(DateTime fechaInicio, DateTime fechaFin, int empresaId = 0)
+		{
+			List<CartaCreditoComision> res = new List<CartaCreditoComision>();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+
+				var dt = new System.Data.DataTable();
+				var errores = "";
+				if (da.Cons_ReporteComisionesPorTipoComision(out dt, out errores, fechaInicio, fechaFin, empresaId))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						for (int i = 0; i < dt.Rows.Count; i++)
+						{
+							int idx = 0;
+							var row = dt.Rows[i];
+							var item = new CartaCreditoComision();
+
+							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
+							item.Empresa = row[idx].ToString(); idx++;
+							item.Comision = row[idx].ToString(); idx++;
+							item.NumCartaCredito = row[idx].ToString(); idx++;
+							item.MonedaOriginal = row[idx].ToString(); idx++;
+							item.Monto = decimal.TryParse(row[idx].ToString(), out decimal montoval) ? montoval : 0; idx++;
+							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montopagadoval) ? montopagadoval : 0; idx++;
+							item.Estatus = int.TryParse(row[idx].ToString(), out int estidval) ? estidval : 0; idx++;
+							item.ComisionId = int.TryParse(row[idx].ToString(),out int comidval) ? comidval : 0; idx++;
+							item.MonedaId = int.TryParse(row[idx].ToString(), out int midval) ? midval : 0; idx++;
+							item.EstatusText = CartaCredito.GetStatusText(item.Estatus);
+
+							res.Add(item);
+						}
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				res = new List<CartaCreditoComision>();
+
+				// Get stack trace for the exception with source file information
+				var st = new StackTrace(ex, true);
+				// Get the top stack frame
+				var frame = st.GetFrame(0);
+				// Get the line number from the stack frame
+				var line = frame.GetFileLineNumber();
+
+				var errorMsg = ex.ToString();
+			}
+
+			return res;
+		}
 	}
 }

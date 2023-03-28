@@ -698,6 +698,31 @@ namespace CartasCredito.Models
 			return estatusText;
 		}
 
+		public static string GetStatusText(int Estatus)
+		{
+			string estatusText = String.Empty;
+			switch (Estatus)
+			{
+				case 1:
+					estatusText = "Registrada";
+					break;
+				case 2:
+					estatusText = "Emitida";
+					break;
+				case 3:
+					estatusText = "Enmienda Pendiente";
+					break;
+				case 4:
+					estatusText = "Pagada";
+					break;
+				case 5:
+					estatusText = "Cancelada";
+					break;
+			}
+
+			return estatusText;
+		}
+
 		public string GetStatusClass()
 		{
 			string estatusText = String.Empty;

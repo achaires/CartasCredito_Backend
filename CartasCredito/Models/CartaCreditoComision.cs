@@ -31,6 +31,11 @@ namespace CartasCredito.Models
 		public int PagoId { get; set; }
 		public int PagoMonedaId { get; set; }
 		public string Comentarios { get; set; }
+
+		// Para Reportes
+		public string Empresa { get; set; }
+		public string NumCartaCredito { get; set; }
+		public string MonedaOriginal { get; set; }
 		//public Pago Pago { get; set; }
 
 		public static List<CartaCreditoComision> GetByCartaCreditoId(string cartaCreditoId)

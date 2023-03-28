@@ -35,5 +35,28 @@ namespace CartasCredito.Controllers.api
 
 			return rsp;
 		}
+
+		[Route("api/reportes/comisionestipocomision")]
+		[HttpPost]
+		public RespuestaFormato ComisionPorTipoComision(SolicitudReporteDTO solicitudReporteDTO)
+		{
+			var rsp = new RespuestaFormato();
+
+			try
+			{
+				var comisionesReporte = Reporte.GetReporteComisionesPorTipoComision(solicitudReporteDTO.FechaInicio, solicitudReporteDTO.FechaFin, solicitudReporteDTO.EmpresaId);
+				rsp.DataInt = solicitudReporteDTO.TipoReporteId;
+
+				comisionesReporte.ForEach(x => rsp.Content.Add(x));
+			}
+			catch (Exception ex)
+			{
+				rsp.DataInt = -1;
+				rsp.Flag = false;
+				rsp.Errors.Add(ex.Message);
+			}
+
+			return rsp;
+		}
 	}
 }

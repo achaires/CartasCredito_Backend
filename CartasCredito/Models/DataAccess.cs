@@ -3605,6 +3605,44 @@ namespace CartasCredito.Models
 
 			return boolProcess;
 		}
+
+		public Boolean Cons_ReporteComisionesPorTipoComision(out DataTable dt, out String msgError, DateTime fechaInicio, DateTime fechaFin, int empresaId = 0)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_ReporteComisionesPorTipoComision", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
 		#endregion
 	}
 }
