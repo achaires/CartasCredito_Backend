@@ -116,6 +116,46 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static RespuestaFormato UpdateSwiftFile(int enmiendaId, string ccid, string swiftFilename)
+		{
+			RespuestaFormato rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Upd_EnmiendaSwift(enmiendaId, ccid, swiftFilename, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var row = dt.Rows[0];
+						string id = row[3].ToString();
+
+						if (id.Length > 0)
+						{
+							rsp.Flag = true;
+							rsp.DataInt = 1;
+							rsp.DataString = id;
+						}
+					}
+				}
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
+			}
+			catch (Exception ex)
+			{
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
+			}
+
+			return rsp;
+		}
+
 		public static Enmienda GetById(int id)
 		{
 			Enmienda rsp = new Enmienda();
@@ -254,7 +294,7 @@ namespace CartasCredito.Models
 							item.Prev_DescripcionMercancia = row[idx].ToString(); idx++;
 							item.Prev_ConsideracionesAdicionales = row[idx].ToString(); idx++;
 							item.Prev_InstruccionesEspeciales = row[idx].ToString(); idx++;
-							//item.RowNum = int.TryParse(row[idx].ToString(), out int rownumval) ? rownumval : 0;
+							item.RowNum = int.TryParse(row[idx].ToString(), out int rownumval) ? rownumval : 0;
 
 							res.Add(item);
 						}

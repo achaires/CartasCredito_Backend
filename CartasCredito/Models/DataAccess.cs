@@ -303,6 +303,41 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+
+		public Boolean Cons_EmpresasByUserId(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@UserId", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_EmpresasByUserId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
 		public Boolean Upd_Empresa(Empresa modelo, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;
@@ -3101,7 +3136,7 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
-		public Boolean Cons_Pagos(out DataTable dt, out String msgError)
+		public Boolean Cons_Pagos(out DataTable dt, out String msgError, DateTime dateStart, DateTime dateEnd)
 		{
 			bool boolProcess = true;
 			dt = new DataTable();
@@ -3109,7 +3144,12 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[0];
+				var pix = 0;
+				
+				SqlParameter[] @params = new SqlParameter[2];
+				@params[pix] = new SqlParameter("FechaInicio", dateStart.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("FechaFin", dateEnd.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
 
 				if (!bd.ExecuteProcedure(conexion, "cons_Pagos", @params, out dt, 1000))
 				{
@@ -3158,47 +3198,6 @@ namespace CartasCredito.Models
 						msgError = "No hay datos para mostrar";
 					}
 				}
-			}
-			catch (Exception e)
-			{
-				boolProcess = false;
-				msgError = e.ToString();
-			}
-
-			return boolProcess;
-		}
-
-		public Boolean Cons_PagosFiltrar(PagosPFEFiltrarDTO filtrarDTO, out DataTable dt, out String msgError)
-		{
-			bool boolProcess = true;
-			dt = new DataTable();
-			msgError = String.Empty;
-
-			try
-			{
-				int pix = 0;
-
-				SqlParameter[] @params = new SqlParameter[4];
-
-				@params[pix] = new SqlParameter("@FechaInicio", filtrarDTO.FechaInicio); pix++;
-				@params[pix] = new SqlParameter("@FechaFin", filtrarDTO.FechaFin); pix++;
-				@params[pix] = new SqlParameter("@EmpresaId", filtrarDTO.EmpresaId); pix++;
-				@params[pix] = new SqlParameter("@Activo", filtrarDTO.Activo); pix++;
-
-				if (!bd.ExecuteProcedure(conexion, "cons_PagosFiltrar", @params, out dt, 1000))
-				{
-					boolProcess = false;
-					msgError = bd._error.ToString();
-				}
-				else
-				{
-					if (dt.Rows.Count < 1)
-					{
-						boolProcess = false;
-						msgError = "No hay registros";
-					}
-				}
-
 			}
 			catch (Exception e)
 			{
@@ -3456,6 +3455,47 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Upd_EnmiendaSwift(int enmiendaId, string ccid, string swiftFilename, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EnmiendaId", enmiendaId); pix++;
+				@params[pix] = new SqlParameter("@SwiftFilename", swiftFilename); pix++;
+				@params[pix] = new SqlParameter("@CartaComercialId", ccid); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_EnmiendaSwift", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+					else
+					{
+						string ccId = dt.Rows[0][3].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
 		public Boolean Ins_Enmienda(Enmienda modelo, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;
@@ -3632,6 +3672,938 @@ namespace CartasCredito.Models
 					{
 						boolProcess = false;
 						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region AspNetUsers
+		public Boolean Cons_AspNetUsers(out DataTable dt, out String msgError, int activo = -1)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Activo", activo);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetUsers", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+				Utility.Logger.Error("DataAccess - " + msgError);
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_AspNetUser(AspNetUser modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[4];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Email", modelo.Email); pix++;
+				@params[pix] = new SqlParameter("@PasswordHash", modelo.PasswordHash); pix++;
+				@params[pix] = new SqlParameter("@PhoneNumber", modelo.PhoneNumber); pix++;
+				@params[pix] = new SqlParameter("@UserName", modelo.UserName); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetUser", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+				Utility.Logger.Error("DataAccess - " + msgError);
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetUserById(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetUserById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetUserByUserName(out DataTable dt, out String msgError, string userName)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+
+				@params[0] = new SqlParameter("@Usuario", userName);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetUserByUserName", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos a mostrar";
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		public Boolean Upd_AspNetUser(AspNetUser modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@Email", modelo.Email); pix++;
+				@params[pix] = new SqlParameter("@PhoneNumber", modelo.PhoneNumber); pix++;
+				@params[pix] = new SqlParameter("@UserName", modelo.UserName); pix++;
+				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_AspNetUser", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Ins_AspNetUserRole(string userId, string roleId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@UserId", userId); pix++;
+				@params[pix] = new SqlParameter("@RoleId", roleId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetUserRole", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Upd_AspNetUserRole(string userId, string roleId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@UserId", userId); pix++;
+				@params[pix] = new SqlParameter("@RoleId", roleId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_AspNetUserRole", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Ins_AspNetUserEmpresa(string userId, int empresaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@UserId", userId); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetUserEmpresa", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Del_AspNetUserEmpresa(string userId, int empresaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@UserId", userId); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "del_AspNetUserEmpresa", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		#endregion
+
+		#region AspNetUserProfile
+		public Boolean Ins_AspNetUserProfile(AspNetUserProfile modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Name", modelo.Name); pix++;
+				@params[pix] = new SqlParameter("@LastName", modelo.LastName); pix++;
+				@params[pix] = new SqlParameter("@DisplayName", modelo.DisplayName); pix++;
+				@params[pix] = new SqlParameter("@UserId", modelo.UserId); pix++;
+				@params[pix] = new SqlParameter("@Notes", modelo.Notes); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetUserProfile", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+				Utility.Logger.Error("DataAccess - " + msgError);
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetUserProfileByUserId(string userId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@UserId", userId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetUserProfileByUserId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Upd_AspNetUserProfile(AspNetUserProfile modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[6];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@Name", modelo.Name); pix++;
+				@params[pix] = new SqlParameter("@LastName", modelo.LastName); pix++;
+				@params[pix] = new SqlParameter("@DisplayName", modelo.DisplayName); pix++;
+				@params[pix] = new SqlParameter("@UserId", modelo.UserId); pix++;
+				@params[pix] = new SqlParameter("@Notes", modelo.Notes); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_AspNetUserProfile", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		#endregion
+
+		#region AspNetRoles
+		public Boolean Cons_AspNetRoles(out DataTable dt, out String msgError, int activo = -1)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Activo", activo);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetRoles", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+				Utility.Logger.Error("DataAccess - " + msgError);
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_AspNetRole(AspNetRole modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Name", modelo.Name); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetRole", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+				Utility.Logger.Error("DataAccess - " + msgError);
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetRoleById(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetRoleById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Upd_AspNetRole(AspNetRole modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[3];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@Name", modelo.Name); pix++;
+				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_AspNetRole", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Ins_AspNetRolePermission(string roleId, int permissionId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@RoleId", roleId); pix++;
+				@params[pix] = new SqlParameter("@PermissionId", permissionId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_AspNetRolePermission", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Del_AspNetRolePermission(string roleId, int permissionId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@RoleId", roleId); pix++;
+				@params[pix] = new SqlParameter("@PermissionId", permissionId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "del_AspNetRolePermission", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		#endregion
+
+		#region AspNetPermissions
+		public Boolean Cons_AspNetPermissions(out DataTable dt, out String msgError, int activo = 1)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Activo", activo);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetPermissions", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetPermissionsByRoleId(string roleId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@RoleId", roleId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetPermissionsByRoleId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_AspNetPermissionById(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_AspNetPermissionsById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region PFE
+		public Boolean Cons_PFEProgramaBuscar(PFEPrograma model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				var pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@Anio", model.Anio); pix++;
+				@params[pix] = new SqlParameter("@Periodo", model.Periodo); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PFEProgramaBuscar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_PFEPrograma(PFEPrograma model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				var pix = 0;
+				SqlParameter[] @params = new SqlParameter[4];
+				@params[pix] = new SqlParameter("@Anio", model.Anio); pix++;
+				@params[pix] = new SqlParameter("@Periodo", model.Periodo); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
+				@params[pix] = new SqlParameter("@CreadoPor", model.CreadoPor); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_PFEPrograma", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_PFEPago(PFEPago model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				var pix = 0;
+				SqlParameter[] @params = new SqlParameter[2];
+				@params[pix] = new SqlParameter("@ProgramaId", model.PFEProgramaId); pix++;
+				@params[pix] = new SqlParameter("@PagoID", model.PagoId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_PFEPago", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PFEPagosByProgramaId(int programaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				var pix = 0;
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[pix] = new SqlParameter("@ProgramaId", programaId);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PFEPagoByProgramaId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
 					}
 				}
 			}

@@ -88,6 +88,55 @@ namespace CartasCredito.Controllers.api
 			return rf;
 		}
 
+		[Route("api/operaciones/adjuntarswift-enmienda/{id}")]
+		[HttpPost]
+		public async Task<RespuestaFormato> AdjuntarSwiftEnmienda([FromUri] int id)
+		{
+			var enmienda = Enmienda.GetById(id);
+			var cc = CartaCredito.GetById(enmienda.CartaCreditoId);
+			var rf = new RespuestaFormato();
+
+
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
+
+			string root = HttpContext.Current.Server.MapPath("~/Uploads");
+			var provider = new MultipartFormDataStreamProvider(root);
+
+			try
+			{
+				// Read the form data.
+				await Request.Content.ReadAsMultipartAsync(provider);
+				var swiftFilename = "";
+
+				// This illustrates how to get the file names.
+				foreach (MultipartFileData file in provider.FileData)
+				{
+					swiftFilename = file.Headers.ContentDisposition.FileName.Trim('\"');
+					swiftFilename = DateTime.Now.ToString("yyyyMMddHmmss") + "-" + swiftFilename.Trim();
+					string swiftFinalName = Path.Combine(root, swiftFilename);
+					File.Move(file.LocalFileName, swiftFinalName);
+
+					//Trace.WriteLine(file.Headers.ContentDisposition.FileName);
+					//Trace.WriteLine("Server file path: " + file.LocalFileName);
+				}
+
+				rf = CartaCredito.UpdateSwiftFile(id, HttpContext.Current.Request.Form["NumCarta"], swiftFilename);
+			}
+			catch (System.Exception ex)
+			{
+				rf.DataInt = 0;
+				rf.DataString = "";
+				rf.Flag = false;
+				rf.Errors.Add(ex.Message);
+			}
+
+
+			return rf;
+		}
+
 		/*
 		[Route("api/operaciones/adjuntarswift/{id}")]
 		[HttpPost]

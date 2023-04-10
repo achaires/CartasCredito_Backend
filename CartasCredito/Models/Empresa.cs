@@ -174,6 +174,72 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+
+		public static List<Empresa> GetByUserId(string id)
+		{
+			List<Empresa> rsp = new List<Empresa>();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Cons_EmpresasByUserId(id, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						for (int i = 0; i < dt.Rows.Count; i++)
+						{
+							int idx = 0;
+							var row = dt.Rows[i];
+							var item = new Empresa();
+
+							item.Id = int.Parse(row[idx].ToString()); idx++;
+							item.DivisionId = int.TryParse(row[idx].ToString(), out int divVal) ? divVal : 0; idx++;
+							item.Nombre = row[idx].ToString(); idx++;
+							item.RFC = row[idx].ToString(); idx++;
+							item.Descripcion = row[idx].ToString(); idx++;
+							item.Activo = bool.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
+							item.CreadoPor = row[idx].ToString(); idx++;
+							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crdVal) ? crdVal : DateTime.Now; idx++;
+
+							if (row[idx].ToString().Length > 0)
+							{
+								item.Actualizado = DateTime.Parse(row[idx].ToString());
+							}
+							else
+							{
+								item.Actualizado = null;
+							}
+
+							idx++;
+
+							if (row[idx].ToString().Length > 0)
+							{
+								item.Eliminado = DateTime.Parse(row[idx].ToString());
+							}
+							else
+							{
+								item.Eliminado = null;
+							}
+
+							idx++;
+
+							rsp.Add(item);
+						}
+
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+			}
+
+			return rsp;
+		}
+
 		public static RespuestaFormato Insert(Empresa modelo)
 		{
 			RespuestaFormato rsp = new RespuestaFormato();

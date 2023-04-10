@@ -59,7 +59,7 @@ namespace CartasCredito.Models
 			Eliminado = null;
 		}
 
-		public static List<Pago> Get(int activo = -1)
+		public static List<Pago> Get(DateTime dateStart, DateTime dateEnd, int activo = -1)
 		{
 			List<Pago> res = new List<Pago>();
 
@@ -69,7 +69,7 @@ namespace CartasCredito.Models
 
 				var dt = new System.Data.DataTable();
 				var errores = "";
-				if (da.Cons_Pagos(out dt, out errores))
+				if (da.Cons_Pagos(out dt, out errores, dateStart, dateEnd))
 				{
 					if (dt.Rows.Count > 0)
 					{
@@ -96,71 +96,6 @@ namespace CartasCredito.Models
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
 							item.Activo = Boolean.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
 							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crVal) ? crVal : DateTime.Now.AddDays(1); idx++;
-
-
-							res.Add(item);
-						}
-					}
-				}
-
-			}
-			catch (Exception ex)
-			{
-				Console.Write(ex);
-				res = new List<Pago>();
-
-				// Get stack trace for the exception with source file information
-				var st = new StackTrace(ex, true);
-				// Get the top stack frame
-				var frame = st.GetFrame(0);
-				// Get the line number from the stack frame
-				var line = frame.GetFileLineNumber();
-
-				var errorMsg = ex.ToString();
-			}
-
-			return res;
-		}
-
-		public static List<Pago> Filtrar(PagosPFEFiltrarDTO model)
-		{
-			List<Pago> res = new List<Pago>();
-
-			try
-			{
-				DataAccess da = new DataAccess();
-
-				var dt = new System.Data.DataTable();
-				var errores = "";
-				if (da.Cons_PagosFiltrar(model, out dt, out errores))
-				{
-					if (dt.Rows.Count > 0)
-					{
-						for (int i = 0; i < dt.Rows.Count; i++)
-						{
-							int idx = 0;
-							var row = dt.Rows[i];
-							var item = new Pago();
-
-							item.NumeroPago = int.TryParse(row[idx].ToString(), out int numPagoVal) ? numPagoVal : 0; idx++;
-							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
-							item.FechaVencimiento = DateTime.TryParse(row[idx].ToString(), out DateTime fvVal) ? fvVal : DateTime.Now.AddDays(1); idx++;
-							item.FechaPago = DateTime.TryParse(row[idx].ToString(), out DateTime fpVal) ? fpVal : DateTime.Now.AddDays(1); idx++;
-							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
-							//item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPgVal) ? montoPgVal : 0;
-							idx++;
-							item.RegistroPagoPor = row[idx].ToString(); idx++;
-							item.CreadoPor = row[idx].ToString(); idx++;
-							item.CartaCreditoId = row[idx].ToString(); idx++;
-							item.NumeroFactura = row[idx].ToString(); idx++;
-							item.Estatus = int.TryParse(row[idx].ToString(), out int statusVal) ? statusVal : 0; idx++;
-							item.EstatusText = Pago.GetStatusText(item.Estatus);
-							item.Activo = Boolean.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
-							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crVal) ? crVal : DateTime.Now.AddDays(1); idx++;
-
-							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
-
-							Decimal montoPagado = 0;
 
 
 							res.Add(item);
