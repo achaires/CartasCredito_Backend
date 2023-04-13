@@ -123,7 +123,7 @@ namespace CartasCredito.Controllers.api
 					//Trace.WriteLine("Server file path: " + file.LocalFileName);
 				}
 
-				rf = CartaCredito.UpdateSwiftFile(id, HttpContext.Current.Request.Form["NumCarta"], swiftFilename);
+				rf = Enmienda.UpdateSwiftFile(id, cc.Id, swiftFilename);
 			}
 			catch (System.Exception ex)
 			{

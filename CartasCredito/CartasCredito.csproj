@@ -331,9 +331,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-149d4c18.css" />
-    <Content Include="assets\index-bd6adff5.js" />
+    <Content Include="assets\index-026c33ed.js" />
+    <Content Include="assets\index-1a85524e.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
