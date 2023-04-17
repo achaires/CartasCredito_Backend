@@ -242,6 +242,7 @@
     <Compile Include="Controllers\api\AccountController.cs" />
     <Compile Include="Controllers\api\AgentesAduanalesController.cs" />
     <Compile Include="Controllers\api\BancosController.cs" />
+    <Compile Include="Controllers\api\BitacoraMovimientosController.cs" />
     <Compile Include="Controllers\api\CartaCreditoComisionesController.cs" />
     <Compile Include="Controllers\api\CartasCreditoController.cs" />
     <Compile Include="Controllers\api\ComisionesController.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\AspNetUserProfile.cs" />
     <Compile Include="Models\Banco.cs" />
+    <Compile Include="Models\BitacoraMovimiento.cs" />
     <Compile Include="Models\CartaCredito.cs" />
     <Compile Include="Models\CartaCreditoComision.cs" />
     <Compile Include="Models\Comision.cs" />
@@ -291,6 +293,7 @@
     <Compile Include="Models\DataAccess.cs" />
     <Compile Include="Models\Division.cs" />
     <Compile Include="Models\Documento.cs" />
+    <Compile Include="Models\DTOs\BitacoraMovimientosFiltrarDTO.cs" />
     <Compile Include="Models\DTOs\CartaCreditoAdjuntarSwiftDTO.cs" />
     <Compile Include="Models\DTOs\CartaCreditoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />

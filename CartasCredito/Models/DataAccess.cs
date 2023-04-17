@@ -3209,6 +3209,88 @@ namespace CartasCredito.Models
 		}
 		#endregion
 
+		#region BitacoraMovimientos
+		public Boolean Ins_BitacoraMovimiento(BitacoraMovimiento modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[8];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Titulo", modelo.Titulo); pix++;
+				@params[pix] = new SqlParameter("@Descripcion", modelo.Descripcion); pix++;
+				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
+				@params[pix] = new SqlParameter("@ModeloNombre", modelo.ModeloNombre); pix++;
+				@params[pix] = new SqlParameter("@ModeloId", modelo.ModeloId); pix++;
+				@params[pix] = new SqlParameter("@CreadoPorId", modelo.CreadoPorId); pix++;
+				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
+				@params[pix] = new SqlParameter("@Creado", modelo.Creado); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_BitacoraMovimiento", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_BitacoraMovimientos(DateTime dateStart, DateTime dateEnd, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@FechaInicio", dateStart.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", dateEnd.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_BitacoraMovimientos", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		#endregion
+
 		#region CartaComisiones
 		public Boolean Cons_ComisionesByCartaCreditoId(string cartaCreditoId, out DataTable dt, out String msgError)
 		{
