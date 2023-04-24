@@ -14,42 +14,34 @@ namespace CartasCredito.Controllers.api
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class ReportesController : ApiController
 	{
-		[Route("api/reportes/analisiscartas")]
-		[HttpPost]
-		public RespuestaFormato AnalisisCartas (SolicitudReporteDTO solicitudReporteDTO)
+		[Route("api/reportes/historial")]
+		[HttpGet]
+		public List<Reporte> Generar()
 		{
-			var rsp = new RespuestaFormato ();
+			var rsp = new List<Reporte>();
 
 			try
 			{
-				var cartasReporte = Reporte.GetReporteAnalisisCartasCredito(solicitudReporteDTO.FechaInicio, solicitudReporteDTO.FechaFin, solicitudReporteDTO.EmpresaId);
-				rsp.DataInt = solicitudReporteDTO.TipoReporteId;
-
-				cartasReporte.ForEach(x => rsp.Content.Add(x));
-			} catch (Exception ex)
+				rsp = Reporte.Get();
+			}
+			catch (Exception ex)
 			{
-				rsp.DataInt = -1;
-				rsp.Flag = false;
-				rsp.Errors.Add(ex.Message);
+				
 			}
 
 			return rsp;
 		}
 
-		[Route("api/reportes/comisionestipocomision")]
+		[Route("api/reportes/generar")]
 		[HttpPost]
-		public RespuestaFormato ComisionPorTipoComision(SolicitudReporteDTO solicitudReporteDTO)
+		public RespuestaFormato Generar (SolicitudReporteDTO solicitudReporteDTO)
 		{
-			var rsp = new RespuestaFormato();
+			var rsp = new RespuestaFormato ();
 
 			try
 			{
-				var comisionesReporte = Reporte.GetReporteComisionesPorTipoComision(solicitudReporteDTO.FechaInicio, solicitudReporteDTO.FechaFin, solicitudReporteDTO.EmpresaId);
-				rsp.DataInt = solicitudReporteDTO.TipoReporteId;
-
-				comisionesReporte.ForEach(x => rsp.Content.Add(x));
-			}
-			catch (Exception ex)
+				
+			} catch (Exception ex)
 			{
 				rsp.DataInt = -1;
 				rsp.Flag = false;

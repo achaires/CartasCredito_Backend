@@ -10,7 +10,9 @@ namespace CartasCredito.Models
 	{
 		public int Id { get; set; }
 		public int EmpresaId { get; set; }
+		public string Empresa { get; set; }
 		public int PaisId { get; set; }
+		public string Pais { get; set; }
 		public string Nombre { get; set; }
 		public string Descripcion { get; set; }
 		public bool Activo { get; set; }
@@ -83,6 +85,11 @@ namespace CartasCredito.Models
 								item.Eliminado = null;
 							}
 
+							idx++;
+
+							item.Empresa = row[idx].ToString(); idx++;
+							item.Pais = row[idx].ToString(); idx++;
+
 							item.Contacto = Contacto.GetByModelNombreAndId(item.Id, "Proveedor");
 
 							res.Add(item);
@@ -154,6 +161,11 @@ namespace CartasCredito.Models
 						{
 							rsp.Eliminado = null;
 						}
+
+						idx++;
+
+						rsp.Empresa = row[idx].ToString(); idx++;
+						rsp.Pais = row[idx].ToString(); idx++;
 					}
 				}
 			}

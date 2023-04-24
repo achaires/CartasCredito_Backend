@@ -8,11 +8,16 @@ namespace CartasCredito.Models
 {
 	public class Reporte
 	{
-		public int TipoReporteId { get; set; }
+		public int Id { get; set; }
+		public string TipoReporte { get; set; }
+		public DateTime Creado { get; set; }
+		public string CreadoPorId { get; set; }
+		public string CreadoPor { get; set; }
+		public string Filename { get; set; }
 
-		public static List<CartaCredito> GetReporteAnalisisCartasCredito(DateTime fechaInicio, DateTime fechaFin, int empresaId = 0)
+		public static List<Reporte> Get()
 		{
-			List<CartaCredito> res = new List<CartaCredito>();
+			List<Reporte> res = new List<Reporte>();
 
 			try
 			{
@@ -20,7 +25,7 @@ namespace CartasCredito.Models
 
 				var dt = new System.Data.DataTable();
 				var errores = "";
-				if (da.Cons_ReporteAnalisisCartasCredito(out dt, out errores, fechaInicio, fechaFin, empresaId))
+				if (da.Cons_Reportes(out dt, out errores))
 				{
 					if (dt.Rows.Count > 0)
 					{
@@ -28,26 +33,14 @@ namespace CartasCredito.Models
 						{
 							int idx = 0;
 							var row = dt.Rows[i];
-							var item = new CartaCredito();
+							var item = new Reporte();
 
-							item.Consecutive = int.Parse(row[idx].ToString()); idx++;
-							item.Id = row[idx].ToString(); idx++;
-							item.NumCartaCredito = row[idx].ToString(); idx++;
-							item.TipoCartaId = int.TryParse(row[idx].ToString(), out int tipoCartaVal) ? tipoCartaVal : 0; idx++;
-							item.TipoCarta = item.TipoCartaId == 17 ? "Comercial" : "StandBy";
-							item.EmpresaId = int.TryParse(row[idx].ToString(), out int empidval) ? empidval : 0; idx++;
-							item.BancoId = int.TryParse(row[idx].ToString(), out int bncidval) ? bncidval : 0; idx++;
-							item.ProveedorId = int.TryParse(row[idx].ToString(), out int prvidval) ? prvidval : 0; idx++;
-							item.MonedaId = int.TryParse(row[idx].ToString(), out int mndidval) ? mndidval : 0; idx++;
-							item.DescripcionMercancia = row[idx].ToString(); idx++;
-							item.PuntoEmbarque = row[idx].ToString(); idx++;
-							item.DescripcionCartaCredito = row[idx].ToString(); idx++;
-							item.MontoOriginalLC = decimal.TryParse(row[idx].ToString(), out decimal montooriginalval) ? montooriginalval : 0; idx++;
-							item.DiasPlazoProveedor = int.TryParse(row[idx].ToString(), out int diasPlazoVal) ? diasPlazoVal : 0; idx++;
-							item.Empresa = row[idx].ToString(); idx++;
-							item.Banco = row[idx].ToString(); idx++;
-							item.Proveedor = row[idx].ToString(); idx++;
-							item.Moneda = row[idx].ToString(); idx++;
+							item.Id = int.Parse(row[idx].ToString()); idx++;
+							item.TipoReporte = row[idx].ToString(); idx++;	
+							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crdVal) ? crdVal : DateTime.Now; idx++;
+							item.CreadoPorId = row[idx].ToString(); idx++;
+							item.CreadoPor = row[idx].ToString(); idx++;
+							item.Filename = row[idx].ToString(); idx++;
 
 							res.Add(item);
 						}
@@ -57,7 +50,8 @@ namespace CartasCredito.Models
 			}
 			catch (Exception ex)
 			{
-				res = new List<CartaCredito>();
+				Console.Write(ex);
+				res = new List<Reporte>();
 
 				// Get stack trace for the exception with source file information
 				var st = new StackTrace(ex, true);
@@ -72,59 +66,45 @@ namespace CartasCredito.Models
 			return res;
 		}
 
-		public static List<CartaCreditoComision> GetReporteComisionesPorTipoComision(DateTime fechaInicio, DateTime fechaFin, int empresaId = 0)
+		public static RespuestaFormato Insert(Reporte modelo)
 		{
-			List<CartaCreditoComision> res = new List<CartaCreditoComision>();
+			RespuestaFormato rsp = new RespuestaFormato();
 
 			try
 			{
 				DataAccess da = new DataAccess();
-
 				var dt = new System.Data.DataTable();
 				var errores = "";
-				if (da.Cons_ReporteComisionesPorTipoComision(out dt, out errores, fechaInicio, fechaFin, empresaId))
+
+				if (da.Ins_Reporte(modelo, out dt, out errores))
 				{
 					if (dt.Rows.Count > 0)
 					{
-						for (int i = 0; i < dt.Rows.Count; i++)
+						var row = dt.Rows[0];
+						int id = 0;
+						Int32.TryParse(row[3].ToString(), out id);
+
+						if (id > 0)
 						{
-							int idx = 0;
-							var row = dt.Rows[i];
-							var item = new CartaCreditoComision();
-
-							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
-							item.Empresa = row[idx].ToString(); idx++;
-							item.Comision = row[idx].ToString(); idx++;
-							item.NumCartaCredito = row[idx].ToString(); idx++;
-							item.MonedaOriginal = row[idx].ToString(); idx++;
-							item.Monto = decimal.TryParse(row[idx].ToString(), out decimal montoval) ? montoval : 0; idx++;
-							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montopagadoval) ? montopagadoval : 0; idx++;
-							item.Estatus = int.TryParse(row[idx].ToString(), out int estidval) ? estidval : 0; idx++;
-							item.ComisionId = int.TryParse(row[idx].ToString(),out int comidval) ? comidval : 0; idx++;
-							item.MonedaId = int.TryParse(row[idx].ToString(), out int midval) ? midval : 0; idx++;
-							item.EstatusText = CartaCredito.GetStatusText(item.Estatus);
-
-							res.Add(item);
+							rsp.Description = "Modelo insertado";
+							rsp.Flag = true;
+							rsp.DataInt = id;
 						}
 					}
 				}
-
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
 			}
 			catch (Exception ex)
 			{
-				res = new List<CartaCreditoComision>();
-
-				// Get stack trace for the exception with source file information
-				var st = new StackTrace(ex, true);
-				// Get the top stack frame
-				var frame = st.GetFrame(0);
-				// Get the line number from the stack frame
-				var line = frame.GetFileLineNumber();
-
-				var errorMsg = ex.ToString();
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
 			}
 
-			return res;
+			return rsp;
 		}
 	}
 }

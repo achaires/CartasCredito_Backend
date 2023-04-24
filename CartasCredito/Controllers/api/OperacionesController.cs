@@ -137,6 +137,72 @@ namespace CartasCredito.Controllers.api
 			return rf;
 		}
 
+		[Route("api/operaciones/clonar")]
+		[HttpPost]
+		public async Task<RespuestaFormato> Clonar([FromBody] string cartaId)
+		{
+			var cc = CartaCredito.GetById(cartaId);
+			var rf = new RespuestaFormato();
+
+
+			try
+			{
+				var ccClon = new CartaCredito();
+
+				ccClon.TipoCarta = cc.TipoCarta;
+				ccClon.TipoCartaId = cc.TipoCartaId;
+				ccClon.TipoActivoId = cc.TipoActivoId;
+				ccClon.ProyectoId = cc.ProyectoId;
+				ccClon.BancoId = cc.BancoId;
+				ccClon.ProveedorId = cc.ProveedorId;
+				ccClon.EmpresaId = cc.EmpresaId;
+				ccClon.AgenteAduanalId = cc.AgenteAduanalId;
+				ccClon.MonedaId = cc.MonedaId;
+				ccClon.TipoPago = cc.TipoPago;
+				ccClon.Responsable = cc.Responsable;
+				ccClon.CompradorId = cc.CompradorId;
+				ccClon.PorcentajeTolerancia = cc.PorcentajeTolerancia;
+				ccClon.CostoApertura = cc.CostoApertura;
+				ccClon.MontoOrdenCompra = cc.MontoOrdenCompra;
+				ccClon.MontoOriginalLC = cc.MontoOriginalLC;
+				ccClon.FechaApertura = cc.FechaApertura;
+				ccClon.Incoterm = cc.Incoterm;
+				ccClon.FechaLimiteEmbarque = cc.FechaLimiteEmbarque ;
+				ccClon.FechaVencimiento = cc.FechaVencimiento;
+				ccClon.EmbarquesParciales = cc.EmbarquesParciales;
+				ccClon.Transbordos = cc.Transbordos;
+				ccClon.PuntoEmbarque = cc.PuntoEmbarque;
+				ccClon.PuntoDesembarque = cc.PuntoDesembarque;
+				ccClon.DescripcionMercancia = cc.DescripcionMercancia;
+				ccClon.DescripcionCartaCredito = cc.DescripcionCartaCredito;
+				ccClon.InstruccionesEspeciales = cc.InstruccionesEspeciales;
+				ccClon.PagoCartaAceptacion = cc.PagoCartaAceptacion;
+				ccClon.ConsignacionMercancia = cc.ConsignacionMercancia;
+				ccClon.ConsideracionesAdicionales = cc.ConsideracionesAdicionales;
+				ccClon.ConsideracionesReclamacion = cc.ConsideracionesReclamacion;
+				ccClon.DiasParaPresentarDocumentos = cc.DiasParaPresentarDocumentos;
+				ccClon.DiasPlazoProveedor = cc.DiasPlazoProveedor;
+				ccClon.CondicionesPago = cc.CondicionesPago;
+				ccClon.NumeroPeriodos = cc.NumeroPeriodos;
+				ccClon.BancoCorresponsalId = cc.BancoCorresponsalId;
+				ccClon.SeguroPorCuenta = cc.SeguroPorCuenta;
+				ccClon.GastosComisionesCorresponsal = cc.GastosComisionesCorresponsal;
+				ccClon.ConfirmacionBancoNotificador = cc.ConfirmacionBancoNotificador;
+				ccClon.TipoEmision = cc.TipoEmision;
+				ccClon.CreadoPor = cc.CreadoPor;
+
+				rf = CartaCredito.Insert(ccClon);
+			} 
+			catch (Exception ex) {
+				rf.DataInt = 0;
+				rf.DataString = "";
+				rf.Flag = false;
+				rf.Errors.Add(ex.Message);
+			}
+
+			return rf;
+		}
+
 		/*
 		[Route("api/operaciones/adjuntarswift/{id}")]
 		[HttpPost]

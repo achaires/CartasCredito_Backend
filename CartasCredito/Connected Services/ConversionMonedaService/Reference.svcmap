@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="a64c1579-5bbf-49b6-ae35-1027de1000f2" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools/bpeltools_client_ep?WSDL" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="BPELTools.xsd" MetadataType="Schema" ID="14973d1d-858e-47e9-b689-6ae6285e57e8" SourceId="1" SourceUrl="http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools/bpeltools_client_ep?XSD=xsd/BPELTools.xsd" />
+    <MetadataFile FileName="BPELTools.wsdl" MetadataType="Wsdl" ID="83c1c6dd-bb23-4f24-b6fb-4dbe4174e9df" SourceId="1" SourceUrl="http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools/bpeltools_client_ep?WSDL" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

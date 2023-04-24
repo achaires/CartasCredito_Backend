@@ -30,13 +30,35 @@ namespace CartasCredito.Controllers.api
 		{
 			var rsp = new RespuestaFormato();
 			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var paisId = 0;
+
+			try
+			{
+				var paises = Pais.Get();
+				var findPais = paises.Find(p => p.Nombre.Trim().ToLower() == modelo.Pais.Trim().ToLower());
+				
+				if ( findPais != null)
+				{
+					paisId = findPais.Id;
+				} else
+				{
+					var nuevoPais = new Pais();
+					nuevoPais.Nombre = modelo.Pais;
+					var nuevoPaisRsp = Pais.Insert(nuevoPais);
+					paisId = nuevoPaisRsp.DataInt;
+				}
+
+			} catch (Exception ex)
+			{
+				paisId = 1;
+			}
 
 			try
 			{
 				var m = new Proveedor()
 				{
 					EmpresaId = modelo.EmpresaId,
-					PaisId = 1,
+					PaisId = paisId,
 					Nombre = modelo.Nombre,
 					Descripcion = modelo.Descripcion,
 					CreadoPor = usr
@@ -65,6 +87,30 @@ namespace CartasCredito.Controllers.api
 		{
 			var rsp = new RespuestaFormato();
 			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var paisId = 0;
+
+			try
+			{
+				var paises = Pais.Get();
+				var findPais = paises.Find(p => p.Nombre.Trim().ToLower() == modelo.Pais.Trim().ToLower());
+
+				if (findPais != null)
+				{
+					paisId = findPais.Id;
+				}
+				else
+				{
+					var nuevoPais = new Pais();
+					nuevoPais.Nombre = modelo.Pais;
+					var nuevoPaisRsp = Pais.Insert(nuevoPais);
+					paisId = nuevoPaisRsp.DataInt;
+				}
+
+			}
+			catch (Exception ex)
+			{
+				paisId = 1;
+			}
 
 			try
 			{
@@ -72,7 +118,7 @@ namespace CartasCredito.Controllers.api
 
 				m.Nombre = modelo.Nombre;
 				m.EmpresaId = modelo.EmpresaId;
-				m.PaisId = modelo.PaisId;
+				m.PaisId = paisId;
 				m.Descripcion = modelo.Descripcion;
 				m.Activo = m.Activo;
 

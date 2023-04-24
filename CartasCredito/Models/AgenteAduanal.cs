@@ -9,8 +9,6 @@ namespace CartasCredito.Models
 	public class AgenteAduanal
 	{
 		public int Id { get; set; }
-		public int EmpresaId { get; set; }
-		public string Empresa { get; set; }
 		public string Nombre { get; set; }
 		public string Descripcion { get; set; }
 		public bool Activo { get; set; }
@@ -23,7 +21,6 @@ namespace CartasCredito.Models
 		public AgenteAduanal()
 		{
 			Id = 0;
-			EmpresaId = 0;
 			Nombre = "";
 			Descripcion = "";
 			Activo = false;
@@ -54,7 +51,6 @@ namespace CartasCredito.Models
 							var item = new AgenteAduanal();
 
 							item.Id = int.Parse(row[idx].ToString()); idx++;
-							item.EmpresaId = int.Parse(row[idx].ToString()); idx++;
 							item.Nombre = row[idx].ToString(); idx++;
 							item.Descripcion = row[idx].ToString(); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
@@ -82,8 +78,6 @@ namespace CartasCredito.Models
 							}
 
 							idx++;
-
-							item.Empresa = row[idx].ToString();
 
 							item.Contacto = Contacto.GetByModelNombreAndId(item.Id, "Agente");
 
@@ -129,7 +123,6 @@ namespace CartasCredito.Models
 						var row = dt.Rows[0];
 
 						rsp.Id = int.Parse(row[idx].ToString()); idx++;
-						rsp.EmpresaId = int.TryParse(row[idx].ToString(), out int divVal) ? divVal : 0; idx++;
 						rsp.Nombre = row[idx].ToString(); idx++;
 						rsp.Descripcion = row[idx].ToString(); idx++;
 						rsp.Activo = bool.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;

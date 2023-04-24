@@ -35,7 +35,6 @@ namespace CartasCredito.Controllers.api
 			{
 				var div = new AgenteAduanal()
 				{
-					EmpresaId = modelo.EmpresaId,
 					Nombre = modelo.Nombre,
 					Descripcion = modelo.Descripcion,
 					CreadoPor = usr
@@ -63,7 +62,6 @@ namespace CartasCredito.Controllers.api
 			{
 				var div = AgenteAduanal.GetById(id);
 
-				div.EmpresaId = modelo.EmpresaId;
 				div.Nombre = modelo.Nombre;
 				div.Descripcion = modelo.Descripcion;
 				div.Activo = div.Activo;

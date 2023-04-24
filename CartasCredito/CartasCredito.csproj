@@ -89,6 +89,8 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encodings.Web, Version=4.0.5.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.7.2\lib\net461\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -238,6 +240,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Connected Services\ConversionMonedaService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\api\AccountController.cs" />
     <Compile Include="Controllers\api\AgentesAduanalesController.cs" />
@@ -248,6 +255,7 @@
     <Compile Include="Controllers\api\ComisionesController.cs" />
     <Compile Include="Controllers\api\CompradoresController.cs" />
     <Compile Include="Controllers\api\ContactosController.cs" />
+    <Compile Include="Controllers\api\ConversionMonedaController.cs" />
     <Compile Include="Controllers\api\DashboardController.cs" />
     <Compile Include="Controllers\api\DivisionesController.cs" />
     <Compile Include="Controllers\api\DocumentosController.cs" />
@@ -297,6 +305,7 @@
     <Compile Include="Models\DTOs\CartaCreditoAdjuntarSwiftDTO.cs" />
     <Compile Include="Models\DTOs\CartaCreditoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\CartasCreditoFiltrarDTO.cs" />
+    <Compile Include="Models\DTOs\ConversionMonedaDTO.cs" />
     <Compile Include="Models\DTOs\EnmiendaInsertDTO.cs" />
     <Compile Include="Models\DTOs\EnmiendaUpdateDTO.cs" />
     <Compile Include="Models\DTOs\LoginDTO.cs" />
@@ -318,6 +327,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Moneda.cs" />
     <Compile Include="Models\Pago.cs" />
+    <Compile Include="Models\Pais.cs" />
     <Compile Include="Models\PeriodoContable.cs" />
     <Compile Include="Models\PFEPago.cs" />
     <Compile Include="Models\PFEPrograma.cs" />
@@ -336,8 +346,25 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-026c33ed.js" />
-    <Content Include="assets\index-1a85524e.css" />
+    <Content Include="assets\index-78157d7d.css" />
+    <Content Include="assets\index-8cd63538.js" />
+    <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="assets\dxicons-19b5ebb1.woff2" />
+    <Content Include="assets\dxicons-85cb4bbe.woff" />
+    <Content Include="assets\dxicons-b47ce9f0.ttf" />
+    <Content Include="assets\OpenSans-Regular-a0707e10.ttf" />
+    <Content Include="assets\Rubik-VariableFont_wght-f9840d46.ttf" />
+    <None Include="Connected Services\ConversionMonedaService\configuration91.svcinfo" />
+    <None Include="Connected Services\ConversionMonedaService\configuration.svcinfo" />
+    <None Include="Connected Services\ConversionMonedaService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -349,11 +376,10 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="assets\dxicons-19b5ebb1.woff2" />
-    <Content Include="assets\dxicons-85cb4bbe.woff" />
-    <Content Include="assets\dxicons-b47ce9f0.ttf" />
-    <Content Include="assets\OpenSans-Regular-a0707e10.ttf" />
-    <Content Include="assets\Rubik-VariableFont_wght-f9840d46.ttf" />
+    <None Include="Connected Services\ConversionMonedaService\BPELTools.wsdl" />
+    <None Include="Connected Services\ConversionMonedaService\BPELTools.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.config" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -417,6 +443,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\ConversionMonedaService\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

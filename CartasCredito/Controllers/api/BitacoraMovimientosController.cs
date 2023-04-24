@@ -6,36 +6,24 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace CartasCredito.Controllers.api
 {
+	[AllowAnonymous]
+	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class BitacoraMovimientosController : ApiController
 	{
-		// GET api/<controller>
-		public IEnumerable<BitacoraMovimiento> Get([FromBody] BitacoraMovimientosFiltrarDTO filtros)
+		[HttpPost]
+		public IEnumerable<BitacoraMovimiento> Filtrar([FromBody] BitacoraMovimientosFiltrarDTO filtros)
 		{
-			return BitacoraMovimiento.Get(filtros.DateStart, filtros.DateEnd);
-		}
+			//var filtros = new BitacoraMovimientosFiltrarDTO();
+			var dateStartOrigin = new DateTime(1970,1,1,0,0,0);
+			var dateEndOrigin = new DateTime(1970,1,1,0,0,0);
+			var dateStart = dateStartOrigin.AddSeconds(filtros.DateStart);
+			var dateEnd = dateEndOrigin.AddSeconds(filtros.DateEnd);
 
-		// GET api/<controller>/5
-		public string Get(int id)
-		{
-			return "value";
-		}
-
-		// POST api/<controller>
-		public void Post([FromBody] string value)
-		{
-		}
-
-		// PUT api/<controller>/5
-		public void Put(int id, [FromBody] string value)
-		{
-		}
-
-		// DELETE api/<controller>/5
-		public void Delete(int id)
-		{
+			return BitacoraMovimiento.Get(dateStart, dateEnd);
 		}
 	}
 }

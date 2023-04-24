@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:client="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" name="BPELTools" targetNamespace="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>
+    <abstractWSDL>http://srgismty2-1931:8001/soa-infra/services/CartaCredito/CartaCreditoTools!1.0/BPELTools.wsdl</abstractWSDL>
+  </wsdl:documentation>
+  <plnk:partnerLinkType name="BPELTools">
+    <plnk:role name="BPELToolsProvider" portType="client:BPELTools" />
+  </plnk:partnerLinkType>
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import schemaLocation="http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools/bpeltools_client_ep?XSD=xsd/BPELTools.xsd" namespace="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" />
+    </schema>
+  </wsdl:types>
+  <wsdl:message name="BPELToolsRequestMessage">
+    <wsdl:part name="payload" element="client:process" />
+  </wsdl:message>
+  <wsdl:message name="BPELToolsResponseMessage">
+    <wsdl:part name="payload" element="client:processResponse" />
+  </wsdl:message>
+  <wsdl:portType name="BPELTools">
+    <wsdl:operation name="process">
+      <wsdl:input message="client:BPELToolsRequestMessage" />
+      <wsdl:output message="client:BPELToolsResponseMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BPELToolsBinding" type="client:BPELTools">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="process">
+      <soap:operation soapAction="process" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="bpeltools_client_ep">
+    <wsdl:port name="BPELTools_pt" binding="client:BPELToolsBinding">
+      <soap:address location="http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools/bpeltools_client_ep" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

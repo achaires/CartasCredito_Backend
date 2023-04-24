@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns:db="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="process">
+    <complexType>
+      <sequence>
+        <element db:index="1" db:type="VARCHAR2" minOccurs="0" name="P_USER_CONVERSION_TYPE" nillable="true" type="string" />
+        <element db:index="2" db:type="DATE" minOccurs="0" name="P_CONVERSION_DATE" nillable="true" type="dateTime" />
+        <element db:index="3" db:type="VARCHAR2" minOccurs="0" name="P_FROM_CURRENCY" nillable="true" type="string" />
+        <element db:index="4" db:type="VARCHAR2" minOccurs="0" name="P_TO_CURRENCY" nillable="true" type="string" />
+      </sequence>
+    </complexType>
+  </element>
+  <element name="processResponse">
+    <complexType>
+      <sequence>
+        <element db:index="5" db:type="NUMBER" minOccurs="0" name="X_CONVERSION_RATE" nillable="true" type="decimal" />
+        <element db:index="6" db:type="VARCHAR2" minOccurs="0" name="X_MNS_ERROR" nillable="true" type="string" />
+      </sequence>
+    </complexType>
+  </element>
+</schema>

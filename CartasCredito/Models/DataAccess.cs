@@ -1013,10 +1013,9 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[4];
+				SqlParameter[] @params = new SqlParameter[3];
 				var pix = 0;
 
-				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@Nombre", modelo.Nombre); pix++;
 				@params[pix] = new SqlParameter("@Descripcion", modelo.Descripcion); pix++;
 				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
@@ -1086,11 +1085,10 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[5];
+				SqlParameter[] @params = new SqlParameter[4];
 				var pix = 0;
 
 				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
-				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
 				@params[pix] = new SqlParameter("@Nombre", modelo.Nombre); pix++;
 				@params[pix] = new SqlParameter("@Descripcion", modelo.Descripcion); pix++;
 				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
@@ -1874,6 +1872,154 @@ namespace CartasCredito.Models
 			}
 			return boolProcess;
 		}
+		#endregion
+
+		#region Paises
+		public Boolean Cons_Paises(out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[0];
+				//@params[0] = new SqlParameter("@Activo", activo);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_Paises", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_Pais(Pais modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[3];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Nombre", modelo.Nombre); pix++;
+				@params[pix] = new SqlParameter("@Alpha2Code", modelo.Alpha2Code); pix++;
+				@params[pix] = new SqlParameter("@Alpha3Code", modelo.Alpha3Code); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_Pais", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		/*
+		public Boolean Cons_PaisById(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PaisById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Upd_Pais(Pais modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[4];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@Nombre", modelo.Nombre); pix++;
+				@params[pix] = new SqlParameter("@Alpha2Code", modelo.Alpha2Code); pix++;
+				@params[pix] = new SqlParameter("@Alpha3Code", modelo.Alpha3Code); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_Pais", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		*/
 		#endregion
 
 		#region Proyectos
@@ -3274,10 +3420,10 @@ namespace CartasCredito.Models
 				}
 				else
 				{
-					if (!dt.Rows[0][0].ToString().Equals("0"))
+					if (dt.Rows.Count < 1)
 					{
 						boolProcess = false;
-						msgError = dt.Rows[0][1].ToString();
+						msgError = "No hay datos para mostrar";
 					}
 				}
 
@@ -3690,6 +3836,79 @@ namespace CartasCredito.Models
 		#endregion
 
 		#region Reportes
+		public Boolean Ins_Reporte(Reporte modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[4];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@TipoReporte", modelo.TipoReporte); pix++;
+				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
+				@params[pix] = new SqlParameter("@CreadoPorId", modelo.CreadoPorId); pix++;
+				@params[pix] = new SqlParameter("@Filename", modelo.Filename); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_Reporte", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_Reportes(out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[0];
+
+				if (!bd.ExecuteProcedure(conexion, "cons_Reportes", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		/*
 		public Boolean Cons_ReporteAnalisisCartasCredito(out DataTable dt, out String msgError, DateTime fechaInicio, DateTime fechaFin, int empresaId = 0)
 		{
 			bool boolProcess = true;
@@ -3765,6 +3984,7 @@ namespace CartasCredito.Models
 
 			return boolProcess;
 		}
+		*/
 		#endregion
 
 		#region AspNetUsers

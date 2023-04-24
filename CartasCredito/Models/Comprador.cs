@@ -18,6 +18,7 @@ namespace CartasCredito.Models
 		public DateTime Creado { get; set; }
 		public DateTime? Actualizado { get; set; }
 		public DateTime? Eliminado { get; set; }
+		public string Empresa { get; set; }
 		
 		public Comprador()
 		{
@@ -31,6 +32,7 @@ namespace CartasCredito.Models
 			Creado = DateTime.MinValue;
 			Actualizado = null;
 			Eliminado = null;
+			Empresa = string.Empty;
 		}
 
 		public static List<Comprador> Get(int activo = 1)
@@ -81,6 +83,10 @@ namespace CartasCredito.Models
 							{
 								item.Eliminado = null;
 							}
+
+							idx++;
+
+							item.Empresa = row[idx].ToString(); idx++;
 
 							res.Add(item);
 						}
