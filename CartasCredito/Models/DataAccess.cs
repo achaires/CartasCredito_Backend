@@ -3859,10 +3859,10 @@ namespace CartasCredito.Models
 				}
 				else
 				{
-					if (!dt.Rows[0][0].ToString().Equals("0"))
+					if (dt.Rows.Count < 1)
 					{
 						boolProcess = false;
-						msgError = dt.Rows[0][1].ToString();
+						msgError = "No hay datos para mostrar";
 					}
 				}
 

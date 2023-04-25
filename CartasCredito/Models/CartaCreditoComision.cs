@@ -33,10 +33,12 @@ namespace CartasCredito.Models
 		public string Comentarios { get; set; }
 
 		// Para Reportes
-		public string Empresa { get; set; }
+		// public string Empresa { get; set; }
 		public string NumCartaCredito { get; set; }
-		public string MonedaOriginal { get; set; }
+		// public string MonedaOriginal { get; set; }
 		//public Pago Pago { get; set; }
+		public int EstatusCartaId { get; set; }
+		public string EstatusCartaText { get; set; }
 
 		public static List<CartaCreditoComision> GetByCartaCreditoId(string cartaCreditoId)
 		{
@@ -86,7 +88,9 @@ namespace CartasCredito.Models
 
 							item.TipoCambio = decimal.TryParse(row[idx].ToString(), out decimal tipoCambioVal) ? tipoCambioVal : 0; idx++;
 							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPVal) ? montoPVal : 0; idx++;
-
+							item.NumCartaCredito = row[idx].ToString(); idx++;
+							item.EstatusCartaId = int.TryParse(row[idx].ToString(), out int estcartaid) ? estcartaid : 0; idx++;
+							item.EstatusCartaText = CartaCredito.GetStatusText(item.EstatusCartaId);
 							item.EstatusText = GetStatusText(item.Estatus);
 							item.EstatusClass = GetStatusClass(item.Estatus);
 
