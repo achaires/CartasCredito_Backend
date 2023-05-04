@@ -36,6 +36,19 @@ namespace CartasCredito.Controllers.api
 			{
 				modelo.CreadoPor = usr;
 				rsp = CartaCredito.Insert(modelo);
+
+				if ( rsp.Flag )
+				{
+					var bm = new BitacoraMovimiento();
+					bm.Titulo = "Nueva carta de crédito";
+					bm.CreadoPorId = usr;
+					bm.Descripcion = "Se ha creado una nueva carta de crédito";
+					bm.CartaCreditoId = rsp.DataString;
+					//bm.ModeloNombre = "CartaCredito";
+					//bm.ModeloId = rsp.DataString;
+
+					BitacoraMovimiento.Insert(bm);
+				}
 			}
 			catch (Exception ex)
 			{

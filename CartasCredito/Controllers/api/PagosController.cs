@@ -48,6 +48,16 @@ namespace CartasCredito.Controllers.api
 				nuevoPago.NumeroPago = ccPagos.Count() + 1;
 
 				rsp = Pago.Insert(nuevoPago);
+
+				var bm = new BitacoraMovimiento();
+				bm.Titulo = "Pago Programado";
+				bm.CreadoPorId = usr;
+				bm.Descripcion = "Se ha creado un nuevo pago programado en la carta de crédito.";
+				bm.CartaCreditoId = model.CartaCreditoId;
+				bm.ModeloNombre = "Pago";
+				bm.ModeloId = rsp.DataInt;
+
+				BitacoraMovimiento.Insert(bm);
 			} 
 			catch ( Exception ex )
 			{

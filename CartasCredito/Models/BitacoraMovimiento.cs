@@ -57,7 +57,6 @@ namespace CartasCredito.Models
 							item.CartaCreditoId = row[idx].ToString(); idx++;
 							item.ModeloNombre = row[idx].ToString(); idx++;
 							item.ModeloId = int.TryParse(row[idx].ToString(), out int modid) ? modid : 0; idx++;
-							item.CreadoPor = row[idx].ToString(); idx++;
 							item.CreadoPorId = row[idx].ToString(); idx++;
 							
 							if (row[idx].ToString().Length > 0)
@@ -68,6 +67,10 @@ namespace CartasCredito.Models
 							{
 								item.Creado = null;
 							}
+
+							idx++;
+
+							item.CreadoPor = row[idx].ToString();
 
 							res.Add(item);
 						}

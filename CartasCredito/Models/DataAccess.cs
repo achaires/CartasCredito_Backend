@@ -3364,7 +3364,7 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[8];
+				SqlParameter[] @params = new SqlParameter[7];
 				var pix = 0;
 
 				@params[pix] = new SqlParameter("@Titulo", modelo.Titulo); pix++;
@@ -3374,7 +3374,6 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@ModeloId", modelo.ModeloId); pix++;
 				@params[pix] = new SqlParameter("@CreadoPorId", modelo.CreadoPorId); pix++;
 				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
-				@params[pix] = new SqlParameter("@Creado", modelo.Creado); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "ins_BitacoraMovimiento", @params, out dt, 1000))
 				{

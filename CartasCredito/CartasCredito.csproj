@@ -349,7 +349,6 @@
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Reporte.cs" />
-    <Compile Include="Models\ReportesModels\ComisionesPorTipoComision.cs" />
     <Compile Include="Models\RespuestaFormato.cs" />
     <Compile Include="Models\TipoActivo.cs" />
     <Compile Include="Models\TipoCobertura.cs" />
@@ -362,8 +361,8 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
+    <Content Include="assets\index-0aca934b.js" />
     <Content Include="assets\index-78157d7d.css" />
-    <Content Include="assets\index-8cd63538.js" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>

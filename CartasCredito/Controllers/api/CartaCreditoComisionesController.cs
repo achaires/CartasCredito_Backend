@@ -44,6 +44,16 @@ namespace CartasCredito.Controllers.api
 				nuevoReg.CreadoPor = usr;
 
 				rsp = CartaCreditoComision.Insert(nuevoReg);
+
+				var bm = new BitacoraMovimiento();
+				bm.Titulo = "Comisión";
+				bm.CreadoPorId = usr;
+				bm.Descripcion = "Se ha agregado una nueva comisión a la carta de crédito";
+				bm.CartaCreditoId = model.CartaCreditoId;
+				bm.ModeloNombre = "CartaCreditoComision";
+				bm.ModeloId = rsp.DataInt;
+
+				BitacoraMovimiento.Insert(bm);
 			}
 			catch (Exception ex)
 			{

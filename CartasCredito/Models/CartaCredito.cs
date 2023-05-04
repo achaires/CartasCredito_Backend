@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 
@@ -215,6 +216,28 @@ namespace CartasCredito.Models
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
 //							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
 							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
+
+							decimal totalPagosEfectuados = 0;
+							foreach (var lp in item.Pagos)
+							{
+								if (lp.Estatus == 3)
+								{
+									totalPagosEfectuados += lp.MontoPago;
+								}
+							}
+
+							item.PagosEfectuados = totalPagosEfectuados;
+
+							decimal totalPagosProgramados = 0;
+							foreach (var lp in item.Pagos)
+							{
+								if (lp.Estatus == 1)
+								{
+									totalPagosProgramados += lp.MontoPago;
+								}
+							}
+
+							item.PagosProgramados = totalPagosProgramados;
 
 							res.Add(item);
 						}
