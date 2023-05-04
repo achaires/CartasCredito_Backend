@@ -47,7 +47,7 @@ namespace CartasCredito.Controllers.api
 			}
 			catch (Exception ex)
 			{
-				
+				//
 			}
 
 			return rsp;
@@ -98,7 +98,6 @@ namespace CartasCredito.Controllers.api
 					rsp.Flag = false;
 					rsp.DataString = "Ocurrió un error al asignar valores";
 				}
-
 				
 			}
 			catch (Exception ex)

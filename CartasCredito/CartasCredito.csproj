@@ -292,6 +292,7 @@
     <Compile Include="Controllers\api\TiposComisionController.cs" />
     <Compile Include="Controllers\api\TiposPersonaFiscalController.cs" />
     <Compile Include="Controllers\api\UsersController.cs" />
+    <Compile Include="Controllers\GeneradorReportes.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TokenGenerator.cs" />

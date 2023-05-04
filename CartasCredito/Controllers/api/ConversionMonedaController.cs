@@ -24,6 +24,7 @@ namespace CartasCredito.Controllers.api
 			{
 				var rspVal = 0M;
 
+				/*
 				switch ( operacion.MonedaInput )
 				{
 					case "USD":
@@ -43,8 +44,9 @@ namespace CartasCredito.Controllers.api
 				rsp.Flag = true;
 				rsp.DataString = rspVal.ToString();
 				rsp.DataDecimal = rspVal;
+				*/
 
-				/*
+				
 				var clnt = new ConversionMonedaService.BPELToolsClient();
 				var req = new ConversionMonedaService.processRequest();
 				var res = new ConversionMonedaService.processResponse();
@@ -52,7 +54,6 @@ namespace CartasCredito.Controllers.api
 				req.process = new ConversionMonedaService.process();
 				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
 				req.process.P_CONVERSION_DATESpecified = true;
-				//req.process.P_CONVERSION_DATE = DateTime.Parse(operacion.Fecha);
 				req.process.P_CONVERSION_DATE = DateTime.Parse(operacion.Fecha);
 				req.process.P_FROM_CURRENCY = operacion.MonedaInput;
 				req.process.P_TO_CURRENCY = operacion.MonedaOutput;
@@ -70,7 +71,7 @@ namespace CartasCredito.Controllers.api
 					rsp.Errors.Add(res.X_MNS_ERROR);
 					rsp.DataString = res.X_MNS_ERROR;
 				}
-				*/
+				
 			} catch (Exception ex)
 			{
 				rsp.Flag = false;

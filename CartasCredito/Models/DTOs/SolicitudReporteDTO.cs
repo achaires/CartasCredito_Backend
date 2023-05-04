@@ -11,6 +11,7 @@ namespace CartasCredito.Models.DTOs
 		public DateTime FechaInicio { get; set; }
 		public DateTime FechaFin { get; set; }
 		public int EmpresaId { get; set; }
+		public DateTime FechaDivisas { get; set; }
 		public SolicitudReporteDTO ()
 		{
 			var fechaActual = DateTime.Now;
