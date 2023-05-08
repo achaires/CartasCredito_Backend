@@ -2679,7 +2679,7 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[41];
+				SqlParameter[] @params = new SqlParameter[39];
 				int pix = 0;
 
 				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCarta); pix++;
@@ -2698,8 +2698,6 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@CostoApertura", modelo.CostoApertura); pix++;
 				@params[pix] = new SqlParameter("@MontoOrdenCompra", modelo.MontoOrdenCompra); pix++;
 				@params[pix] = new SqlParameter("@MontoOriginal", modelo.MontoOriginalLC); pix++;
-				@params[pix] = new SqlParameter("@MontoDispuesto", modelo.MontoDispuesto); pix++;
-				@params[pix] = new SqlParameter("@SaldoInsoluto", modelo.SaldoInsoluto); pix++;
 				@params[pix] = new SqlParameter("@FechaApertura", modelo.FechaApertura.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@Incoterm", modelo.Incoterm); pix++;
 				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
@@ -2822,7 +2820,7 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[44];
+				SqlParameter[] @params = new SqlParameter[42];
 
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.Id); pix++;
 				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
@@ -2842,8 +2840,6 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@CostoApertura", modelo.CostoApertura); pix++;
 				@params[pix] = new SqlParameter("@MontoOrdenCompra", modelo.MontoOrdenCompra); pix++;
 				@params[pix] = new SqlParameter("@MontoOriginal", modelo.MontoOriginalLC); pix++;
-				@params[pix] = new SqlParameter("@MontoDispuesto", modelo.MontoDispuesto); pix++;
-				@params[pix] = new SqlParameter("@SaldoInsoluto", modelo.SaldoInsoluto); pix++;
 				@params[pix] = new SqlParameter("@FechaApertura", modelo.FechaApertura.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@Incoterm", modelo.Incoterm); pix++;
 				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
@@ -3064,6 +3060,43 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Cons_ReporteCartas(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_ReporteCartas", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
 		public Boolean Cons_CartaCreditoById(string id, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;
@@ -3108,16 +3141,14 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[6];
+				SqlParameter[] @params = new SqlParameter[5];
 				int pix = 0;
 
-				@params[pix] = new SqlParameter("@NumeroPago", modelo.NumeroPago); pix++;
 				@params[pix] = new SqlParameter("@NumeroFactura", modelo.NumeroFactura); pix++;
 				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
 				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
-				//@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "ins_Pago", @params, out dt, 1000))
 				{
@@ -3150,12 +3181,13 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[6];
+				SqlParameter[] @params = new SqlParameter[7];
 				int pix = 0;
 				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
 				@params[pix] = new SqlParameter("@NumeroFactura", modelo.NumeroFactura); pix++;
 				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
+				@params[pix] = new SqlParameter("@MontoPagado", modelo.MontoPagado); pix++;
 				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
 				@params[pix] = new SqlParameter("@CartaCreditoId", modelo.CartaCreditoId); pix++;
 

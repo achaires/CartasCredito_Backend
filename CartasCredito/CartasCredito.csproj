@@ -362,6 +362,7 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
+    <Content Include="assets\GIS_BN.jpg" />
     <Content Include="assets\index-0aca934b.js" />
     <Content Include="assets\index-78157d7d.css" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
@@ -445,6 +446,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\ReportesModels\" />
     <Folder Include="Reportes\" />
     <Folder Include="Uploads\" />
   </ItemGroup>

@@ -45,8 +45,6 @@ namespace CartasCredito.Controllers.api
 
 				var ccPagos = Pago.GetByCartaCreditoId(model.CartaCreditoId);
 
-				nuevoPago.NumeroPago = ccPagos.Count() + 1;
-
 				rsp = Pago.Insert(nuevoPago);
 
 				var bm = new BitacoraMovimiento();

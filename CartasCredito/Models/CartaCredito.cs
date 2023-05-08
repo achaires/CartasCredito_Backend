@@ -214,7 +214,7 @@ namespace CartasCredito.Models
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.Creado = DateTime.Parse(row[idx].ToString()); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
-//							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
+							// item.Pagos = Pago.GetByCartaCreditoId(item.Id);
 							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
 
 							decimal totalPagosEfectuados = 0;
@@ -364,6 +364,133 @@ namespace CartasCredito.Models
 
 			return res;
 		}
+
+		public static List<CartaCredito> Reporte(int empresaId, DateTime fechaInicio, DateTime fechaFin)
+		{
+			List<CartaCredito> res = new List<CartaCredito>();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+
+				var dt = new System.Data.DataTable();
+				var errores = "";
+				if (da.Cons_ReporteCartas(empresaId, fechaInicio, fechaFin, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						for (int i = 0; i < dt.Rows.Count; i++)
+						{
+							int idx = 0;
+							var row = dt.Rows[i];
+							var item = new CartaCredito();
+
+							item.Consecutive = int.Parse(row[idx].ToString()); idx++;
+							item.Id = row[idx].ToString(); idx++;
+							item.TipoActivo = row[idx].ToString(); idx++;
+							item.Banco = row[idx].ToString(); idx++;
+							item.Empresa = row[idx].ToString(); idx++;
+							item.Proveedor = row[idx].ToString(); idx++;
+							item.Moneda = row[idx].ToString(); idx++;
+							item.FechaVencimiento = DateTime.TryParse(row[idx].ToString(), out DateTime fvval) ? fvval : new DateTime(); idx++;
+							item.NumCartaCredito = row[idx].ToString(); idx++;
+							item.TipoCartaId = int.TryParse(row[idx].ToString(), out int tipoCartaVal) ? tipoCartaVal : 0; idx++;
+							item.TipoCarta = item.TipoCartaId == 17 ? "Comercial" : "StandBy";
+							item.TipoActivoId = int.TryParse(row[idx].ToString(), out int tactval) ? tactval : 0; idx++;
+							item.BancoId = int.TryParse(row[idx].ToString(), out int bncidval) ? bncidval : 0; idx++;
+							item.ProyectoId = int.TryParse(row[idx].ToString(), out int pryidval) ? pryidval : 0; idx++;
+							item.ProveedorId = int.TryParse(row[idx].ToString(), out int prvidval) ? prvidval : 0; idx++;
+							item.EmpresaId = int.TryParse(row[idx].ToString(), out int empidval) ? empidval : 0; idx++;
+							item.AgenteAduanalId = int.TryParse(row[idx].ToString(), out int agadidval) ? agadidval : 0; idx++;
+							item.MonedaId = int.TryParse(row[idx].ToString(), out int mndidval) ? mndidval : 0; idx++;
+							item.TipoPago = row[idx].ToString(); idx++;
+							item.Responsable = row[idx].ToString(); idx++;
+							item.CompradorId = int.TryParse(row[idx].ToString(), out int cmprdidval) ? cmprdidval : 0; idx++;
+							item.PorcentajeTolerancia = int.TryParse(row[idx].ToString(), out int prctolval) ? prctolval : 0; idx++;
+							item.NumOrdenCompra = row[idx].ToString(); idx++;
+							item.CostoApertura = decimal.TryParse(row[idx].ToString(), out decimal costoapval) ? costoapval : 0; idx++;
+							item.MontoOrdenCompra = decimal.TryParse(row[idx].ToString(), out decimal montoordenval) ? montoordenval : 0; idx++;
+							item.MontoOriginalLC = decimal.TryParse(row[idx].ToString(), out decimal montooriginalval) ? montooriginalval : 0; idx++;
+							item.PagosEfectuados = decimal.TryParse(row[idx].ToString(), out decimal pagosEfectuadosVal) ? pagosEfectuadosVal : 0; idx++;
+							item.PagosProgramados = decimal.TryParse(row[idx].ToString(), out decimal pagosProgramadosVal) ? pagosProgramadosVal : 0; idx++;
+							item.MontoDispuesto = decimal.TryParse(row[idx].ToString(), out decimal montoDispuestoVal) ? montoDispuestoVal : 0; idx++;
+							item.SaldoInsoluto = decimal.TryParse(row[idx].ToString(), out decimal saldoInsolutoVal) ? saldoInsolutoVal : 0; idx++;
+							item.FechaApertura = DateTime.TryParse(row[idx].ToString(), out DateTime faval) ? faval : DateTime.Now.AddDays(365); idx++;
+							item.Incoterm = row[idx].ToString(); idx++;
+							item.FechaLimiteEmbarque = DateTime.TryParse(row[idx].ToString(), out DateTime flimval) ? flimval : DateTime.Now.AddDays(365); idx++;
+							item.EmbarquesParciales = row[idx].ToString(); idx++;
+							item.Transbordos = row[idx].ToString(); idx++;
+							item.PuntoEmbarque = row[idx].ToString(); idx++;
+							item.PuntoDesembarque = row[idx].ToString(); idx++;
+							item.DescripcionMercancia = row[idx].ToString(); idx++;
+							item.DescripcionCartaCredito = row[idx].ToString(); idx++;
+							item.PagoCartaAceptacion = row[idx].ToString(); idx++;
+							item.ConsignacionMercancia = row[idx].ToString(); idx++;
+							item.ConsideracionesAdicionales = row[idx].ToString(); idx++;
+							item.DiasParaPresentarDocumentos = int.TryParse(row[idx].ToString(), out int diasprsval) ? diasprsval : 0; idx++;
+							item.DiasPlazoProveedor = int.TryParse(row[idx].ToString(), out int diasPlazoVal) ? diasPlazoVal : 0; idx++;
+							item.CondicionesPago = row[idx].ToString(); idx++;
+							item.NumeroPeriodos = int.TryParse(row[idx].ToString(), out int numeroPeriodosVal) ? numeroPeriodosVal : 0; idx++;
+							item.BancoCorresponsalId = int.TryParse(row[idx].ToString(), out int bancoCoritemVal) ? bancoCoritemVal : 0; idx++;
+							item.SeguroPorCuenta = row[idx].ToString(); idx++;
+							item.GastosComisionesCorresponsal = row[idx].ToString(); idx++;
+							item.ConfirmacionBancoNotificador = row[idx].ToString(); idx++;
+							item.Estatus = int.Parse(row[idx].ToString()); idx++;
+							item.TipoEmision = row[idx].ToString(); idx++;
+							item.DocumentoSwift = row[idx].ToString(); idx++;
+							item.CreadoPor = row[idx].ToString(); idx++;
+							item.Creado = DateTime.Parse(row[idx].ToString()); idx++;
+							item.Activo = bool.TryParse(row[idx].ToString(), out bool activoVal) && activoVal; idx++;
+							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
+
+							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
+
+							decimal totalPagosEfectuados = 0;
+							foreach (var lp in item.Pagos)
+							{
+								if (lp.Estatus == 3)
+								{
+									totalPagosEfectuados += lp.MontoPago;
+								}
+							}
+
+							item.PagosEfectuados = totalPagosEfectuados;
+
+							decimal totalPagosProgramados = 0;
+							foreach (var lp in item.Pagos)
+							{
+								if (lp.Estatus == 1)
+								{
+									totalPagosProgramados += lp.MontoPago;
+								}
+							}
+
+							item.PagosProgramados = totalPagosProgramados;
+
+							res.Add(item);
+						}
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Console.Write(ex);
+				res = new List<CartaCredito>();
+
+				// Get stack trace for the exception with source file information
+				var st = new StackTrace(ex, true);
+				// Get the top stack frame
+				var frame = st.GetFrame(0);
+				// Get the line number from the stack frame
+				var line = frame.GetFileLineNumber();
+
+				var errorMsg = ex.ToString();
+			}
+
+			return res;
+		}
+
 
 		public static RespuestaFormato InsertStandBy(CartaCredito modelo)
 		{

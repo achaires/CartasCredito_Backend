@@ -15,6 +15,13 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Text.RegularExpressions;
+using OfficeOpenXml.Drawing;
+using System.Drawing;
+using static System.Web.Razor.Parser.SyntaxConstants;
+using System.Drawing.Imaging;
+using System.Security.Cryptography;
+using System.Web.Services.Description;
+using System.Web.WebPages;
 
 namespace CartasCredito.Controllers.api
 {
@@ -67,7 +74,7 @@ namespace CartasCredito.Controllers.api
 				switch ( solicitudReporte.TipoReporteId )
 				{
 					case 1:
-						rsp.DataString = ReporteAnalisisEjecutivoCartas(solicitudReporte.EmpresaId, solicitudReporte.FechaInicio, solicitudReporte.FechaFin);
+						rsp.DataString = ReporteAnalisisEjecutivoCartas(solicitudReporte.EmpresaId, solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.FechaDivisas);
 						break;
 					case 2:
 						rsp.DataString = ReporteComisiones(solicitudReporte.EmpresaId, solicitudReporte.FechaInicio, solicitudReporte.FechaFin);
@@ -114,6 +121,8 @@ namespace CartasCredito.Controllers.api
 		{
 			var curDate = DateTime.Now;
 			var filename = repNombre.Trim().Replace(' ','-').ToLower() + curDate.Year.ToString() + curDate.Month.ToString() + curDate.Day.ToString() + curDate.Hour.ToString() + curDate.Minute.ToString() + curDate.Second.ToString() + ".xlsx";
+
+			filename = "reporte.xlsx";
 
 			return filename;
 		}
@@ -252,7 +261,66 @@ namespace CartasCredito.Controllers.api
 			return rsp;
 		}
 
-		private string ReporteAnalisisEjecutivoCartas(int empresaId, DateTime fechaInicio, DateTime fechaFin)
+		private decimal GetRateEx(int monedaIdIn, int monedaIdOut, DateTime fecha)
+		{
+			var rateEx = 1M;
+
+			/*
+			try
+			{
+				var monedaInDb = Moneda.GetById(monedaIdIn);
+				var monedaOutDb = Moneda.GetById(monedaIdOut);
+
+				var clnt = new ConversionMonedaService.BPELToolsClient();
+				var req = new ConversionMonedaService.processRequest();
+				var res = new ConversionMonedaService.processResponse();
+
+				var timeoutSpan = new TimeSpan(0, 0, 1);
+				clnt.Endpoint.Binding.CloseTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.OpenTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.ReceiveTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.SendTimeout = timeoutSpan;
+
+				req.process = new ConversionMonedaService.process();
+				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
+				req.process.P_CONVERSION_DATESpecified = true;
+				req.process.P_CONVERSION_DATE = fecha;
+				req.process.P_FROM_CURRENCY = monedaInDb.Abbr;
+				req.process.P_TO_CURRENCY = monedaOutDb.Abbr;
+
+				res = clnt.process(req.process);
+
+				if (res.X_CONVERSION_RATE != null && res.X_MNS_ERROR == null)
+				{
+					rateEx = res.X_CONVERSION_RATE.Value;
+				}
+			} catch (Exception ex)
+			{
+				rateEx = 1M;
+			}
+			*/
+			
+			return rateEx;
+		}
+
+		private decimal ConversionUSD(int monedaId, decimal valorIn, DateTime fecha)
+		{
+			var valorOut = 0M;
+			try
+			{
+				var mndUsd = Moneda.Get(1).First(m => m.Abbr.Trim().ToLower() == "usd");
+				var rateEx = GetRateEx(monedaId, mndUsd.Id, fecha);
+
+				valorOut = valorIn * rateEx;
+			} catch ( Exception ex )
+			{
+				valorOut = 0M;
+			}
+
+			return valorOut;
+		}
+
+		private string ReporteAnalisisEjecutivoCartas(int empresaId, DateTime fechaInicio, DateTime fechaFin, DateTime fechaDivisa)
 		{
 			var reporteNombre = "Análisis Ejecutivo de Cartas de Crédito";
 			var rsp = "";
@@ -261,13 +329,13 @@ namespace CartasCredito.Controllers.api
 
 			try
 			{
-				var ccFiltro = new CartasCreditoFiltrarDTO()
-				{
-					FechaInicio = fechaInicio,
-					FechaFin = fechaFin,
-				};
 
-				var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
+				var fechaInicioExact = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day, 0, 0, 0);
+				var fechaFinExact = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day, 23, 59, 59);
+				
+
+				var cartasCredito = CartaCredito.Reporte(empresaId, fechaInicioExact, fechaFinExact).GroupBy(cc => cc.NumCartaCredito).Select(cg => cg.First()).OrderBy(cc => cc.FechaVencimiento);
+				var catMonedas = Moneda.Get();
 
 				ExcelPackage Ep = new ExcelPackage();
 				ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Reporte");
@@ -311,24 +379,41 @@ namespace CartasCredito.Controllers.api
 				Sheet.Cells["B2:P2"].Merge = true;
 				Sheet.Cells["B4:P4"].Merge = true;
 
+				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
+				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
+				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
+				{
+					imagen.Save(imgStream, ImageFormat.Jpeg);
+				}
+
+				var sheetLogo = Sheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
+				sheetLogo.SetPosition(50,50);
 
 				int fila = 10;
+
+				var proveedoresCat = Proveedor.Get(1);
 
 				var grupos = cartasCredito
 					.GroupBy(carta => carta.Empresa)
 					.Select(grupoEmpresa => new
 					{
 						grupoEmpresa.Key,
+						TotalEmpresa = grupoEmpresa.Sum(c => c.MontoOriginalLC),
 						GruposMoneda = grupoEmpresa
 							.GroupBy(carta => carta.Moneda)
 							.Select(grupoMoneda => new
 							{
 								grupoMoneda.Key,
+								MonedaId = grupoMoneda.First().MonedaId,
 								TotalMoneda = grupoMoneda.Sum(carta => carta.MontoOriginalLC),
 								CartasDeCredito = grupoMoneda.ToList()
 							}).ToList()
 					}).ToList();
 
+				var granTotal = 0M;
+
+				var divisasList = new List<int>();
+				
 				foreach (var grupoEmpresa in grupos)
 				{
 					Sheet.Cells[string.Format("B{0}", fila)].Value = grupoEmpresa.Key;
@@ -341,14 +426,18 @@ namespace CartasCredito.Controllers.api
 							int cantidadDias = (int)diferencia.TotalDays;
 							decimal periodosDecimal = Convert.ToDecimal(cantidadDias) / 90M;
 							var periodos = Math.Ceiling(periodosDecimal);
+							var proveedorObj = proveedoresCat.First(pv => pv.Id == carta.ProveedorId);
 
 							Sheet.Cells[string.Format("C{0}", fila)].Value = carta.Banco;
 							Sheet.Cells[string.Format("D{0}", fila)].Value = carta.Proveedor;
 							Sheet.Cells[string.Format("E{0}", fila)].Value = carta.DescripcionMercancia;
-							Sheet.Cells[string.Format("F{0}", fila)].Value = "ProveedorPais";
+							Sheet.Cells[string.Format("F{0}", fila)].Value = proveedorObj.Pais;
 							Sheet.Cells[string.Format("G{0}", fila)].Value = carta.TipoActivo;
 							Sheet.Cells[string.Format("H{0}", fila)].Value = carta.Moneda;
+							
 							Sheet.Cells[string.Format("I{0}", fila)].Value = carta.MontoOriginalLC;
+							Sheet.Cells[string.Format("I{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("J{0}", fila)].Value = carta.MontoOriginalLC < 50000 ? "Sí" : "No";
 							Sheet.Cells[string.Format("K{0}", fila)].Value = carta.MontoOriginalLC > 50000 && carta.MontoOriginalLC < 300000 ? "Sí" : "No";
 							Sheet.Cells[string.Format("L{0}", fila)].Value = carta.MontoOriginalLC > 300000 ? "Sí" : "No";
@@ -357,30 +446,54 @@ namespace CartasCredito.Controllers.api
 							Sheet.Cells[string.Format("O{0}", fila)].Value = periodos > 2 ? "Sí" : "No";
 							Sheet.Cells[string.Format("P{0}", fila)].Value = carta.DiasPlazoProveedor;
 
-							/*
-							 * COMPROBACIÓN DE CÁLCULOS
-							Sheet.Cells[string.Format("Q{0}", fila)].Value = carta.FechaApertura.ToString("yyyy-MM-dd");
-							Sheet.Cells[string.Format("R{0}", fila)].Value = carta.FechaVencimiento.ToString("yyyy-MM-dd");
-							Sheet.Cells[string.Format("S{0}", fila)].Value = diferencia.ToString();
-							Sheet.Cells[string.Format("T{0}", fila)].Value = periodosDecimal;
-							Sheet.Cells[string.Format("U{0}", fila)].Value = periodos;
-							*/
-
 							fila++;
 						}
 						Sheet.Cells["H" + fila].Value = "Total " + grupoMoneda.Key;
 						Sheet.Cells["I" + fila].Value = grupoMoneda.TotalMoneda;
+						Sheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+
+						// Calcula y agrega fila de conversión a dólares
+						fila++;
+						var totalMonedaEnUsd = ConversionUSD(grupoMoneda.MonedaId, grupoMoneda.TotalMoneda, fechaDivisa);
+						divisasList.Add(grupoMoneda.MonedaId);
+
+						Sheet.Cells["H" + fila].Value = "Total USD";
+						Sheet.Cells["I" + fila].Value = totalMonedaEnUsd;
+						Sheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+
+						granTotal += totalMonedaEnUsd;
+
 						fila++;
 						fila++;
 					}
-					// Sheet.Cells["H" + fila].Value = "Total Empresa:";
-					// Sheet.Cells["I" + fila].Value = grupoEmpresa.GruposMoneda.Sum(grupoMoneda => grupoMoneda.TotalMoneda);
+					fila++;
+					fila++;
+				}
+
+				Sheet.Cells["H" + fila].Value = "GRAN TOTAL:";
+				Sheet.Cells["I" + fila].Value = granTotal;
+				Sheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+
+				fila++;
+				fila++;
+
+				foreach (var grupoEmpresa in grupos)
+				{
+					Sheet.Cells["H" + fila].Value = grupoEmpresa.Key;
+					Sheet.Cells["I" + fila].Value = Math.Round(grupoEmpresa.TotalEmpresa / granTotal * 100).ToString() + "%"; ;
+
 					fila++;
 				}
 
 
-				Sheet.Cells["A:AZ"].AutoFitColumns();
-				Sheet.Column(5).Width = 50;
+					Sheet.Cells["A:AZ"].AutoFitColumns();
+				
+				Sheet.Column(5).Width = 25;
+				Sheet.Column(4).Width = 25;
+				Sheet.Column(8).Width = 25;
+				Sheet.Column(11).Width = 25;
+				Sheet.Column(16).Width = 25;
+
 				var path = HttpContext.Current.Server.MapPath("~/Reportes/") + filename;
 				var stream = File.Create(path);
 				Ep.SaveAs(stream);
@@ -419,7 +532,10 @@ namespace CartasCredito.Controllers.api
 					FechaFin = fechaFin,
 				};
 
-				var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
+				//var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
+				var fechaInicioExact = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day, 0, 0, 0);
+				var fechaFinExact = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day, 23, 59, 59);
+				var cartasCredito = CartaCredito.Reporte(empresaId, fechaInicioExact, fechaFinExact).GroupBy(cc => cc.NumCartaCredito).Select(cg => cg.First()).OrderBy(cc => cc.FechaVencimiento);
 
 				ExcelPackage Ep = new ExcelPackage();
 				ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Reporte");
@@ -487,7 +603,6 @@ namespace CartasCredito.Controllers.api
 				foreach (var grupoEmpresa in grupos)
 				{
 					Sheet.Cells[string.Format("B{0}", fila)].Value = grupoEmpresa.Key;
-					fila++;
 
 					foreach (var grupoMoneda in grupoEmpresa.GruposMoneda)
 					{
@@ -504,16 +619,23 @@ namespace CartasCredito.Controllers.api
 							Sheet.Cells[string.Format("F{0}", fila)].Value = carta.TipoActivo;
 							Sheet.Cells[string.Format("G{0}", fila)].Value = carta.DescripcionCartaCredito;
 							Sheet.Cells[string.Format("H{0}", fila)].Value = carta.Moneda;
+							
 							Sheet.Cells[string.Format("I{0}", fila)].Value = carta.MontoOriginalLC;
+							Sheet.Cells[string.Format("I{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("J{0}", fila)].Value = carta.PagosEfectuados;
+							Sheet.Cells[string.Format("J{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("K{0}", fila)].Value = carta.PagosProgramados;
+							Sheet.Cells[string.Format("K{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("L{0}", fila)].Value = 0;
 							Sheet.Cells[string.Format("M{0}", fila)].Value = 0;
 							Sheet.Cells[string.Format("N{0}", fila)].Value = 0;
 							Sheet.Cells[string.Format("O{0}", fila)].Value = 0;
 							Sheet.Cells[string.Format("P{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("Q{0}", fila)].Value = carta.FechaApertura;
-							Sheet.Cells[string.Format("R{0}", fila)].Value = carta.FechaVencimiento;
+							Sheet.Cells[string.Format("Q{0}", fila)].Value = carta.FechaApertura.ToString("dd-MM-yyyy");
+							Sheet.Cells[string.Format("R{0}", fila)].Value = carta.FechaVencimiento.ToString("dd-MM-yyyy");
 							Sheet.Cells[string.Format("S{0}", fila)].Value = carta.DiasPlazoProveedor;
 
 							fila++;
@@ -522,14 +644,23 @@ namespace CartasCredito.Controllers.api
 						Sheet.Cells["I" + fila].Value = grupoMoneda.TotalMoneda;
 						fila++;
 					}
-					// Sheet.Cells["H" + fila].Value = "Total Empresa:";
-					// Sheet.Cells["I" + fila].Value = grupoEmpresa.GruposMoneda.Sum(grupoMoneda => grupoMoneda.TotalMoneda);
+
 					fila++;
 				}
 
 
-				Sheet.Cells["A:AZ"].AutoFitColumns();
-				Sheet.Column(5).Width = 50;
+				//Sheet.Cells["A:AZ"].AutoFitColumns();
+				Sheet.Column(2).Width = 20;
+				Sheet.Column(3).Width = 15;
+				Sheet.Column(4).Width = 20;
+				Sheet.Column(5).Width = 15;
+				Sheet.Column(8).Width = 15;
+				Sheet.Column(9).Width = 15;
+				Sheet.Column(19).Width = 10;
+
+				Sheet.Column(2).Style.WrapText = true;
+				Sheet.Column(3).Style.WrapText = true;
+
 				var path = HttpContext.Current.Server.MapPath("~/Reportes/") + filename;
 				var stream = File.Create(path);
 				Ep.SaveAs(stream);
