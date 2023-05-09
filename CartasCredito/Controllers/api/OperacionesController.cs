@@ -2,6 +2,7 @@
 using CartasCredito.Models.DTOs;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -28,6 +29,68 @@ namespace CartasCredito.Controllers.api
 			filtros.FechaFin = fechaFin;
 			
 			return CartaCredito.Filtrar(filtros);
+		}
+
+		[Route("api/operaciones/clonar/{id}")]
+		[HttpPost]
+		public RespuestaFormato Clonar(string id)
+		{
+			var rsp = new RespuestaFormato();
+
+			try
+			{
+				var originalCC = CartaCredito.GetById(id);
+
+				var newCC = new CartaCredito();
+				newCC.TipoCarta = originalCC.TipoCarta;
+				newCC.TipoActivoId = originalCC.TipoActivoId;
+				newCC.BancoId = originalCC.BancoId;
+				newCC.ProyectoId = originalCC.ProyectoId;
+				newCC.ProveedorId = originalCC.ProveedorId;
+				newCC.EmpresaId = originalCC.EmpresaId;
+				newCC.AgenteAduanalId = originalCC.AgenteAduanalId;
+				newCC.MonedaId = originalCC.MonedaId;
+				newCC.TipoPago = originalCC.TipoPago;
+				newCC.Responsable = originalCC.Responsable;
+				newCC.CompradorId = originalCC.CompradorId;
+				newCC.PorcentajeTolerancia = originalCC.PorcentajeTolerancia;
+				newCC.NumOrdenCompra = originalCC.NumOrdenCompra;
+				newCC.CostoApertura = originalCC.CostoApertura;
+				newCC.MontoOrdenCompra = originalCC.MontoOrdenCompra;
+				newCC.MontoOriginalLC = originalCC.MontoOriginalLC;
+				newCC.FechaApertura = originalCC.FechaApertura;
+				newCC.Incoterm = originalCC.Incoterm;
+				newCC.FechaLimiteEmbarque = originalCC.FechaLimiteEmbarque;
+				newCC.FechaVencimiento = originalCC.FechaVencimiento;
+				newCC.EmbarquesParciales = originalCC.EmbarquesParciales;
+				newCC.Transbordos = originalCC.Transbordos;
+				newCC.PuntoEmbarque = originalCC.PuntoEmbarque;
+				newCC.PuntoDesembarque = originalCC.PuntoDesembarque;
+				newCC.DescripcionMercancia = originalCC.DescripcionMercancia;
+				newCC.DescripcionCartaCredito = originalCC.DescripcionCartaCredito;
+				newCC.PagoCartaAceptacion = originalCC.PagoCartaAceptacion;
+				newCC.ConsignacionMercancia = originalCC.ConsignacionMercancia;
+				newCC.ConsideracionesAdicionales = originalCC.ConsideracionesAdicionales;
+				newCC.DiasParaPresentarDocumentos = originalCC.DiasParaPresentarDocumentos;
+				newCC.DiasPlazoProveedor = originalCC.DiasPlazoProveedor;
+				newCC.CondicionesPago = originalCC.CondicionesPago;
+				newCC.NumeroPeriodos = originalCC.NumeroPeriodos;
+				newCC.BancoCorresponsalId = originalCC.BancoCorresponsalId;
+				newCC.SeguroPorCuenta = originalCC.SeguroPorCuenta;
+				newCC.GastosComisionesCorresponsal = originalCC.GastosComisionesCorresponsal;
+				newCC.ConfirmacionBancoNotificador = originalCC.ConfirmacionBancoNotificador;
+				newCC.TipoEmision = originalCC.TipoEmision;
+				newCC.CreadoPor = originalCC.CreadoPor;
+
+				rsp = CartaCredito.Insert(newCC);
+			} catch (Exception ex)
+			{
+				rsp.Flag = false;
+				rsp.DataString = ex.ToString();
+				rsp.Errors.Add(ex.ToString());
+			}
+
+			return rsp;
 		}
 
 		[Route("api/operaciones/cambiarestatus/{id}")]
@@ -137,6 +200,7 @@ namespace CartasCredito.Controllers.api
 			return rf;
 		}
 
+		/*
 		[Route("api/operaciones/clonar")]
 		[HttpPost]
 		public async Task<RespuestaFormato> Clonar([FromBody] string cartaId)
@@ -202,6 +266,7 @@ namespace CartasCredito.Controllers.api
 
 			return rf;
 		}
+		*/
 
 		/*
 		[Route("api/operaciones/adjuntarswift/{id}")]

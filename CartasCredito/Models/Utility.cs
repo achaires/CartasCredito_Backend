@@ -9,6 +9,12 @@ namespace CartasCredito.Models
 	public class Utility
 	{
 		public static string HostUrl = ConfigurationManager.AppSettings.Get("HostUrl");
+
+		public static string SmtpHost = ConfigurationManager.AppSettings.Get("SmtpHost");
+		public static string SmtpPort = ConfigurationManager.AppSettings.Get("SmtpPort");
+		public static string SmtpUser = ConfigurationManager.AppSettings.Get("SmtpUser");
+		public static string SmtpPass = ConfigurationManager.AppSettings.Get("SmtpPass");
+
 		public static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
 		public static RespuestaFormato Login_GIS(string username, string password)

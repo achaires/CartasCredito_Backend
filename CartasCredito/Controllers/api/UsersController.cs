@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -52,16 +53,45 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Post([FromBody] UserInsertDTO userDto)
 		{
 			var rsp = new RespuestaFormato();
+			var usrId = "12cb7342-837e-45d9-892c-6818a38a3816";
 
 			try
 			{
+
+				var curDate = new DateTime();
 				var u = new AspNetUser();
 				u.UserName = userDto.UserName;
 				u.Email = userDto.Email;
-				u.PasswordHash = Crypto.HashPassword(userDto.Password);
+				u.PasswordHash = Crypto.HashPassword("RandomPassword" + curDate.ToString());
 				u.PhoneNumber = userDto.PhoneNumber;
+				u.Activo = false;
 				
 				rsp = AspNetUser.Insert(u);
+
+				// Crear invitación
+				var invitacion = new Invitacion()
+				{
+					Email = userDto.Email,
+					UserName = userDto.UserName,
+					CreadoPorId = usrId
+				};
+
+				var rspInv = Invitacion.Insert(invitacion);
+
+				if ( rsp.DataInt > 0 )
+				{
+					var invDb = Invitacion.GetById(rsp.DataInt);
+
+					// enviar invitacion
+					var smtpClient = new SmtpClient(Utility.SmtpHost)
+					{
+						Port = int.Parse(Utility.SmtpPort),
+						Credentials = new NetworkCredential(Utility.SmtpUser, Utility.SmtpPass),
+						EnableSsl = false,
+					};
+
+					smtpClient.Send("cartasdecredito@gis.com.mx", "j.sanchez@softdepot.mx", "Invitación a Sistema Cartas de Crédito", "Ha sido invitado al sistema de Cartas de Crédito: " + invDb.Token);
+				}
 
 				if ( rsp.DataInt > 0 )
 				{

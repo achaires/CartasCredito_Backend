@@ -4063,13 +4063,14 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[4];
+				SqlParameter[] @params = new SqlParameter[5];
 				var pix = 0;
 
 				@params[pix] = new SqlParameter("@Email", modelo.Email); pix++;
 				@params[pix] = new SqlParameter("@PasswordHash", modelo.PasswordHash); pix++;
 				@params[pix] = new SqlParameter("@PhoneNumber", modelo.PhoneNumber); pix++;
 				@params[pix] = new SqlParameter("@UserName", modelo.UserName); pix++;
+				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "ins_AspNetUser", @params, out dt, 1000))
 				{
@@ -4945,6 +4946,113 @@ namespace CartasCredito.Models
 			{
 				boolProcess = false;
 				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region Invitaciones
+		public Boolean Ins_Invitacion(Invitacion modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[3];
+
+				@params[0] = new SqlParameter("@Email", modelo.Email);
+				@params[1] = new SqlParameter("@UserName", modelo.UserName);
+				@params[2] = new SqlParameter("@CreadoPorId", modelo.CreadoPorId);
+
+				if (!bd.ExecuteProcedure(conexion, "ins_Invitacion", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Cons_InvitacionById(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Id", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_InvitacionById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_InvitacionByToken(string token, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Token", token);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_InvitacionByToken", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
 			}
 
 			return boolProcess;
