@@ -13,9 +13,9 @@ namespace CartasCredito.Models
 		public int Id { get; set; }
 		public string CartaCreditoId { get; set; }
 		public int ComisionId { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		// [JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime? FechaCargo { get; set; }
-		[JsonConverter(typeof(CustomDateTimeConverter))]
+		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime? FechaPago { get; set; }
 		public int MonedaId { get; set; }
 		public decimal TipoCambio { get; set; }

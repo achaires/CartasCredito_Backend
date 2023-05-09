@@ -3181,10 +3181,11 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[7];
+				SqlParameter[] @params = new SqlParameter[8];
 				int pix = 0;
 				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
 				@params[pix] = new SqlParameter("@NumeroFactura", modelo.NumeroFactura); pix++;
+				@params[pix] = new SqlParameter("@FechaPago", modelo.FechaPago?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento?.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@MontoPago", modelo.MontoPago); pix++;
 				@params[pix] = new SqlParameter("@MontoPagado", modelo.MontoPagado); pix++;

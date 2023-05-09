@@ -43,7 +43,16 @@ namespace CartasCredito.Controllers.api
 				nuevoPago.Estatus = 1;
 				nuevoPago.CreadoPor = usr;
 
+				var cc = CartaCredito.GetById(model.CartaCreditoId);
 				var ccPagos = Pago.GetByCartaCreditoId(model.CartaCreditoId);
+
+				// verifica que nuevo pago + pagos existentes no sobrepase el monto original
+				var totalPagos = ccPagos.Sum(p => p.MontoPago) + nuevoPago.MontoPago;
+
+				if ( totalPagos > cc.MontoOriginalLC )
+				{
+					throw new Exception("Pagos exceden el monto original de la carta");
+				}
 
 				rsp = Pago.Insert(nuevoPago);
 
@@ -78,7 +87,7 @@ namespace CartasCredito.Controllers.api
 			{
 				Pago pago = Pago.GetById(model.Id);
 				pago.Estatus = 3;
-				pago.FechaPago = DateTime.Now;
+				pago.FechaPago = model.FechaPago;
 				pago.MontoPagado = pago.MontoPago;
 				pago.RegistroPagoPor = usr;
 				rsp = Pago.Update(pago);
