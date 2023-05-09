@@ -22,6 +22,8 @@ using System.Drawing.Imaging;
 using System.Security.Cryptography;
 using System.Web.Services.Description;
 using System.Web.WebPages;
+using static System.Net.WebRequestMethods;
+using File = System.IO.File;
 
 namespace CartasCredito.Controllers.api
 {
@@ -121,8 +123,6 @@ namespace CartasCredito.Controllers.api
 		{
 			var curDate = DateTime.Now;
 			var filename = repNombre.Trim().Replace(' ','-').ToLower() + curDate.Year.ToString() + curDate.Month.ToString() + curDate.Day.ToString() + curDate.Hour.ToString() + curDate.Minute.ToString() + curDate.Second.ToString() + ".xlsx";
-
-			filename = "reporte.xlsx";
 
 			return filename;
 		}
@@ -379,6 +379,7 @@ namespace CartasCredito.Controllers.api
 				Sheet.Cells["B2:P2"].Merge = true;
 				Sheet.Cells["B4:P4"].Merge = true;
 
+				/*
 				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
 				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
 				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
@@ -388,7 +389,7 @@ namespace CartasCredito.Controllers.api
 
 				var sheetLogo = Sheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
 				sheetLogo.SetPosition(50,50);
-
+				*/
 				int fila = 10;
 
 				var proveedoresCat = Proveedor.Get(1);
@@ -1025,22 +1026,25 @@ namespace CartasCredito.Controllers.api
 					var comisionAceptacion = EncontrarComisionEnCarta("COMISION DE ACEPTACION", cc.Id);
 
 					Sheet.Cells[string.Format("B{0}", row)].Value = cc.Moneda;
-					Sheet.Cells[string.Format("C{0}", row)].Value = cc.FechaVencimiento.ToString("yyyy-MM-dd");
+					Sheet.Cells[string.Format("C{0}", row)].Value = cc.FechaVencimiento.ToString("dd-MM-yyyy");
 					Sheet.Cells[string.Format("D{0}", row)].Value = cc.Empresa;
 					Sheet.Cells[string.Format("E{0}", row)].Value = cc.NumCartaCredito;
 					Sheet.Cells[string.Format("F{0}", row)].Value = CartaCredito.GetStatusText(cc.Estatus);
 					Sheet.Cells[string.Format("G{0}", row)].Value = cc.Proveedor;
 					Sheet.Cells[string.Format("H{0}", row)].Value = cc.Banco;
 					Sheet.Cells[string.Format("I{0}", row)].Value = cc.MontoOriginalLC;
+					Sheet.Cells[string.Format("I{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 
 					if ( comisionBancoCorresponsal != null && comisionBancoCorresponsal.Id > 0 )
 					{
 						Sheet.Cells[string.Format("J{0}", row)].Value = comisionBancoCorresponsal.MontoPagado;
+						Sheet.Cells[string.Format("J{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 					}
 					
 					if ( comisionAceptacion !=  null && comisionAceptacion.Id > 0 )
 					{
 						Sheet.Cells[string.Format("K{0}", row)].Value = comisionAceptacion.MontoPagado;
+						Sheet.Cells[string.Format("K{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 					}
 
 					row++;
@@ -1244,6 +1248,7 @@ namespace CartasCredito.Controllers.api
 				// Formar Excel
 				ExcelPackage Ep = new ExcelPackage();
 				ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Reporte");
+
 				Sheet.Cells.Style.Font.Size = 10;
 				Sheet.Cells["B4:H4"].Style.Font.Bold = true;
 				
@@ -1278,6 +1283,8 @@ namespace CartasCredito.Controllers.api
 
 
 				int row = 10;
+				var granTotalProgramado = 0M;
+				var granTotalPagado = 0M;
 
 				foreach (var empresa in empresas)
 				{
@@ -1288,9 +1295,7 @@ namespace CartasCredito.Controllers.api
 					{
 						continue;
 					}
-
-					Sheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre;
-
+					
 					foreach ( var cartaCredito in empresaCartas)
 					{
 						var cartaComisiones = CartaCreditoComision.GetByCartaCreditoId(cartaCredito.Id);
@@ -1299,36 +1304,72 @@ namespace CartasCredito.Controllers.api
 
 					var groupedComisiones = empresaCartasComisiones.GroupBy(ecc => ecc.ComisionId);
 
+					Sheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre;
+					var totalEmpresaProgramado = 0M;
+					var totalEmpresaPagado = 0M;
+
 					foreach ( var comisionGroup in groupedComisiones)
 					{
-						var rowOrigin = row;
-						var comisionTotal = 0M;
+						//var rowOrigin = row;
+						
 						foreach ( var comision in comisionGroup )
 						{
 							Sheet.Cells[string.Format("C{0}", row)].Value = comision.Comision;
 							Sheet.Cells[string.Format("D{0}", row)].Value = comision.NumCartaCredito;
 							Sheet.Cells[string.Format("E{0}", row)].Value = comision.Moneda;
-							Sheet.Cells[string.Format("F{0}", row)].Value = comision.Monto;
+							
+							Sheet.Cells[string.Format("F{0}", row)].Value = comision.Monto - comision.MontoPagado;
+							Sheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("G{0}", row)].Value = comision.MontoPagado;
+							Sheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+
 							Sheet.Cells[string.Format("H{0}", row)].Value = comision.EstatusCartaText;
 
 							row++;
-							comisionTotal += comision.MontoPagado;
+							
+							totalEmpresaProgramado += (comision.Monto - comision.MontoPagado);
+							totalEmpresaPagado += comision.MontoPagado;
 						}
 
-						Sheet.Cells[string.Format("C{0}", row)].Value = "Total";
-						Sheet.Cells[string.Format("G{0}", row)].Value = comisionTotal;
-
-						var rowFinal = row - 1;
+						//var rowFinal = row - 1;
 						row++;
 
-						Sheet.Cells[string.Format("C{0}:C{1}",rowOrigin,rowFinal)].Merge = true;
+						//Sheet.Cells[string.Format("C{0}:C{1}",rowOrigin,rowFinal)].Merge = true;
 					}
 
+					granTotalProgramado += totalEmpresaProgramado;
+					granTotalPagado += totalEmpresaPagado;
+
+					Sheet.Cells[string.Format("C{0}", row)].Value = "Total";
+					Sheet.Cells[string.Format("F{0}", row)].Value = totalEmpresaProgramado;
+					Sheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+					Sheet.Cells[string.Format("G{0}", row)].Value = totalEmpresaPagado;
+					Sheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 					row++;
+
 				}
 
+				Sheet.Cells[string.Format("C{0}", row)].Value = "Gran Total";
+				Sheet.Cells[string.Format("F{0}", row)].Value = granTotalProgramado;
+				Sheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+				Sheet.Cells[string.Format("G{0}", row)].Value = granTotalPagado;
+				Sheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+
+				/*
+				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
+				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(), ".jpg"));
+				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
+				{
+					imagen.Save(imgStream, ImageFormat.Jpeg);
+				}
+
+				var sheetLogo = Sheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
+				sheetLogo.SetPosition(50, 50);
+				*/
+
 				Sheet.Cells["A:AZ"].AutoFitColumns();
+				Sheet.Column(3).Width = 30;
 				var path = HttpContext.Current.Server.MapPath("~/Reportes/") + filename;
 				var stream = File.Create(path);
 				Ep.SaveAs(stream);

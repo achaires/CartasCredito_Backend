@@ -4,10 +4,12 @@ using Microsoft.Ajax.Utilities;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Web;
 using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -57,17 +59,6 @@ namespace CartasCredito.Controllers.api
 
 			try
 			{
-
-				var curDate = new DateTime();
-				var u = new AspNetUser();
-				u.UserName = userDto.UserName;
-				u.Email = userDto.Email;
-				u.PasswordHash = Crypto.HashPassword("RandomPassword" + curDate.ToString());
-				u.PhoneNumber = userDto.PhoneNumber;
-				u.Activo = false;
-				
-				rsp = AspNetUser.Insert(u);
-
 				// Crear invitación
 				var invitacion = new Invitacion()
 				{
@@ -78,20 +69,22 @@ namespace CartasCredito.Controllers.api
 
 				var rspInv = Invitacion.Insert(invitacion);
 
-				if ( rsp.DataInt > 0 )
+				if (rspInv.DataInt > 0)
 				{
-					var invDb = Invitacion.GetById(rsp.DataInt);
-
-					// enviar invitacion
-					var smtpClient = new SmtpClient(Utility.SmtpHost)
-					{
-						Port = int.Parse(Utility.SmtpPort),
-						Credentials = new NetworkCredential(Utility.SmtpUser, Utility.SmtpPass),
-						EnableSsl = false,
-					};
-
-					smtpClient.Send("cartasdecredito@gis.com.mx", "j.sanchez@softdepot.mx", "Invitación a Sistema Cartas de Crédito", "Ha sido invitado al sistema de Cartas de Crédito: " + invDb.Token);
+					var invDb = Invitacion.GetById(rspInv.DataInt);
+					var btnLink = Utility.HostUrl + "/#/registro/" + invDb.Token;
+					EnviaEmail(userDto.Email,btnLink);
 				}
+
+				var curDate = new DateTime();
+				var u = new AspNetUser();
+				u.UserName = userDto.UserName;
+				u.Email = userDto.Email;
+				u.PasswordHash = Crypto.HashPassword("RandomPassword" + curDate.ToString());
+				u.PhoneNumber = userDto.PhoneNumber;
+				u.Activo = false;
+				
+				rsp = AspNetUser.Insert(u);
 
 				if ( rsp.DataInt > 0 )
 				{
@@ -119,6 +112,72 @@ namespace CartasCredito.Controllers.api
 			}
 
 			return rsp;
+		}
+
+		protected static RespuestaFormato EnviaEmail(string sendEmailTo, string btnLink)
+		{
+			RespuestaFormato res = new RespuestaFormato();
+			try
+			{
+				dll_Gis.Funciones fn = new dll_Gis.Funciones();
+				int port = 0;
+				string host = "";
+				string username = "";
+				string mailFrom = "rondines.service@gis.com.mx";
+				string password = "";
+				bool ssl = false;
+				bool defaultCredentials = false;
+				string deliveryMethod = "";
+
+				Int32.TryParse(ConfigurationManager.AppSettings["SMTPPort"].ToString(), out port);
+				host = fn.Desencriptar(ConfigurationManager.AppSettings["SMTPHost"].ToString());
+				username = fn.Desencriptar(ConfigurationManager.AppSettings["SMTPUsername"].ToString());
+
+				Boolean.TryParse(ConfigurationManager.AppSettings["SMTPSSL"].ToString(), out ssl);
+				Boolean.TryParse(ConfigurationManager.AppSettings["SMTPDefaultCredentials"].ToString(), out defaultCredentials);
+				deliveryMethod = ConfigurationManager.AppSettings["SMTPDeliveryMethod"].ToString();
+
+				MailMessage mail = new MailMessage();
+				mail.IsBodyHtml = true;
+				SmtpClient SmtpServer = new SmtpClient(host);
+
+				mail.From = new MailAddress(mailFrom, "Portal Cartas de Crédito");
+
+				var mailTo = new MailAddress(sendEmailTo);
+				mail.To.Add(mailTo);
+				mail.Subject = "Registro en Portal Cartas de Crédito";
+
+				string mailBody = System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("~/Views/Shared/NotificacionRegistro.html"));
+				mailBody = mailBody.Replace("#AppUrl#", btnLink);
+
+				mail.Body = mailBody;
+
+
+				mail.ReplyToList.Add(new MailAddress(mailFrom, "reply-to"));
+
+				SmtpServer.Port = port;
+				SmtpServer.UseDefaultCredentials = defaultCredentials;
+				if (deliveryMethod == "Network")
+				{
+					SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+				}
+				else
+				{
+					password = fn.Desencriptar(ConfigurationManager.AppSettings["SMTPPassword"].ToString());
+					SmtpServer.Credentials = new System.Net.NetworkCredential(username, password);
+				}
+				SmtpServer.EnableSsl = ssl;
+				//ACTIVAR CORREOS
+				SmtpServer.Send(mail);
+				res.Flag = true;
+			}
+			catch (Exception ex)
+			{
+				res.Flag = false;
+				res.Errors.Add(ex.Message);
+			}
+
+			return res;
 		}
 
 		// PUT api/users/5

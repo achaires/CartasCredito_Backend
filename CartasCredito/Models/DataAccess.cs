@@ -4205,6 +4205,44 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Upd_AspNetUserPassword(AspNetUser modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[2];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@Password", modelo.PasswordHash); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "upd_AspNetUserPassword", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
 		public Boolean Ins_AspNetUserRole(string userId, string roleId, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;

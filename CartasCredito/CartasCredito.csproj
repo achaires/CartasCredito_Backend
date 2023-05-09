@@ -276,6 +276,7 @@
     <Compile Include="Controllers\api\DocumentosController.cs" />
     <Compile Include="Controllers\api\EmpresasController.cs" />
     <Compile Include="Controllers\api\EnmiendasController.cs" />
+    <Compile Include="Controllers\api\InvitacionesController.cs" />
     <Compile Include="Controllers\api\LineasDeCreditoController.cs" />
     <Compile Include="Controllers\api\MonedasController.cs" />
     <Compile Include="Controllers\api\OperacionesController.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Models\DTOs\ConversionMonedaDTO.cs" />
     <Compile Include="Models\DTOs\EnmiendaInsertDTO.cs" />
     <Compile Include="Models\DTOs\EnmiendaUpdateDTO.cs" />
+    <Compile Include="Models\DTOs\InvitacionRegistroDTO.cs" />
     <Compile Include="Models\DTOs\LoginDTO.cs" />
     <Compile Include="Models\DTOs\PagoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
@@ -364,9 +366,8 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\GIS_BN.jpg" />
-    <Content Include="assets\index-0aca934b.js" />
-    <Content Include="assets\index-78157d7d.css" />
+    <Content Include="assets\index-ad701402.js" />
+    <Content Include="assets\index-f4294b18.css" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -411,6 +412,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Shared\NotificacionRegistro.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

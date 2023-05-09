@@ -229,6 +229,47 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static RespuestaFormato UpdatePassword(AspNetUser modelo)
+		{
+			RespuestaFormato rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Upd_AspNetUserPassword(modelo, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var row = dt.Rows[0];
+						string id = row[3].ToString();
+
+						if (id.Length > 0)
+						{
+							rsp.Description = "Nuevo usuario creado correctamente";
+							rsp.Flag = true;
+							rsp.DataInt = 1;
+							rsp.DataString = id;
+						}
+					}
+				}
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
+			}
+			catch (Exception ex)
+			{
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
+			}
+
+			return rsp;
+		}
+
 		public static RespuestaFormato InsertRole(string userId, string roleId)
 		{
 			RespuestaFormato rsp = new RespuestaFormato();
