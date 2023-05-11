@@ -28,7 +28,7 @@ namespace CartasCredito.Controllers.api
 		{
 			var invitacion = Invitacion.GetByToken(tokenString);
 
-			if (invitacion == null)
+			if (invitacion == null || invitacion.Id < 1)
 			{
 				return Unauthorized();
 			}
@@ -55,7 +55,9 @@ namespace CartasCredito.Controllers.api
 					if (tryLogin_Gis.Flag != false)
 					{
 						usr.PasswordHash = Crypto.HashPassword(invitacionRegistroDTO.Password);
+						usr.Activo = true;
 						rsp = AspNetUser.UpdatePassword(usr);
+						AspNetUser.Update(usr);
 					}
 					else
 					{

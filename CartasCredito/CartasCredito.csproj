@@ -366,8 +366,8 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-ad701402.js" />
     <Content Include="assets\index-f4294b18.css" />
+    <Content Include="assets\index-f4690e05.js" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
