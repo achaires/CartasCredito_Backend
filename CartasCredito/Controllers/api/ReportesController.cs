@@ -24,6 +24,7 @@ using System.Web.Services.Description;
 using System.Web.WebPages;
 using static System.Net.WebRequestMethods;
 using File = System.IO.File;
+using System.CodeDom;
 
 namespace CartasCredito.Controllers.api
 {
@@ -478,10 +479,24 @@ namespace CartasCredito.Controllers.api
 				fila++;
 				fila++;
 
+				var sumaProcentajes = 0M;
+				var grupoEmpresaLast = grupos.Last();
+
 				foreach (var grupoEmpresa in grupos)
 				{
+					var porcentajeEmpresa = Math.Round(Math.Round(grupoEmpresa.TotalEmpresa, 4) / granTotal,4) * 100;
+					
+					/*
+					if (grupoEmpresa.Equals(grupoEmpresaLast))
+					{
+						porcentajeEmpresa = 100 - sumaProcentajes;
+					}
+					*/
+
+					sumaProcentajes += porcentajeEmpresa;
+
 					Sheet.Cells["H" + fila].Value = grupoEmpresa.Key;
-					Sheet.Cells["I" + fila].Value = Math.Round(grupoEmpresa.TotalEmpresa / granTotal * 100).ToString() + "%"; ;
+					Sheet.Cells["I" + fila].Value =  porcentajeEmpresa + "%";
 
 					fila++;
 				}
