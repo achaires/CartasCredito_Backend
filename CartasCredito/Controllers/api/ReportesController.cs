@@ -336,7 +336,7 @@ namespace CartasCredito.Controllers.api
 				var fechaInicioExact = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day, 0, 0, 0);
 				var fechaFinExact = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day, 23, 59, 59);
 				
-				var cartasCredito = CartaCredito.Reporte(empresaId, fechaInicioExact, fechaFinExact).GroupBy(cc => cc.NumCartaCredito).Select(cg => cg.First()).OrderBy(cc => cc.FechaVencimiento);
+				var cartasCredito = CartaCredito.Reporte(empresaId, fechaInicioExact, fechaFinExact).Where(cc => cc.TipoCarta == "Comercial").GroupBy(cc => cc.NumCartaCredito).Select(cg => cg.First()).OrderBy(cc => cc.FechaVencimiento);
 				var catMonedas = Moneda.Get();
 
 				ExcelPackage Ep = new ExcelPackage();

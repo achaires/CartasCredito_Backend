@@ -88,7 +88,7 @@ namespace CartasCredito.Controllers.api
 				m.Activo = m.Activo;
 				*/
 
-				rsp = CartaCredito.Update(m);
+				rsp = CartaCredito.Update(modelo);
 			}
 			catch (Exception ex)
 			{

@@ -2855,7 +2855,6 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@DiasPresentarDocumentos", modelo.DiasParaPresentarDocumentos); pix++;
 				@params[pix] = new SqlParameter("@DiasPlazoProveedor", modelo.DiasPlazoProveedor); pix++;
 				@params[pix] = new SqlParameter("@CondicionesPago", modelo.CondicionesPago); pix++;
-				@params[pix] = new SqlParameter("@NumeroPeriodos", modelo.NumeroPeriodos); pix++;
 				@params[pix] = new SqlParameter("@BancoCorresponsalId", modelo.BancoCorresponsalId); pix++;
 				@params[pix] = new SqlParameter("@SeguroPorCuenta", modelo.SeguroPorCuenta); pix++;
 				@params[pix] = new SqlParameter("@GastosComisionesCorresponsal", modelo.GastosComisionesCorresponsal); pix++;

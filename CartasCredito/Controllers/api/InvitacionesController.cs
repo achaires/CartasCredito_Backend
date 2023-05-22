@@ -50,7 +50,7 @@ namespace CartasCredito.Controllers.api
 
 				if ( usr != null && usr.Id.Length > 0 )
 				{
-					var tryLogin_Gis = Utility.Login_GIS(usr.Email, invitacionRegistroDTO.Password);
+					var tryLogin_Gis = Utility.Login_GIS(invitacionRegistroDTO.UserName, invitacionRegistroDTO.Password);
 					//var tryLogin_Gis = Utility.Login_GIS("jesus.sanchez.ext@gis.com.mx", "O}8CuTL&[TAdZ8Z");
 					if (tryLogin_Gis.Flag != false)
 					{

@@ -63,7 +63,7 @@ namespace CartasCredito.Controllers.api
 				var invitacion = new Invitacion()
 				{
 					Email = userDto.Email,
-					UserName = userDto.UserName,
+					UserName = userDto.Email,
 					CreadoPorId = usrId
 				};
 
@@ -78,7 +78,7 @@ namespace CartasCredito.Controllers.api
 
 				var curDate = new DateTime();
 				var u = new AspNetUser();
-				u.UserName = userDto.UserName;
+				u.UserName = userDto.Email;
 				u.Email = userDto.Email;
 				u.PasswordHash = Crypto.HashPassword("RandomPassword" + curDate.ToString());
 				u.PhoneNumber = userDto.PhoneNumber;
@@ -188,7 +188,7 @@ namespace CartasCredito.Controllers.api
 			try
 			{
 				var u = AspNetUser.GetById(id);
-				u.UserName = userDto.UserName;
+				u.UserName = userDto.Email;
 				u.Email = userDto.Email;
 				u.PhoneNumber = userDto.PhoneNumber;
 
