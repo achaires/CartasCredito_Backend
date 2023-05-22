@@ -46,7 +46,9 @@ namespace CartasCredito.Controllers.api
 				rsp.DataDecimal = rspVal;
 				*/
 
-				
+				var monedaInput = Moneda.GetById(operacion.MonedaInput);
+				var monedaOutput = Moneda.GetById(operacion.MonedaOutput);
+
 				var clnt = new ConversionMonedaService.BPELToolsClient();
 				var req = new ConversionMonedaService.processRequest();
 				var res = new ConversionMonedaService.processResponse();
@@ -55,8 +57,8 @@ namespace CartasCredito.Controllers.api
 				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
 				req.process.P_CONVERSION_DATESpecified = true;
 				req.process.P_CONVERSION_DATE = DateTime.Parse(operacion.Fecha);
-				req.process.P_FROM_CURRENCY = operacion.MonedaInput;
-				req.process.P_TO_CURRENCY = operacion.MonedaOutput;
+				req.process.P_FROM_CURRENCY = monedaInput.Abbr.Trim();
+				req.process.P_TO_CURRENCY = monedaOutput.Abbr.Trim();
 
 				res = clnt.process(req.process);
 

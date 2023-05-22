@@ -266,7 +266,7 @@ namespace CartasCredito.Controllers.api
 		{
 			var rateEx = 1M;
 
-			/*
+			
 			try
 			{
 				var monedaInDb = Moneda.GetById(monedaIdIn);
@@ -286,8 +286,8 @@ namespace CartasCredito.Controllers.api
 				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
 				req.process.P_CONVERSION_DATESpecified = true;
 				req.process.P_CONVERSION_DATE = fecha;
-				req.process.P_FROM_CURRENCY = monedaInDb.Abbr;
-				req.process.P_TO_CURRENCY = monedaOutDb.Abbr;
+				req.process.P_FROM_CURRENCY = monedaInDb.Abbr.Trim();
+				req.process.P_TO_CURRENCY = monedaOutDb.Abbr.Trim();
 
 				res = clnt.process(req.process);
 
@@ -295,11 +295,13 @@ namespace CartasCredito.Controllers.api
 				{
 					rateEx = res.X_CONVERSION_RATE.Value;
 				}
+
+				Utility.Logger.Info("Conversion Rate " + res.X_CONVERSION_RATE.Value.ToString());
 			} catch (Exception ex)
 			{
+				Utility.Logger.Error(ex.Message);
 				rateEx = 1M;
 			}
-			*/
 			
 			return rateEx;
 		}
@@ -334,7 +336,6 @@ namespace CartasCredito.Controllers.api
 				var fechaInicioExact = new DateTime(fechaInicio.Year, fechaInicio.Month, fechaInicio.Day, 0, 0, 0);
 				var fechaFinExact = new DateTime(fechaFin.Year, fechaFin.Month, fechaFin.Day, 23, 59, 59);
 				
-
 				var cartasCredito = CartaCredito.Reporte(empresaId, fechaInicioExact, fechaFinExact).GroupBy(cc => cc.NumCartaCredito).Select(cg => cg.First()).OrderBy(cc => cc.FechaVencimiento);
 				var catMonedas = Moneda.Get();
 
@@ -380,7 +381,7 @@ namespace CartasCredito.Controllers.api
 				Sheet.Cells["B2:P2"].Merge = true;
 				Sheet.Cells["B4:P4"].Merge = true;
 
-				/*
+				
 				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
 				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
 				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
@@ -390,7 +391,7 @@ namespace CartasCredito.Controllers.api
 
 				var sheetLogo = Sheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
 				sheetLogo.SetPosition(50,50);
-				*/
+				
 				int fila = 10;
 
 				var proveedoresCat = Proveedor.Get(1);
@@ -463,11 +464,12 @@ namespace CartasCredito.Controllers.api
 						Sheet.Cells["I" + fila].Value = totalMonedaEnUsd;
 						Sheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 
-						granTotal += totalMonedaEnUsd;
-
 						fila++;
 						fila++;
 					}
+
+					granTotal += grupoEmpresa.TotalEmpresa;
+
 					fila++;
 					fila++;
 				}
@@ -480,19 +482,11 @@ namespace CartasCredito.Controllers.api
 				fila++;
 
 				var sumaProcentajes = 0M;
-				var grupoEmpresaLast = grupos.Last();
-
+				
 				foreach (var grupoEmpresa in grupos)
 				{
 					var porcentajeEmpresa = Math.Round(Math.Round(grupoEmpresa.TotalEmpresa, 4) / granTotal,4) * 100;
-					
-					/*
-					if (grupoEmpresa.Equals(grupoEmpresaLast))
-					{
-						porcentajeEmpresa = 100 - sumaProcentajes;
-					}
-					*/
-
+		
 					sumaProcentajes += porcentajeEmpresa;
 
 					Sheet.Cells["H" + fila].Value = grupoEmpresa.Key;
@@ -502,7 +496,7 @@ namespace CartasCredito.Controllers.api
 				}
 
 
-					Sheet.Cells["A:AZ"].AutoFitColumns();
+				Sheet.Cells["A:AZ"].AutoFitColumns();
 				
 				Sheet.Column(5).Width = 25;
 				Sheet.Column(4).Width = 25;
@@ -556,21 +550,21 @@ namespace CartasCredito.Controllers.api
 				ExcelPackage Ep = new ExcelPackage();
 				ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Reporte");
 				Sheet.Cells.Style.Font.Size = 10;
-				Sheet.Cells["B4:S4"].Style.Font.Bold = true;
+				Sheet.Cells["B4:R4"].Style.Font.Bold = true;
 
-				Sheet.Cells["B1:S1"].Style.Font.Size = 22;
-				Sheet.Cells["B1:S1"].Style.Font.Bold = true;
-				Sheet.Cells["B1:S1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+				Sheet.Cells["B1:R1"].Style.Font.Size = 22;
+				Sheet.Cells["B1:R1"].Style.Font.Bold = true;
+				Sheet.Cells["B1:R1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 				Sheet.Cells["B1"].Value = "Grupo Industrial Saltillo, S.A.B. de C.V.";
 
-				Sheet.Cells["B2:S2"].Style.Font.Size = 16;
-				Sheet.Cells["B2:S2"].Style.Font.Bold = true;
-				Sheet.Cells["B2:S2"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+				Sheet.Cells["B2:R2"].Style.Font.Size = 16;
+				Sheet.Cells["B2:R2"].Style.Font.Bold = true;
+				Sheet.Cells["B2:R2"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 				Sheet.Cells["B2"].Value = reporteNombre;
 
-				Sheet.Cells["B4:S4"].Style.Font.Size = 16;
-				Sheet.Cells["B4:S4"].Style.Font.Bold = false;
-				Sheet.Cells["B4:S4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+				Sheet.Cells["B4:R4"].Style.Font.Size = 16;
+				Sheet.Cells["B4:R4"].Style.Font.Bold = false;
+				Sheet.Cells["B4:R4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 				Sheet.Cells["B4"].Value = "Periodo " + fechaInicio.ToString("yyyy-MM-dd") + " - " + fechaFin.ToString("yyyy-MM-dd");
 
 				Sheet.Cells["B9"].Value = "Empresa";
@@ -584,19 +578,18 @@ namespace CartasCredito.Controllers.api
 				Sheet.Cells["J9"].Value = "Pagos Efectuados";
 				Sheet.Cells["K9"].Value = "Plazo Proveedor";
 				Sheet.Cells["L9"].Value = "Refinanciado";
-				Sheet.Cells["M9"].Value = "Saldo Insoluto por Embarcar";
-				Sheet.Cells["N9"].Value = "Saldo insoluto por embarcar (sin % tolerancia) ";
-				Sheet.Cells["O9"].Value = "Saldo insoluto real + Plazo Proveedor";
-				Sheet.Cells["P9"].Value = "Comisiones Pagadas";
-				Sheet.Cells["Q9"].Value = "Fecha Apertura";
-				Sheet.Cells["R9"].Value = "Fecha Vencimiento";
-				Sheet.Cells["S9"].Value = "Días plazo proveedor despúes de B/L";
+				Sheet.Cells["M9"].Value = "Saldo insoluto por embarcar (sin % tolerancia) ";
+				Sheet.Cells["N9"].Value = "Saldo insoluto real + Plazo Proveedor";
+				Sheet.Cells["O9"].Value = "Comisiones Pagadas";
+				Sheet.Cells["P9"].Value = "Fecha Apertura";
+				Sheet.Cells["Q9"].Value = "Fecha Vencimiento";
+				Sheet.Cells["R9"].Value = "Días plazo proveedor despúes de B/L";
 
-				Sheet.Cells["B9:S9"].Style.Font.Bold = true;
+				Sheet.Cells["B9:R9"].Style.Font.Bold = true;
 
-				Sheet.Cells["B1:S1"].Merge = true;
-				Sheet.Cells["B2:S2"].Merge = true;
-				Sheet.Cells["B4:S4"].Merge = true;
+				Sheet.Cells["B1:R1"].Merge = true;
+				Sheet.Cells["B2:R2"].Merge = true;
+				Sheet.Cells["B4:R4"].Merge = true;
 
 
 				int fila = 10;
@@ -645,19 +638,37 @@ namespace CartasCredito.Controllers.api
 							Sheet.Cells[string.Format("K{0}", fila)].Value = carta.PagosProgramados;
 							Sheet.Cells[string.Format("K{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
 
-							Sheet.Cells[string.Format("L{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("M{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("N{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("O{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("P{0}", fila)].Value = 0;
-							Sheet.Cells[string.Format("Q{0}", fila)].Value = carta.FechaApertura.ToString("dd-MM-yyyy");
-							Sheet.Cells[string.Format("R{0}", fila)].Value = carta.FechaVencimiento.ToString("dd-MM-yyyy");
-							Sheet.Cells[string.Format("S{0}", fila)].Value = carta.DiasPlazoProveedor;
+							Sheet.Cells[string.Format("L{0}", fila)].Value = 0; // Refinanciado
+
+							/*
+							 * Saldo insoluto por embarcar (sin % tolerancia) = Importe  –  Pagos Efectuados – Plazo Proveedor
+							 * */
+							var saldoInsolutoReal = carta.MontoOriginalLC - carta.PagosEfectuados - carta.PagosProgramados;
+							Sheet.Cells[string.Format("M{0}", fila)].Value = saldoInsolutoReal;
+							Sheet.Cells[string.Format("M{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
+							/*
+							 * Saldo insoluto real + Plazo Proveedor = Saldo insoluto por embarcar (sin % tolerancia) + Plazo Proveedor
+							 */
+							Sheet.Cells[string.Format("N{0}", fila)].Value = saldoInsolutoReal + carta.PagosProgramados;
+							Sheet.Cells[string.Format("N{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
+							/*
+							 * COMISIONES PAGADAS
+							 * Si hay comisiones pagadas en dólares y la carta es en yenes, deberá convertir los dólares a yenes para mostrarlas en el reporte
+							 */
+							Sheet.Cells[string.Format("O{0}", fila)].Value = carta.PagosComisionesEfectuados;
+							Sheet.Cells[string.Format("O{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+
+							Sheet.Cells[string.Format("P{0}", fila)].Value = carta.FechaApertura.ToString("dd-MM-yyyy");
+							Sheet.Cells[string.Format("Q{0}", fila)].Value = carta.FechaVencimiento.ToString("dd-MM-yyyy");
+							Sheet.Cells[string.Format("R{0}", fila)].Value = carta.DiasPlazoProveedor;
 
 							fila++;
 						}
 						Sheet.Cells["H" + fila].Value = "Total " + grupoMoneda.Key + ": ";
 						Sheet.Cells["I" + fila].Value = grupoMoneda.TotalMoneda;
+						Sheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 						fila++;
 					}
 
@@ -672,6 +683,12 @@ namespace CartasCredito.Controllers.api
 				Sheet.Column(5).Width = 15;
 				Sheet.Column(8).Width = 15;
 				Sheet.Column(9).Width = 15;
+				Sheet.Column(10).Width = 15;
+				Sheet.Column(11).Width = 15;
+				Sheet.Column(12).Width = 15;
+				Sheet.Column(13).Width = 15;
+				Sheet.Column(14).Width = 15;
+				Sheet.Column(15).Width = 15;
 				Sheet.Column(19).Width = 10;
 
 				Sheet.Column(2).Style.WrapText = true;

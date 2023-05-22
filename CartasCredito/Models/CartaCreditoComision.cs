@@ -29,6 +29,7 @@ namespace CartasCredito.Models
 		public string Moneda { get; set; }
 		public string Comision { get; set; }
 		public int PagoId { get; set; }
+		public string PagoMoneda { get; set; }
 		public int PagoMonedaId { get; set; }
 		public string Comentarios { get; set; }
 
@@ -73,6 +74,7 @@ namespace CartasCredito.Models
 							item.Moneda = row[idx].ToString(); idx++;
 							item.Comision = row[idx].ToString(); idx++;
 							item.PagoId = int.TryParse(row[idx].ToString(), out int pagoidval) ? pagoidval : 0; idx++;
+
 							item.PagoMonedaId = int.TryParse(row[idx].ToString(), out int pagoMonId) ? pagoMonId : 0; idx++;
 							item.Comentarios = row[idx].ToString(); idx++;
 
@@ -90,6 +92,7 @@ namespace CartasCredito.Models
 							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPVal) ? montoPVal : 0; idx++;
 							item.NumCartaCredito = row[idx].ToString(); idx++;
 							item.EstatusCartaId = int.TryParse(row[idx].ToString(), out int estcartaid) ? estcartaid : 0; idx++;
+							item.PagoMoneda = row[idx].ToString(); idx++;
 							item.EstatusCartaText = CartaCredito.GetStatusText(item.EstatusCartaId);
 							item.EstatusText = GetStatusText(item.Estatus);
 							item.EstatusClass = GetStatusClass(item.Estatus);

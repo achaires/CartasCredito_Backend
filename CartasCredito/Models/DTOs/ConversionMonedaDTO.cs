@@ -7,8 +7,8 @@ namespace CartasCredito.Models.DTOs
 {
 	public class ConversionMonedaDTO
 	{
-		public string MonedaInput { get; set; }
-		public string MonedaOutput { get; set; }
+		public int MonedaInput { get; set; }
+		public int MonedaOutput { get; set; }
 		public string Fecha { get; set; }
 	}
 }

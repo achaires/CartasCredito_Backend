@@ -2762,10 +2762,10 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[14];
+				SqlParameter[] @params = new SqlParameter[13];
 				int pix = 0;
 
-				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCarta); pix++;
+				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCartaId); pix++;
 				@params[pix] = new SqlParameter("@TipoStandBy", modelo.TipoStandBy); pix++;
 				@params[pix] = new SqlParameter("@BancoId", modelo.BancoId); pix++;
 				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
@@ -2773,7 +2773,6 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@CompradorId", modelo.CompradorId); pix++;
 				@params[pix] = new SqlParameter("@MontoOriginal", modelo.MontoOriginalLC); pix++;
 				@params[pix] = new SqlParameter("@FechaApertura", modelo.FechaApertura.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				@params[pix] = new SqlParameter("@Incoterm", modelo.Incoterm); pix++;
 				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@ConsideracionesReclamacion", modelo.ConsideracionesReclamacion); pix++;
@@ -3026,14 +3025,6 @@ namespace CartasCredito.Models
 			{
 				int pix = 0;
 				SqlParameter[] @params = new SqlParameter[10];
-				@params[pix] = new SqlParameter("@NumCarta", model.NumCarta); pix++;
-				@params[pix] = new SqlParameter("@TipoCarta", model.TipoCartaId.ToString()); pix++;
-				@params[pix] = new SqlParameter("@TipoActivoId", model.TipoActivoId); pix++;
-				@params[pix] = new SqlParameter("@MonedaId", model.MonedaId); pix++;
-				@params[pix] = new SqlParameter("@ProveedorId", model.ProveedorId); pix++;
-				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
-				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
-				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
 				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 

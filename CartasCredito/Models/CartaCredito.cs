@@ -43,6 +43,7 @@ namespace CartasCredito.Models
 		public decimal MontoOriginalLC { get; set; }
 		public decimal PagosEfectuados { get; set; }
 		public decimal PagosProgramados { get; set; }
+		public decimal PagosComisionesEfectuados { get; set; }
 		public decimal MontoDispuesto { get; set; }
 		public decimal SaldoInsoluto { get; set; }
 		public DateTime FechaApertura { get; set; }
@@ -444,7 +445,7 @@ namespace CartasCredito.Models
 							item.Enmiendas = Enmienda.GetByCartaCreditoId(item.Id);
 
 							item.Pagos = Pago.GetByCartaCreditoId(item.Id);
-
+							
 							decimal totalPagosEfectuados = 0;
 							foreach (var lp in item.Pagos)
 							{
@@ -466,6 +467,29 @@ namespace CartasCredito.Models
 							}
 
 							item.PagosProgramados = totalPagosProgramados;
+
+							item.Comisiones = CartaCreditoComision.GetByCartaCreditoId(item.Id);
+
+							decimal totalPagoComisionesEfectuados = 0;
+
+							foreach (var comision in item.Comisiones)
+							{
+								if ( comision.Estatus == 3)
+								{
+									if ( item.MonedaId != comision.PagoMonedaId )
+									{
+										DateTime comFechaPago = comision.FechaPago ?? DateTime.Now;
+										var comRateEx = Utility.GetRateEx(comision.PagoMonedaId, item.MonedaId, comFechaPago);
+										totalPagoComisionesEfectuados += comision.MontoPagado * comRateEx;
+									} else
+									{
+										totalPagoComisionesEfectuados += comision.MontoPagado;
+									}
+									
+								}
+							}
+
+							item.PagosComisionesEfectuados = totalPagoComisionesEfectuados;
 
 							res.Add(item);
 						}
@@ -637,28 +661,30 @@ namespace CartasCredito.Models
 						rsp.NumCartaCredito = row[idx].ToString(); idx++;
 						rsp.TipoCartaId = int.TryParse(row[idx].ToString(), out int tipoCartaVal) ? tipoCartaVal : 0; idx++;
 						rsp.TipoCarta = rsp.TipoCartaId == 17 ? "Comercial" : "StandBy";
-						rsp.TipoActivoId = int.Parse(row[idx].ToString()); idx++;
-						rsp.BancoId = int.Parse(row[idx].ToString()); idx++;
-						rsp.ProyectoId = int.Parse(row[idx].ToString()); idx++;
-						rsp.ProveedorId = int.Parse(row[idx].ToString()); idx++;
-						rsp.EmpresaId = int.Parse(row[idx].ToString()); idx++;
-						rsp.AgenteAduanalId = int.Parse(row[idx].ToString()); idx++;
-						rsp.MonedaId = int.Parse(row[idx].ToString()); idx++;
+						rsp.TipoActivoId = int.TryParse(row[idx].ToString(), out int taval) ? taval : 0; idx++;
+						rsp.BancoId = int.TryParse(row[idx].ToString(), out int bancoidval) ? bancoidval : 0; idx++;
+						rsp.ProyectoId = int.TryParse(row[idx].ToString(), out int proyectoidval) ? proyectoidval : 0; idx++;
+						rsp.ProveedorId = int.TryParse(row[idx].ToString(), out int proveeidval) ? proveeidval : 0; idx++;
+						rsp.EmpresaId = int.TryParse(row[idx].ToString(), out int eidval) ? eidval : 0; idx++;
+						rsp.AgenteAduanalId = int.TryParse(row[idx].ToString(), out int aadidval) ? aadidval : 0; idx++;
+						rsp.MonedaId = int.TryParse(row[idx].ToString(), out int monidval) ? monidval : 0; idx++;
 						rsp.TipoPago = row[idx].ToString(); idx++;
 						rsp.Responsable = row[idx].ToString(); idx++;
-						rsp.CompradorId = int.Parse(row[idx].ToString()); idx++;
-						rsp.PorcentajeTolerancia = int.Parse(row[idx].ToString()); idx++;
+						rsp.CompradorId = int.TryParse(row[idx].ToString(), out int compidval) ? compidval : 0; idx++;
+						rsp.PorcentajeTolerancia = int.TryParse(row[idx].ToString(), out int tolerval) ? tolerval: 0; idx++;
 						rsp.NumOrdenCompra = row[idx].ToString(); idx++;
-						rsp.CostoApertura = decimal.Parse(row[idx].ToString()); idx++;
-						rsp.MontoOrdenCompra = decimal.Parse(row[idx].ToString()); idx++;
-						rsp.MontoOriginalLC = decimal.Parse(row[idx].ToString()); idx++;
+						rsp.CostoApertura = decimal.TryParse(row[idx].ToString(), out decimal costapval) ? costapval : 0M; idx++;
+						rsp.MontoOrdenCompra = decimal.TryParse(row[idx].ToString(), out decimal ordencompval) ? ordencompval : 0M; idx++;
+						rsp.MontoOriginalLC = decimal.TryParse(row[idx].ToString(), out decimal montoval) ? montoval : 0M; idx++;
 						rsp.PagosEfectuados = decimal.TryParse(row[idx].ToString(), out decimal pagosEfectuadosVal) ? pagosEfectuadosVal : 0; idx++;
 						rsp.PagosProgramados = decimal.TryParse(row[idx].ToString(), out decimal pagosProgramadosVal) ? pagosProgramadosVal : 0; idx++;
 						rsp.MontoDispuesto = decimal.TryParse(row[idx].ToString(), out decimal montoDispuestoVal) ? montoDispuestoVal : 0; idx++;
 						rsp.SaldoInsoluto = decimal.TryParse(row[idx].ToString(), out decimal saldoInsolutoVal) ? saldoInsolutoVal : 0; idx++;
 						rsp.FechaApertura = DateTime.Parse(row[idx].ToString()); idx++;
 						rsp.Incoterm = row[idx].ToString(); idx++;
-						rsp.FechaLimiteEmbarque = DateTime.Parse(row[idx].ToString()); idx++;
+
+						rsp.FechaLimiteEmbarque = DateTime.TryParse(row[idx].ToString(), out DateTime flimval) ? flimval : DateTime.Now.AddDays(365); idx++;
+
 						rsp.EmbarquesParciales = row[idx].ToString(); idx++;
 						rsp.Transbordos = row[idx].ToString(); idx++;
 						rsp.PuntoEmbarque = row[idx].ToString(); idx++;
@@ -668,7 +694,7 @@ namespace CartasCredito.Models
 						rsp.PagoCartaAceptacion = row[idx].ToString(); idx++;
 						rsp.ConsignacionMercancia = row[idx].ToString(); idx++;
 						rsp.ConsideracionesAdicionales = row[idx].ToString(); idx++;
-						rsp.DiasParaPresentarDocumentos = int.Parse(row[idx].ToString()); idx++;
+						rsp.DiasParaPresentarDocumentos = int.TryParse(row[idx].ToString(), out int diasdocval) ? diasdocval : 0; idx++;
 						rsp.DiasPlazoProveedor = int.TryParse(row[idx].ToString(), out int diasPlazoVal) ? diasPlazoVal : 0; idx++;
 						rsp.CondicionesPago = row[idx].ToString(); idx++;
 						rsp.NumeroPeriodos = int.TryParse(row[idx].ToString(), out int numeroPeriodosVal) ? numeroPeriodosVal : 0; idx++;

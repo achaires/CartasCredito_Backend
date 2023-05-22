@@ -43,5 +43,50 @@ namespace CartasCredito.Models
 
 			return res;
 		}
+
+		public static decimal GetRateEx(int monedaIdIn, int monedaIdOut, DateTime fecha)
+		{
+			var rateEx = 1M;
+
+
+			try
+			{
+				var monedaInDb = Moneda.GetById(monedaIdIn);
+				var monedaOutDb = Moneda.GetById(monedaIdOut);
+
+				var clnt = new ConversionMonedaService.BPELToolsClient();
+				var req = new ConversionMonedaService.processRequest();
+				var res = new ConversionMonedaService.processResponse();
+
+				var timeoutSpan = new TimeSpan(0, 0, 1);
+				clnt.Endpoint.Binding.CloseTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.OpenTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.ReceiveTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.SendTimeout = timeoutSpan;
+
+				req.process = new ConversionMonedaService.process();
+				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
+				req.process.P_CONVERSION_DATESpecified = true;
+				req.process.P_CONVERSION_DATE = fecha;
+				req.process.P_FROM_CURRENCY = monedaInDb.Abbr.Trim();
+				req.process.P_TO_CURRENCY = monedaOutDb.Abbr.Trim();
+
+				res = clnt.process(req.process);
+
+				if (res.X_CONVERSION_RATE != null && res.X_MNS_ERROR == null)
+				{
+					rateEx = res.X_CONVERSION_RATE.Value;
+				}
+
+				Utility.Logger.Info("Conversion Rate " + res.X_CONVERSION_RATE.Value.ToString());
+			}
+			catch (Exception ex)
+			{
+				Utility.Logger.Error(ex.Message);
+				rateEx = 1M;
+			}
+
+			return rateEx;
+		}
 	}
 }

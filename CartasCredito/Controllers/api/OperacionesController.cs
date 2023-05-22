@@ -22,13 +22,35 @@ namespace CartasCredito.Controllers.api
 		[HttpPost]
 		public IEnumerable<CartaCredito> Filtrar([FromBody] CartasCreditoFiltrarDTO filtros)
 		{
-			var fechaIni = new DateTime(filtros.FechaInicio.Year, filtros.FechaInicio.Month, filtros.FechaInicio.Day, 0, 0, 0);
-			var fechaFin = new DateTime(filtros.FechaFin.Year, filtros.FechaFin.Month, filtros.FechaFin.Day, 23, 59, 59);
+			var cartasResponse = new List<CartaCredito>();
 
-			filtros.FechaInicio = fechaIni;
-			filtros.FechaFin = fechaFin;
+			try
+			{
+				var fechaIni = new DateTime(filtros.FechaInicio.Year, filtros.FechaInicio.Month, filtros.FechaInicio.Day, 0, 0, 0);
+				var fechaFin = new DateTime(filtros.FechaFin.Year, filtros.FechaFin.Month, filtros.FechaFin.Day, 23, 59, 59);
+				
+
+				filtros.FechaInicio = fechaIni;
+				filtros.FechaFin = fechaFin;
+
+				var cartasEnRango = CartaCredito.Filtrar(filtros);
+
+				cartasResponse = cartasEnRango.Where(carta =>
+					(filtros.BancoId == 0 || carta.BancoId == filtros.BancoId) &&
+					(filtros.EmpresaId == 0 || carta.EmpresaId == filtros.EmpresaId) &&
+					(filtros.MonedaId == 0 || carta.MonedaId == filtros.MonedaId) &&
+					(filtros.NumCarta == "" || carta.NumCartaCredito.Trim().ToLower() == filtros.NumCarta.Trim().ToLower()) &&
+					(filtros.ProveedorId == 0 || carta.ProveedorId == filtros.ProveedorId) &&
+					(filtros.TipoActivoId == 0 || carta.TipoActivoId == filtros.TipoActivoId) &&
+					(filtros.TipoCarta == "0" || carta.TipoCartaId == (int.TryParse(filtros.TipoCarta, out int tcval) ? tcval : 0))
+				).ToList();
+			} catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
 			
-			return CartaCredito.Filtrar(filtros);
+
+			return cartasResponse;
 		}
 
 		[Route("api/operaciones/clonar/{id}")]
@@ -43,6 +65,17 @@ namespace CartasCredito.Controllers.api
 
 				var newCC = new CartaCredito();
 				newCC.TipoCarta = originalCC.TipoCarta;
+
+				if ( originalCC.TipoCarta == "Comercial" )
+				{
+					newCC.TipoCarta = "17";
+					newCC.TipoCartaId = 17;
+				} else
+				{
+					newCC.TipoCarta = "18";
+					newCC.TipoCartaId = 18;
+				}
+
 				newCC.TipoActivoId = originalCC.TipoActivoId;
 				newCC.BancoId = originalCC.BancoId;
 				newCC.ProyectoId = originalCC.ProyectoId;

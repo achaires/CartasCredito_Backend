@@ -34,11 +34,12 @@ namespace CartasCredito.Controllers.api
 
 			try
 			{
+				var cc = CartaCredito.GetById(model.CartaCreditoId);
 				var nuevoReg = new CartaCreditoComision();
 				nuevoReg.CartaCreditoId = model.CartaCreditoId;
 				nuevoReg.ComisionId = model.ComisionId;
 				nuevoReg.FechaCargo = model.FechaCargo;
-				nuevoReg.MonedaId = model.MonedaId;
+				nuevoReg.MonedaId = cc.MonedaId;
 				nuevoReg.Monto = model.Monto;
 				nuevoReg.PagoId = model.NumReferencia;
 				nuevoReg.CreadoPor = usr;

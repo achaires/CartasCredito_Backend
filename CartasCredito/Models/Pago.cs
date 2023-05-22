@@ -143,6 +143,8 @@ namespace CartasCredito.Models
 							var item = new Pago();
 
 							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
+							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
+							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPagadoVal) ? montoPagadoVal : 0; idx++;
 
 							if (row[idx].ToString().Length > 0)
 							{
@@ -166,7 +168,6 @@ namespace CartasCredito.Models
 
 							idx++;
 
-							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
 							item.RegistroPagoPor = row[idx].ToString(); idx++;
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.CartaCreditoId = row[idx].ToString(); idx++;
@@ -251,6 +252,8 @@ namespace CartasCredito.Models
 							var item = new Pago();
 
 							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
+							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
+							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPagadoVal) ? montoPagadoVal : 0; idx++;
 
 							if (row[idx].ToString().Length > 0)
 							{
@@ -274,7 +277,7 @@ namespace CartasCredito.Models
 
 							idx++;
 
-							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
+							
 							item.RegistroPagoPor = row[idx].ToString(); idx++;
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.CartaCreditoId = row[idx].ToString(); idx++;
