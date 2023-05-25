@@ -2895,6 +2895,65 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Upd_StandBy(CartaCredito modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[15];
+
+				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
+				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCartaId); pix++;
+				@params[pix] = new SqlParameter("@TipoStandBy", modelo.TipoStandBy); pix++;
+				@params[pix] = new SqlParameter("@BancoId", modelo.BancoId); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", modelo.EmpresaId); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", modelo.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@CompradorId", modelo.CompradorId); pix++;
+				@params[pix] = new SqlParameter("@MontoOriginal", modelo.MontoOriginalLC); pix++;
+				@params[pix] = new SqlParameter("@FechaApertura", modelo.FechaApertura.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaLimiteEmbarque", modelo.FechaLimiteEmbarque.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimiento", modelo.FechaVencimiento.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@ConsideracionesReclamacion", modelo.ConsideracionesReclamacion); pix++;
+				@params[pix] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales); pix++;
+				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
+				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
+
+
+				if (!bd.ExecuteProcedure(conexion, "upd_CartaStandBy", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+
+
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+					else
+					{
+						string ccId = dt.Rows[0][3].ToString();
+
+						//Ins_CartaCreditoDocumentos(ccId, modelo.DocumentosRequeridosIds, out dt, out msgError);
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
 		public Boolean Upd_CartaCreditoSwift(string ccid, string numeroCartaComercial, string swiftFilename, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;

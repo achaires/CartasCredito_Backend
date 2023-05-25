@@ -36,7 +36,6 @@ namespace CartasCredito.Controllers.api
 			{
 				modelo.CreadoPor = usr;
 				
-				// Si es Stand By, cambian los parámetros
 				if ( modelo.TipoCartaId == 17 )
 				{
 					rsp = CartaCredito.Insert(modelo);
@@ -88,7 +87,15 @@ namespace CartasCredito.Controllers.api
 				m.Activo = m.Activo;
 				*/
 
-				rsp = CartaCredito.Update(modelo);
+				//rsp = CartaCredito.Update(modelo);
+				if (modelo.TipoCartaId == 17)
+				{
+					rsp = CartaCredito.Update(modelo);
+				}
+				else
+				{
+					rsp = CartaCredito.UpdateStandBy(modelo);
+				}
 			}
 			catch (Exception ex)
 			{

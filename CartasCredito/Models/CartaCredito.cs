@@ -636,6 +636,46 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static RespuestaFormato UpdateStandBy(CartaCredito modelo)
+		{
+			RespuestaFormato rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Upd_StandBy(modelo, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var row = dt.Rows[0];
+						string id = row[3].ToString();
+
+						if (id.Length > 0)
+						{
+							rsp.Flag = true;
+							rsp.DataInt = 1;
+							rsp.DataString = id;
+						}
+					}
+				}
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
+			}
+			catch (Exception ex)
+			{
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
+			}
+
+			return rsp;
+		}
+
 		public static CartaCredito GetById(string id)
 		{
 			CartaCredito rsp = new CartaCredito();
@@ -729,6 +769,8 @@ namespace CartasCredito.Models
 						rsp.Empresa = row[idx].ToString(); idx++;
 						rsp.Comprador = row[idx].ToString(); idx++;
 						rsp.InstruccionesEspeciales = row[idx].ToString(); idx++;
+						rsp.TipoStandBy = row[idx].ToString(); idx++;
+						rsp.ConsideracionesReclamacion = row[idx].ToString(); idx++;
 
 						rsp.Pagos = Pago.GetByCartaCreditoId(rsp.Id);
 						rsp.Comisiones = CartaCreditoComision.GetByCartaCreditoId(rsp.Id);
