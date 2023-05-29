@@ -283,7 +283,6 @@
     <Compile Include="Controllers\api\PagosComisionesController.cs" />
     <Compile Include="Controllers\api\PagosController.cs" />
     <Compile Include="Controllers\api\PermissionsController.cs" />
-    <Compile Include="Controllers\api\PFEProgramasController.cs" />
     <Compile Include="Controllers\api\ProveedoresController.cs" />
     <Compile Include="Controllers\api\ProyectosController.cs" />
     <Compile Include="Controllers\api\ReporteController.cs" />
@@ -332,8 +331,6 @@
     <Compile Include="Models\DTOs\PagoComisionInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoUpdateDTO.cs" />
-    <Compile Include="Models\DTOs\PFEProgramaBuscarDTO.cs" />
-    <Compile Include="Models\DTOs\PFEProgramaInsertDTO.cs" />
     <Compile Include="Models\DTOs\RoleInsertDTO.cs" />
     <Compile Include="Models\DTOs\RoleUpdateDTO.cs" />
     <Compile Include="Models\DTOs\SolicitudReporteDTO.cs" />
@@ -350,8 +347,6 @@
     <Compile Include="Models\Pago.cs" />
     <Compile Include="Models\Pais.cs" />
     <Compile Include="Models\PeriodoContable.cs" />
-    <Compile Include="Models\PFEPago.cs" />
-    <Compile Include="Models\PFEPrograma.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Reporte.cs" />

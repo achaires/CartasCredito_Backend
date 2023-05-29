@@ -4891,154 +4891,6 @@ namespace CartasCredito.Models
 		}
 		#endregion
 
-		#region PFE
-		public Boolean Cons_PFEProgramaBuscar(PFEPrograma model, out DataTable dt, out String msgError)
-		{
-			bool boolProcess = true;
-			dt = new DataTable();
-			msgError = string.Empty;
-
-			try
-			{
-				var pix = 0;
-				SqlParameter[] @params = new SqlParameter[3];
-				@params[pix] = new SqlParameter("@Anio", model.Anio); pix++;
-				@params[pix] = new SqlParameter("@Periodo", model.Periodo); pix++;
-				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
-
-				if (!bd.ExecuteProcedure(conexion, "cons_PFEProgramaBuscar", @params, out dt, 1000))
-				{
-					boolProcess = false;
-					msgError = bd._error.ToString();
-				}
-				else
-				{
-					if (dt.Rows.Count < 1)
-					{
-						boolProcess = false;
-						msgError = "No hay datos para mostrar";
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				boolProcess = false;
-				msgError = e.ToString();
-			}
-
-			return boolProcess;
-		}
-
-		public Boolean Ins_PFEPrograma(PFEPrograma model, out DataTable dt, out String msgError)
-		{
-			bool boolProcess = true;
-			dt = new DataTable();
-			msgError = string.Empty;
-
-			try
-			{
-				var pix = 0;
-				SqlParameter[] @params = new SqlParameter[4];
-				@params[pix] = new SqlParameter("@Anio", model.Anio); pix++;
-				@params[pix] = new SqlParameter("@Periodo", model.Periodo); pix++;
-				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
-				@params[pix] = new SqlParameter("@CreadoPor", model.CreadoPor); pix++;
-
-				if (!bd.ExecuteProcedure(conexion, "ins_PFEPrograma", @params, out dt, 1000))
-				{
-					boolProcess = false;
-					msgError = bd._error.ToString();
-				}
-				else
-				{
-					if (!dt.Rows[0][0].ToString().Equals("0"))
-					{
-						boolProcess = false;
-						msgError = dt.Rows[0][1].ToString();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				boolProcess = false;
-				msgError = e.ToString();
-			}
-
-			return boolProcess;
-		}
-
-		public Boolean Ins_PFEPago(PFEPago model, out DataTable dt, out String msgError)
-		{
-			bool boolProcess = true;
-			dt = new DataTable();
-			msgError = string.Empty;
-
-			try
-			{
-				var pix = 0;
-				SqlParameter[] @params = new SqlParameter[2];
-				@params[pix] = new SqlParameter("@ProgramaId", model.PFEProgramaId); pix++;
-				@params[pix] = new SqlParameter("@PagoID", model.PagoId); pix++;
-
-				if (!bd.ExecuteProcedure(conexion, "ins_PFEPago", @params, out dt, 1000))
-				{
-					boolProcess = false;
-					msgError = bd._error.ToString();
-				}
-				else
-				{
-					if (!dt.Rows[0][0].ToString().Equals("0"))
-					{
-						boolProcess = false;
-						msgError = dt.Rows[0][1].ToString();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				boolProcess = false;
-				msgError = e.ToString();
-			}
-
-			return boolProcess;
-		}
-
-		public Boolean Cons_PFEPagosByProgramaId(int programaId, out DataTable dt, out String msgError)
-		{
-			bool boolProcess = true;
-			dt = new DataTable();
-			msgError = string.Empty;
-
-			try
-			{
-				var pix = 0;
-				SqlParameter[] @params = new SqlParameter[1];
-				@params[pix] = new SqlParameter("@ProgramaId", programaId);
-
-				if (!bd.ExecuteProcedure(conexion, "cons_PFEPagoByProgramaId", @params, out dt, 1000))
-				{
-					boolProcess = false;
-					msgError = bd._error.ToString();
-				}
-				else
-				{
-					if (!dt.Rows[0][0].ToString().Equals("0"))
-					{
-						boolProcess = false;
-						msgError = dt.Rows[0][1].ToString();
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				boolProcess = false;
-				msgError = e.ToString();
-			}
-
-			return boolProcess;
-		}
-		#endregion
-
 		#region Invitaciones
 		public Boolean Ins_Invitacion(Invitacion modelo, out DataTable dt, out String msgError)
 		{
@@ -5144,6 +4996,10 @@ namespace CartasCredito.Models
 
 			return boolProcess;
 		}
+		#endregion
+
+		#region
+
 		#endregion
 	}
 }
