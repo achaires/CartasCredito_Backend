@@ -88,7 +88,7 @@ namespace CartasCredito.Controllers.api
 				*/
 
 				//rsp = CartaCredito.Update(modelo);
-				if (modelo.TipoCartaId == 17)
+				if (m.TipoCartaId == 17)
 				{
 					rsp = CartaCredito.Update(modelo);
 				}
