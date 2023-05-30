@@ -5143,6 +5143,45 @@ namespace CartasCredito.Models
 
 			return boolProcess;
 		}
+
+		public Boolean Ins_PFETipoCambio(PFETipoCambio model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@ProgramaId", model.ProgramaId); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", model.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@PA", model.PA); pix++;
+				@params[pix] = new SqlParameter("@PA1", model.PA1); pix++;
+				@params[pix] = new SqlParameter("@PA2", model.PA2); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_PFETipoCambio", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
 		#endregion
 	}
 }

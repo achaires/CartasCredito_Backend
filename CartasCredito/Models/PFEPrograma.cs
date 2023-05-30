@@ -106,6 +106,47 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static RespuestaFormato InsertTipoCambio(PFETipoCambio model)
+		{
+			RespuestaFormato rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Ins_PFETipoCambio(model, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var row = dt.Rows[0];
+						int id = 0;
+						Int32.TryParse(row[3].ToString(), out id);
+
+						if (id > 0)
+						{
+							rsp.Description = "Modelo insertado";
+							rsp.Flag = true;
+							rsp.DataInt = id;
+						}
+					}
+				}
+				else
+				{
+					rsp.Description = "Ocurrió un error";
+					rsp.Errors.Add(errores);
+				}
+			}
+			catch (Exception ex)
+			{
+				rsp.Errors.Add(ex.Message);
+				rsp.Description = "Ocurrió un error";
+			}
+
+			return rsp;
+		}
+
 
 		public static PFEPrograma Buscar(PFEPrograma model)
 		{
@@ -128,6 +169,7 @@ namespace CartasCredito.Models
 						rsp.Anio = int.Parse(row[idx].ToString()); idx++;
 						rsp.Periodo = int.Parse(row[idx].ToString()); idx++;
 						rsp.EmpresaId = int.Parse(row[idx].ToString()); idx++;
+						rsp.Pagos = PagosByPFEProgramaId(rsp.Id);
 					}
 				}
 			} catch (Exception ex)
@@ -138,7 +180,7 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
-		public List<Pago> PagosByPFEProgramaId (int pfeProgramaId)
+		public static List<Pago> PagosByPFEProgramaId (int pfeProgramaId)
 		{
 			var rsp = new List<Pago>();
 
@@ -158,24 +200,21 @@ namespace CartasCredito.Models
 							var row = dt.Rows[i];
 							var item = new Pago();
 
-							item.NumeroPago = int.TryParse(row[idx].ToString(), out int numPagoVal) ? numPagoVal : 0; idx++;
 							item.Id = int.TryParse(row[idx].ToString(), out int idval) ? idval : 0; idx++;
+							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
+							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPgVal) ? montoPgVal : 0; idx++;
 							item.FechaVencimiento = DateTime.TryParse(row[idx].ToString(), out DateTime fvVal) ? fvVal : DateTime.Now.AddDays(1); idx++;
 							item.FechaPago = DateTime.TryParse(row[idx].ToString(), out DateTime fpVal) ? fpVal : DateTime.Now.AddDays(1); idx++;
-							item.MontoPago = decimal.TryParse(row[idx].ToString(), out decimal montoVal) ? montoVal : 0; idx++;
-							//item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montoPgVal) ? montoPgVal : 0;
-							idx++;
 							item.RegistroPagoPor = row[idx].ToString(); idx++;
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.CartaCreditoId = row[idx].ToString(); idx++;
-							//item.NumeroPago = int.TryParse(row[idx].ToString(), out int numPagoVal) ? numPagoVal : 0;
-							idx++;
+							item.NumeroPago = int.TryParse(row[idx].ToString(), out int numPagoVal) ? numPagoVal : 0; idx++;
 							item.NumeroFactura = row[idx].ToString(); idx++;
 							item.Estatus = int.TryParse(row[idx].ToString(), out int statusVal) ? statusVal : 0; idx++;
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
 							item.Activo = Boolean.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
 							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crVal) ? crVal : DateTime.Now.AddDays(1); idx++;
-
+							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
 							rsp.Add(item);
 						}
 					}

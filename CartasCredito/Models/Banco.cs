@@ -19,6 +19,8 @@ namespace CartasCredito.Models
 		public DateTime? Eliminado { get; set; }
 		public List<Contacto> Contactos { get; set; }
 
+		public List<LineaDeCredito> LineasDeCredito { get; set; }
+
 		public Banco()
 		{
 			Id = 0;
@@ -31,11 +33,14 @@ namespace CartasCredito.Models
 			Actualizado = null;
 			Eliminado = null;
 			Contactos = new List<Contacto>();
+			LineasDeCredito = new List<LineaDeCredito>();
 		}
 
 		public static List<Banco> Get(int activo = 1)
 		{
 			List<Banco> res = new List<Banco>();
+
+			var lineasCredito = LineaDeCredito.Get();
 
 			try
 			{
@@ -56,7 +61,8 @@ namespace CartasCredito.Models
 							item.Id = int.Parse(row[idx].ToString()); idx++;
 							item.Nombre = row[idx].ToString(); idx++;
 							item.Descripcion = row[idx].ToString(); idx++;
-							item.TotalLinea = decimal.TryParse(row[idx].ToString(), out decimal totalVal) ? totalVal : 0M; idx++;
+							//item.TotalLinea = decimal.TryParse(row[idx].ToString(), out decimal totalVal) ? totalVal : 0M;
+							idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
 							item.CreadoPor = row[idx].ToString(); idx++;
 							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crdVal) ? crdVal : DateTime.Now; idx++;
@@ -80,6 +86,10 @@ namespace CartasCredito.Models
 							{
 								item.Eliminado = null;
 							}
+
+							item.LineasDeCredito = lineasCredito.Where(lc => lc.BancoId == item.Id).ToList();
+
+							item.TotalLinea = item.LineasDeCredito.Sum(lc => lc.Monto);
 
 							res.Add(item);
 						}

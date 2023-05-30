@@ -70,8 +70,52 @@ namespace CartasCredito.Controllers.api
 		}
 
 		// POST api/<controller>
-		public void Post([FromBody] string value)
+		public RespuestaFormato Post([FromBody] PFEProgramaInsertarDTO pfePrograma)
 		{
+			var rsp = new RespuestaFormato();
+			try
+			{
+				var newProg = new PFEPrograma()
+				{
+					EmpresaId = pfePrograma.EmpresaId,
+					Anio = pfePrograma.Anio,
+					Periodo = pfePrograma.Periodo,
+				};
+
+				rsp = PFEPrograma.Insert(newProg);
+
+				if ( rsp.Flag )
+				{
+					foreach ( var progPago in pfePrograma.Pagos)
+					{
+						PFEPrograma.InsertPFEProgramaPago(rsp.DataInt, progPago.Id);
+					}
+
+					foreach (var procTipoCambio in pfePrograma.TiposCambio)
+					{
+						var newTc = new PFETipoCambio()
+						{
+							ProgramaId = rsp.DataInt,
+							MonedaId = procTipoCambio.MonedaId,
+							PA = procTipoCambio.PA,
+							PA1 = procTipoCambio.PA1,
+							PA2 = procTipoCambio.PA2
+						};
+
+						PFEPrograma.InsertTipoCambio(newTc);
+					}
+				}
+
+				rsp.DataString = "Programa creado con éxito";
+				rsp.Flag = true;
+			} catch (Exception ex)
+			{
+				rsp.DataString = ex.Message;
+				rsp.Flag = false;
+				Utility.Logger.Error(ex.Message);
+			}
+
+			return rsp;
 		}
 
 		// PUT api/<controller>/5

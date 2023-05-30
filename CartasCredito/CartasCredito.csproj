@@ -333,6 +333,7 @@
     <Compile Include="Models\DTOs\PagoInsertDTO.cs" />
     <Compile Include="Models\DTOs\PagoUpdateDTO.cs" />
     <Compile Include="Models\DTOs\PFEProgramaBuscarDTO.cs" />
+    <Compile Include="Models\DTOs\PFEProgramaInsertarDTO.cs" />
     <Compile Include="Models\DTOs\RoleInsertDTO.cs" />
     <Compile Include="Models\DTOs\RoleUpdateDTO.cs" />
     <Compile Include="Models\DTOs\SolicitudReporteDTO.cs" />
@@ -350,6 +351,7 @@
     <Compile Include="Models\Pais.cs" />
     <Compile Include="Models\PeriodoContable.cs" />
     <Compile Include="Models\PFEPrograma.cs" />
+    <Compile Include="Models\PFETipoCambio.cs" />
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Reporte.cs" />
