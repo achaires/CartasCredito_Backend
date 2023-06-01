@@ -369,7 +369,7 @@
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
     <Content Include="assets\GIS_BN.jpg" />
     <Content Include="assets\index-46ff38eb.css" />
-    <Content Include="assets\index-aba82d40.js" />
+    <Content Include="assets\index-73546000.js" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>

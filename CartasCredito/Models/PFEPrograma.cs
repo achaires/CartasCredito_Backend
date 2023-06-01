@@ -14,6 +14,7 @@ namespace CartasCredito.Models
 		public int EmpresaId { get; set; }
 
 		public List<Pago> Pagos { get; set; }
+		public List<PFETipoCambio> TiposCambio { get; set; }
 
 		public PFEPrograma() 
 		{
@@ -175,6 +176,70 @@ namespace CartasCredito.Models
 			} catch (Exception ex)
 			{
 				Utility.Logger.Error(ex.Message);
+			}
+
+			return rsp;
+		}
+
+		public static PFEPrograma GetById(int id)
+		{
+			var rsp = new PFEPrograma();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Cons_PFEProgramaById(id, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var idx = 0;
+						var row = dt.Rows[0];
+
+						rsp.Id = int.Parse(row[idx].ToString()); idx++;
+						rsp.Anio = int.Parse(row[idx].ToString()); idx++;
+						rsp.Periodo = int.Parse(row[idx].ToString()); idx++;
+						rsp.EmpresaId = int.Parse(row[idx].ToString()); idx++;
+						rsp.Pagos = PagosByPFEProgramaId(rsp.Id);
+						rsp.TiposCambio = PFETipoCambio.GetByProgramaId(rsp.Id);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Utility.Logger.Error(ex.Message);
+			}
+
+			return rsp;
+		}
+
+		public static RespuestaFormato DelPagosByProgramaId(int id)
+		{
+			var rsp = new RespuestaFormato();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Del_PFEPagosByProgramaId(id, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						rsp.Flag = true;
+						rsp.DataString = "Registro eliminado";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Utility.Logger.Error(ex.Message);
+				rsp.Flag = false;
+				rsp.DataString = ex.Message;
+				rsp.Errors.Add(ex.Message);
 			}
 
 			return rsp;

@@ -32,22 +32,33 @@ namespace CartasCredito.Controllers.api
 
 				rsp = PFEPrograma.Buscar(buscarModelo);
 
-				if ( rsp.Id < 1 )
-				{
-					var dateNow = DateTime.Now;
-					var periodoUltDia = DateTime.DaysInMonth(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo);
+				var dateNow = DateTime.Now;
+				var periodoUltDia = DateTime.DaysInMonth(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo);
 
-					var fechaPeriodoIni = new DateTime(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo, 1,0,0,0);
-					var fechaPeriodoFin = new DateTime(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo, periodoUltDia, 23, 59, 59);
-
-					rsp.Anio = pfeProgramaBuscarDTO.Anio;
-					rsp.Periodo = pfeProgramaBuscarDTO.Periodo;
-					rsp.EmpresaId = pfeProgramaBuscarDTO.EmpresaId;
-					rsp.Pagos = Pago.GetProgramados()
+				var fechaPeriodoIni = new DateTime(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo, 1, 0, 0, 0);
+				var fechaPeriodoFin = new DateTime(pfeProgramaBuscarDTO.Anio, pfeProgramaBuscarDTO.Periodo, periodoUltDia, 23, 59, 59);
+				
+				var pagosProgramados = Pago.GetProgramados()
 							.Where(p => p.EmpresaId == pfeProgramaBuscarDTO.EmpresaId)
 							.Where(p => p.FechaVencimiento >= fechaPeriodoIni)
 							.Where(p => p.FechaVencimiento <= fechaPeriodoFin)
 							.ToList();
+
+				if ( rsp.Id < 1 )
+				{
+					rsp.Anio = pfeProgramaBuscarDTO.Anio;
+					rsp.Periodo = pfeProgramaBuscarDTO.Periodo;
+					rsp.EmpresaId = pfeProgramaBuscarDTO.EmpresaId;
+					rsp.Pagos = pagosProgramados;
+				} else
+				{
+					foreach (Pago pago in pagosProgramados.Where(p => rsp.Pagos.Any(pp => pp.Id == p.Id)))
+					{
+						pago.PFEActivo = true;
+					}
+
+					rsp.TiposCambio = PFETipoCambio.GetByProgramaId(rsp.Id);
+					rsp.Pagos = pagosProgramados;
 				}
 			} catch (Exception ex)
 			{
@@ -119,8 +130,51 @@ namespace CartasCredito.Controllers.api
 		}
 
 		// PUT api/<controller>/5
-		public void Put(int id, [FromBody] string value)
+		public RespuestaFormato Put(int id, [FromBody] PFEProgramaInsertarDTO pfePrograma)
 		{
+			var rsp = new RespuestaFormato();
+			try
+			{
+				var updPrograma = PFEPrograma.GetById(id);
+				
+				if (updPrograma.Id > 0)
+				{
+					// eliminar los pagos relacionados y tipos de cambio relacionados al programa para no duplicar
+					PFETipoCambio.DelByProgramaId(updPrograma.Id);
+					PFEPrograma.DelPagosByProgramaId(updPrograma.Id);
+
+
+					foreach (var progPago in pfePrograma.Pagos)
+					{
+						PFEPrograma.InsertPFEProgramaPago(updPrograma.Id, progPago.Id);
+					}
+
+					foreach (var procTipoCambio in pfePrograma.TiposCambio)
+					{
+						var newTc = new PFETipoCambio()
+						{
+							ProgramaId = updPrograma.Id,
+							MonedaId = procTipoCambio.MonedaId,
+							PA = procTipoCambio.PA,
+							PA1 = procTipoCambio.PA1,
+							PA2 = procTipoCambio.PA2
+						};
+
+						PFEPrograma.InsertTipoCambio(newTc);
+					}
+				}
+
+				rsp.DataString = "Programa actualizado con éxito";
+				rsp.Flag = true;
+			}
+			catch (Exception ex)
+			{
+				rsp.DataString = ex.Message;
+				rsp.Flag = false;
+				Utility.Logger.Error(ex.Message);
+			}
+
+			return rsp;
 		}
 
 		// DELETE api/<controller>/5
