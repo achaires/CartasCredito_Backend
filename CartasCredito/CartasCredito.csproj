@@ -294,6 +294,7 @@
     <Compile Include="Controllers\api\TiposComisionController.cs" />
     <Compile Include="Controllers\api\TiposPersonaFiscalController.cs" />
     <Compile Include="Controllers\api\UsersController.cs" />
+    <Compile Include="Controllers\DescargaSwiftController.cs" />
     <Compile Include="Controllers\GeneradorReportes.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -455,6 +456,7 @@
     <Folder Include="Models\ReportesModels\" />
     <Folder Include="Reportes\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\DescargaSwift\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

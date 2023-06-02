@@ -123,7 +123,7 @@ namespace CartasCredito.Controllers.api
 				int port = 0;
 				string host = "";
 				string username = "";
-				string mailFrom = "rondines.service@gis.com.mx";
+				string mailFrom = "cartas.credito@gis.com.mx";
 				string password = "";
 				bool ssl = false;
 				bool defaultCredentials = false;
