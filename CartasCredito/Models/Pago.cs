@@ -41,6 +41,8 @@ namespace CartasCredito.Models
 		public int ProveedorId { get; set; }
 		public int EmpresaId { get; set; }
 
+		public bool PFEActivo { get; set; } // Esta flag me ayuda a saber si está seleccionado dentro de un programa PFE
+
 		public Pago()
 		{
 			Id = 0;
@@ -57,6 +59,7 @@ namespace CartasCredito.Models
 			Creado = DateTime.MinValue;
 			Actualizado = null;
 			Eliminado = null;
+			PFEActivo = false;
 		}
 
 		public static List<Pago> Get(DateTime dateStart, DateTime dateEnd, int activo = -1)

@@ -28,7 +28,6 @@ namespace CartasCredito.Controllers.api
 			{
 				var fechaIni = new DateTime(filtros.FechaInicio.Year, filtros.FechaInicio.Month, filtros.FechaInicio.Day, 0, 0, 0);
 				var fechaFin = new DateTime(filtros.FechaFin.Year, filtros.FechaFin.Month, filtros.FechaFin.Day, 23, 59, 59);
-				
 
 				filtros.FechaInicio = fechaIni;
 				filtros.FechaFin = fechaFin;

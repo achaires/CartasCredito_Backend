@@ -5073,6 +5073,41 @@ namespace CartasCredito.Models
 			return boolProcess;
 		}
 
+		public Boolean Cons_PFEProgramaById(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@Id", id); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PFEProgramaById", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
 		public Boolean Cons_PFEPagos(int pfeProgramaId, out DataTable dt, out String msgError)
 		{
 			bool boolProcess = true;
@@ -5122,6 +5157,150 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@PagoId", pagoId); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "ins_PFEProgramaPago", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_PFETipoCambio(PFETipoCambio model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[5];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@ProgramaId", model.ProgramaId); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", model.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@PA", model.PA); pix++;
+				@params[pix] = new SqlParameter("@PA1", model.PA1); pix++;
+				@params[pix] = new SqlParameter("@PA2", model.PA2); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "ins_PFETipoCambio", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_PFETipoCambioByProgramaId(int programaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@ProgramaId", programaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_PFETipoCambioByProgramaId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Del_PFETipoCambioByProgramaId(int programaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@ProgramaId", programaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "del_PFETipoCambioByProgramaId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Del_PFEPagosByProgramaId(int programaId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				var pix = 0;
+				@params[pix] = new SqlParameter("@ProgramaId", programaId); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "del_PFEPagosByProgramaId", @params, out dt, 1000))
 				{
 					boolProcess = false;
 					msgError = bd._error.ToString();
