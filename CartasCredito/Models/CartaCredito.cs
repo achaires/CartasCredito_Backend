@@ -811,6 +811,35 @@ namespace CartasCredito.Models
 			return rsp;
 		}
 
+		public static string GetSwiftByCartaCreditoId(string id)
+		{
+			string rsp = String.Empty;
+
+			try
+			{
+				DataAccess da = new DataAccess();
+				var dt = new System.Data.DataTable();
+				var errores = "";
+
+				if (da.Cons_SwiftByCartaCreditoId(id, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						var idx = 0;
+						var row = dt.Rows[0];
+
+						rsp = row[idx].ToString(); idx++;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex);
+			}
+
+			return rsp;
+		}
+
 		public static RespuestaFormato UpdateStatus(string ccid, int newStatus)
 		{
 			RespuestaFormato rsp = new RespuestaFormato();

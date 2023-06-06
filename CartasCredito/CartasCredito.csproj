@@ -272,6 +272,7 @@
     <Compile Include="Controllers\api\ContactosController.cs" />
     <Compile Include="Controllers\api\ConversionMonedaController.cs" />
     <Compile Include="Controllers\api\DashboardController.cs" />
+    <Compile Include="Controllers\api\DescargasController.cs" />
     <Compile Include="Controllers\api\DivisionesController.cs" />
     <Compile Include="Controllers\api\DocumentosController.cs" />
     <Compile Include="Controllers\api\EmpresasController.cs" />
@@ -368,8 +369,8 @@
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
     <Content Include="assets\GIS_BN.jpg" />
+    <Content Include="assets\index-082bd4b9.js" />
     <Content Include="assets\index-46ff38eb.css" />
-    <Content Include="assets\index-73546000.js" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -456,6 +457,7 @@
     <Folder Include="Reportes\" />
     <Folder Include="Uploads\" />
     <Folder Include="Views\DescargaSwift\" />
+    <Folder Include="Views\Descargas\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

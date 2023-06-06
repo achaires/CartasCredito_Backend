@@ -3179,6 +3179,40 @@ namespace CartasCredito.Models
 
 			return boolProcess;
 		}
+
+		public Boolean Cons_SwiftByCartaCreditoId(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@CartaCreditoId", id);
+
+				if (!bd.ExecuteProcedure(conexion, "cons_SwiftByCartaCreditoId", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No se pudo encontrar el registro";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
 		#endregion
 
 		#region Pagos
