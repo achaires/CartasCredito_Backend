@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Threading;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Http;
@@ -16,13 +17,16 @@ using System.Web.Http.Cors;
 
 namespace CartasCredito.Controllers.api
 {
-	[AllowAnonymous]
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
+	[Authorize]
 	public class UsersController : ApiController
 	{
 		// GET api/users
 		public IEnumerable<AspNetUser> Get()
 		{
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
+
 			var rsp = new List<AspNetUser>();
 			try
 			{
@@ -55,7 +59,9 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Post([FromBody] UserInsertDTO userDto)
 		{
 			var rsp = new RespuestaFormato();
-			var usrId = "12cb7342-837e-45d9-892c-6818a38a3816";
+
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			try
 			{
@@ -64,7 +70,7 @@ namespace CartasCredito.Controllers.api
 				{
 					Email = userDto.Email,
 					UserName = userDto.Email,
-					CreadoPorId = usrId
+					CreadoPorId = usr.Id
 				};
 
 				var rspInv = Invitacion.Insert(invitacion);

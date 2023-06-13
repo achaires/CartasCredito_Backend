@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
 namespace CartasCredito.Controllers.api
 {
-	[AllowAnonymous]
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
+	[Authorize]
 	public class PagosController : ApiController
 	{
 		// GET api/<controller>
@@ -31,7 +32,8 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Post([FromBody] PagoInsertDTO model)
 		{
 			var rsp = new RespuestaFormato();
-			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			try
 			{
@@ -41,7 +43,7 @@ namespace CartasCredito.Controllers.api
 				nuevoPago.FechaVencimiento = model.FechaVencimiento;
 				nuevoPago.MontoPago = model.MontoPago;
 				nuevoPago.Estatus = 1;
-				nuevoPago.CreadoPor = usr;
+				nuevoPago.CreadoPor = usr.Id;
 
 				var cc = CartaCredito.GetById(model.CartaCreditoId);
 				var ccPagos = Pago.GetByCartaCreditoId(model.CartaCreditoId);
@@ -58,7 +60,7 @@ namespace CartasCredito.Controllers.api
 
 				var bm = new BitacoraMovimiento();
 				bm.Titulo = "Pago Programado";
-				bm.CreadoPorId = usr;
+				bm.CreadoPorId = usr.Id;
 				bm.Descripcion = "Se ha creado un nuevo pago programado en la carta de crédito.";
 				bm.CartaCreditoId = model.CartaCreditoId;
 				bm.ModeloNombre = "Pago";
@@ -81,15 +83,16 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Put(int id, [FromBody] PagoUpdateDTO model)
 		{
 			var rsp = new RespuestaFormato();
-			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			try
 			{
 				Pago pago = Pago.GetById(model.Id);
 				pago.Estatus = 3;
 				pago.FechaPago = model.FechaPago;
-				pago.MontoPagado = pago.MontoPago;
-				pago.RegistroPagoPor = usr;
+				pago.MontoPagado = model.Monto;
+				pago.RegistroPagoPor = usr.Id;
 				rsp = Pago.Update(pago);
 			}
 			catch (Exception ex)

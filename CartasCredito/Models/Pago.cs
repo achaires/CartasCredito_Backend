@@ -400,6 +400,7 @@ namespace CartasCredito.Models
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
 							item.Activo = Boolean.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;
 							item.Creado = DateTime.TryParse(row[idx].ToString(), out DateTime crVal) ? crVal : DateTime.Now.AddDays(1); idx++;
+							item.MontoPagado = decimal.TryParse(row[idx].ToString(), out decimal montopagadoval) ? montopagadoval : 0; idx++;
 
 							item.EstatusClass = GetStatusClass(item.Estatus);
 

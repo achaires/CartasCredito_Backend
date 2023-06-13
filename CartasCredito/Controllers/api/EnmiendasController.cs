@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading;
 using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Cors;
@@ -16,12 +17,13 @@ namespace CartasCredito.Controllers.api
 	[EnableCors(origins: "*", headers: "*", methods: "*")]
 	public class EnmiendasController : ApiController
 	{
-		[HttpPost]
-		[Route("api/enmiendas")]
+		[EnableCors(origins: "*", headers: "*", methods: "*")]
+		[Authorize]
 		public RespuestaFormato Save([FromBody] EnmiendaInsertDTO dtoEnmienda)
 		{
 			var rsp = new RespuestaFormato();
-			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			try
 			{
@@ -34,7 +36,7 @@ namespace CartasCredito.Controllers.api
 					FechaVencimiento = dtoEnmienda.FechaVencimiento,
 					ImporteLC = dtoEnmienda.ImporteLC,
 					InstruccionesEspeciales = dtoEnmienda.InstruccionesEspeciales,
-					CreadoPor = usr
+					CreadoPor = usr.Id
 				};
 
 				rsp = Enmienda.Insert(modelo);
@@ -54,7 +56,8 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Aprobar(int id)
 		{
 			var rsp = new RespuestaFormato();
-			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			try
 			{
@@ -120,7 +123,8 @@ namespace CartasCredito.Controllers.api
 		public RespuestaFormato Update(int id, [FromBody] EnmiendaUpdateDTO dtoEnmienda)
 		{
 			var rsp = new RespuestaFormato();
-			var usr = "12cb7342-837e-45d9-892c-6818a38a3816";
+			var identity = Thread.CurrentPrincipal.Identity;
+			var usr = AspNetUser.GetByUserName(identity.Name);
 
 			/*
 			try

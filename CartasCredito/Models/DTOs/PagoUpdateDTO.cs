@@ -9,5 +9,6 @@ namespace CartasCredito.Models.DTOs
 	{
 		public int Id { get; set; }
 		public DateTime FechaPago { get; set; }
+		public decimal Monto { get; set; }
 	}
 }
