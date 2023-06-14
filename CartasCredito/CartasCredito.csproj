@@ -369,14 +369,24 @@
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
     <Content Include="assets\GIS_BN.jpg" />
-    <Content Include="assets\index-082bd4b9.js" />
     <Content Include="assets\index-46ff38eb.css" />
+    <Content Include="assets\index-fec97b62.js" />
+    <Content Include="assets_bak\cartas-login-bg-opt-22952870.png" />
+    <Content Include="assets_bak\gis-logo-gris-ddf51f53.png" />
+    <Content Include="assets_bak\GIS_BN.jpg" />
+    <Content Include="assets_bak\index-082bd4b9.js" />
+    <Content Include="assets_bak\index-46ff38eb.css" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
+    <Content Include="assets_bak\dxicons-19b5ebb1.woff2" />
+    <Content Include="assets_bak\dxicons-85cb4bbe.woff" />
+    <Content Include="assets_bak\dxicons-b47ce9f0.ttf" />
+    <Content Include="assets_bak\OpenSans-Regular-a0707e10.ttf" />
+    <Content Include="assets_bak\Rubik-VariableFont_wght-f9840d46.ttf" />
     <Content Include="assets\dxicons-19b5ebb1.woff2" />
     <Content Include="assets\dxicons-85cb4bbe.woff" />
     <Content Include="assets\dxicons-b47ce9f0.ttf" />

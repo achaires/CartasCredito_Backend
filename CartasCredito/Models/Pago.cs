@@ -321,8 +321,6 @@ namespace CartasCredito.Models
 							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
 
 							res.Add(item);
-
-							res.Add(item);
 						}
 					}
 				}
