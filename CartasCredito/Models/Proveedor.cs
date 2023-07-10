@@ -57,8 +57,8 @@ namespace CartasCredito.Models
 							var item = new Proveedor();
 
 							item.Id = int.Parse(row[idx].ToString()); idx++;
-							item.EmpresaId = int.Parse(row[idx].ToString()); idx++;
-							item.PaisId = int.Parse(row[idx].ToString()); idx++;
+							item.EmpresaId = int.TryParse(row[idx].ToString(), out int empid) ? empid : 0; idx++;
+							item.PaisId = int.TryParse(row[idx].ToString(), out int paisid) ? paisid : 0; idx++;
 							item.Nombre = row[idx].ToString(); idx++;
 							item.Descripcion = row[idx].ToString(); idx++;
 							item.Activo = bool.TryParse(row[idx].ToString(), out bool actVal) ? actVal : false; idx++;

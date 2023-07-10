@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Web.Helpers;
 using System.Web.Http;
@@ -24,18 +25,27 @@ namespace CartasCredito.Controllers.api
 				return BadRequest(ModelState);
 			}
 
-			var hashPass = Crypto.HashPassword(loginDTO.Password);
-
 			var usuario = AspNetUser.GetByUserName(loginDTO.UserName);
 
+			// Verifica que sea un usuario activo
 			if (usuario.Activo == false)
 			{
 				return BadRequest();
 			}
 
-			bool isCredentialValid = Crypto.VerifyHashedPassword(usuario.PasswordHash, loginDTO.Password);
+			// Verifica que el password sea correcto
+			bool isLocalCredentialValid = Crypto.VerifyHashedPassword(usuario.PasswordHash, loginDTO.Password);
 
-			if (isCredentialValid)
+			// Validar cuenta en GIS
+			var tryLogin_Gis = Utility.Login_GIS(loginDTO.UserName, loginDTO.Password);
+			
+			// Si no pasa la validacion en GIS, regresar mensaje - bypass cuenta softdepot
+			if ( tryLogin_Gis.Flag == false && loginDTO.UserName.ToLower() != "softdepot" )
+			{
+				return Content(HttpStatusCode.Unauthorized, "LOGIN_GIS");
+			}
+
+			if (isLocalCredentialValid)
 			{
 				var token = TokenGenerator.GenerateTokenJwt(loginDTO.UserName);
 
@@ -43,7 +53,7 @@ namespace CartasCredito.Controllers.api
 			}
 			else
 			{
-				return Unauthorized();
+				return Content(HttpStatusCode.Unauthorized, "LOGIN_APP");
 			}
 		}
 

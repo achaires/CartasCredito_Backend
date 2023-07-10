@@ -3082,11 +3082,59 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[10];
+				SqlParameter[] @params = new SqlParameter[8];
+				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
+				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId",model.EmpresaId);pix++;
+				@params[pix] = new SqlParameter("@MonedaId",model.MonedaId);pix++;
+				@params[pix] = new SqlParameter("@NumCarta",model.NumCarta);pix++;
+				@params[pix] = new SqlParameter("@ProveedorId",model.ProveedorId);pix++;
+				@params[pix] = new SqlParameter("@TipoActivoId",model.TipoActivoId);pix++;
+				@params[pix] = new SqlParameter("@TipoCarta", model.TipoCarta);pix++;
+
+				/*
+				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				*/
+
+				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_CartasCreditoParaReportes(CartasCreditoFiltrarDTO model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[2];
+
 				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 
-				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
+				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoParaReportes", @params, out dt, 1000))
 				{
 					boolProcess = false;
 					msgError = bd._error.ToString();

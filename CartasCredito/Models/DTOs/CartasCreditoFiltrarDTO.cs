@@ -32,8 +32,8 @@ namespace CartasCredito.Models.DTOs
 			TipoCarta = "";
 
 			DateTime dateNow = DateTime.Now;
-			FechaInicio = new DateTime(dateNow.Year, dateNow.Month, 1);
-			FechaFin = dateNow;
+			// FechaInicio = new DateTime(dateNow.Year, dateNow.Month, 1);
+			// FechaFin = dateNow;
 
 			TiposActivo = TipoActivo.Get(1);
 			TiposActivo.Insert(0, new TipoActivo

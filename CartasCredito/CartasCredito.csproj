@@ -368,14 +368,13 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\GIS_BN.jpg" />
     <Content Include="assets\index-46ff38eb.css" />
-    <Content Include="assets\index-fec97b62.js" />
+    <Content Include="assets\index-f02fafc7.js" />
     <Content Include="assets_bak\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets_bak\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets_bak\GIS_BN.jpg" />
-    <Content Include="assets_bak\index-082bd4b9.js" />
+    <Content Include="assets_bak\index-192abd50.js" />
     <Content Include="assets_bak\index-46ff38eb.css" />
+    <Content Include="assets\GIS_BN.jpg" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>

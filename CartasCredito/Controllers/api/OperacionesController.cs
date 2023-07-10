@@ -26,6 +26,45 @@ namespace CartasCredito.Controllers.api
 
 			try
 			{
+				/*
+				var fechaIni = new DateTime(filtros.FechaInicio.Year, filtros.FechaInicio.Month, filtros.FechaInicio.Day, 0, 0, 0);
+				var fechaFin = new DateTime(filtros.FechaFin.Year, filtros.FechaFin.Month, filtros.FechaFin.Day, 23, 59, 59);
+
+				filtros.FechaInicio = fechaIni;
+				filtros.FechaFin = fechaFin;
+				*/
+
+				cartasResponse = CartaCredito.Filtrar(filtros);
+
+				/*
+				cartasResponse = cartasEnRango.Where(carta =>
+					(filtros.BancoId == 0 || carta.BancoId == filtros.BancoId) &&
+					(filtros.EmpresaId == 0 || carta.EmpresaId == filtros.EmpresaId) &&
+					(filtros.MonedaId == 0 || carta.MonedaId == filtros.MonedaId) &&
+					(filtros.NumCarta == "" || carta.NumCartaCredito.Trim().ToLower() == filtros.NumCarta.Trim().ToLower()) &&
+					(filtros.ProveedorId == 0 || carta.ProveedorId == filtros.ProveedorId) &&
+					(filtros.TipoActivoId == 0 || carta.TipoActivoId == filtros.TipoActivoId) &&
+					(filtros.TipoCarta == "0" || carta.TipoCartaId == (int.TryParse(filtros.TipoCarta, out int tcval) ? tcval : 0))
+				).ToList();
+				*/
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
+
+
+			return cartasResponse;
+		}
+
+		/*
+		[HttpPost]
+		public IEnumerable<CartaCredito> Filtrar([FromBody] CartasCreditoFiltrarDTO filtros)
+		{
+			var cartasResponse = new List<CartaCredito>();
+
+			try
+			{
 				var fechaIni = new DateTime(filtros.FechaInicio.Year, filtros.FechaInicio.Month, filtros.FechaInicio.Day, 0, 0, 0);
 				var fechaFin = new DateTime(filtros.FechaFin.Year, filtros.FechaFin.Month, filtros.FechaFin.Day, 23, 59, 59);
 
@@ -51,6 +90,7 @@ namespace CartasCredito.Controllers.api
 
 			return cartasResponse;
 		}
+		*/
 
 		[Route("api/operaciones/clonar/{id}")]
 		[HttpPost]

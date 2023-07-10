@@ -17,7 +17,7 @@ namespace CartasCredito.Controllers.api
 		// GET api/<controller>
 		public IEnumerable<Proveedor> Get()
 		{
-			return Proveedor.Get(0);
+			return Proveedor.Get(1);
 		}
 
 		// GET api/<controller>/5
