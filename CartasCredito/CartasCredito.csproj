@@ -303,6 +303,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IGeneradorReporte.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AgenteAduanal.cs" />
     <Compile Include="Models\AspNetPermission.cs" />
@@ -356,6 +357,14 @@
     <Compile Include="Models\Proveedor.cs" />
     <Compile Include="Models\Proyecto.cs" />
     <Compile Include="Models\Reporte.cs" />
+    <Compile Include="Models\ReportesModels\AnalisisCartas.cs" />
+    <Compile Include="Models\ReportesModels\AnalisisEjecutivo.cs" />
+    <Compile Include="Models\ReportesModels\ComisionesCartasPorEstatus.cs" />
+    <Compile Include="Models\ReportesModels\ComisionesPorTipoComision.cs" />
+    <Compile Include="Models\ReportesModels\LineasDeCreditoDisponibles.cs" />
+    <Compile Include="Models\ReportesModels\StandBy.cs" />
+    <Compile Include="Models\ReportesModels\TotalOutstanding.cs" />
+    <Compile Include="Models\ReportesModels\Vencimientos.cs" />
     <Compile Include="Models\RespuestaFormato.cs" />
     <Compile Include="Models\TipoActivo.cs" />
     <Compile Include="Models\TipoCobertura.cs" />
@@ -462,8 +471,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\ReportesModels\" />
-    <Folder Include="Reportes\" />
     <Folder Include="Uploads\" />
     <Folder Include="Views\DescargaSwift\" />
     <Folder Include="Views\Descargas\" />
