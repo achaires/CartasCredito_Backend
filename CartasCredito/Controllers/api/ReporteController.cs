@@ -7,51 +7,67 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using CartasCredito.Interfaces;
 using CartasCredito.Models.ReportesModels;
+using System.Web.Http.Cors;
 
 namespace CartasCredito.Controllers.api
 {
-    public class ReporteController : ApiController
+	[AllowAnonymous]
+	[EnableCors(origins: "*", headers: "*", methods: "*")]
+	public class ReporteController : ApiController
     {
-		[Route("api/reportes/generar")]
+		[Route("api/reportes2/generar")]
 		[HttpPost]
 		public RespuestaFormato Generar(SolicitudReporteDTO solicitudReporte)
 		{
 			var rsp = new RespuestaFormato();
-			var reporteResultado = new Reporte();
 
-			var reporteGeneradores = new List<IGeneradorReporte>()
+			if ( solicitudReporte.TipoReporteId == 1 )
 			{
-				new AnalisisEjecutivo(),
-				new StandBy(),
-				new Vencimientos(),
-				new ComisionesCartasPorEstatus(),
-				new LineasDeCreditoDisponibles(),
-				new TotalOutstanding(),
-				new AnalisisCartas(),
-			};
-
-			var reporteGenerador = reporteGeneradores.FirstOrDefault(gen => gen.Verificar(solicitudReporte.TipoReporteId));
-
-			if ( reporteGenerador == null )
-			{
-				rsp.Flag = false;
-				rsp.Description = "Error";
-				rsp.Errors.Add("ID de reporte no registrado");
+				var reporteRes = new AnalisisEjecutivo(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
 			}
 
-			try
+			if (solicitudReporte.TipoReporteId == 2)
 			{
-				reporteResultado = reporteGenerador.Generar(solicitudReporte.EmpresaId, solicitudReporte.FechaInicio, solicitudReporte.FechaFin);
+				var reporteRes = new ComisionesPorTipoComision(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
 
-				rsp.Flag = true;
-				rsp.Content.Add(reporteResultado);
-			} catch (Exception ex)
+			if (solicitudReporte.TipoReporteId == 3)
 			{
-				rsp.Flag = false;
-				rsp.Description = "Error";
-				rsp.Errors.Add(ex.Message);
+				var reporteRes = new StandBy(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
+
+			if (solicitudReporte.TipoReporteId == 4)
+			{
+				var reporteRes = new Vencimientos(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
+
+			if (solicitudReporte.TipoReporteId == 5)
+			{
+				var reporteRes = new ComisionesCartasPorEstatus(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
+
+			if (solicitudReporte.TipoReporteId == 6)
+			{
+				var reporteRes = new LineasDeCreditoDisponibles(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
+
+			if (solicitudReporte.TipoReporteId == 7)
+			{
+				var reporteRes = new TotalOutstanding(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
+			}
+
+			if (solicitudReporte.TipoReporteId == 8)
+			{
+				var reporteRes = new AnalisisCartas(solicitudReporte.FechaInicio, solicitudReporte.FechaFin, solicitudReporte.EmpresaId);
+				reporteRes.Generar();
 			}
 
 			return rsp;

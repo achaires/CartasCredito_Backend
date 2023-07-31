@@ -303,7 +303,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Interfaces\IGeneradorReporte.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AgenteAduanal.cs" />
     <Compile Include="Models\AspNetPermission.cs" />
@@ -362,6 +361,7 @@
     <Compile Include="Models\ReportesModels\ComisionesCartasPorEstatus.cs" />
     <Compile Include="Models\ReportesModels\ComisionesPorTipoComision.cs" />
     <Compile Include="Models\ReportesModels\LineasDeCreditoDisponibles.cs" />
+    <Compile Include="Models\ReportesModels\ReporteBase.cs" />
     <Compile Include="Models\ReportesModels\StandBy.cs" />
     <Compile Include="Models\ReportesModels\TotalOutstanding.cs" />
     <Compile Include="Models\ReportesModels\Vencimientos.cs" />
@@ -377,12 +377,12 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets\index-46ff38eb.css" />
-    <Content Include="assets\index-f02fafc7.js" />
+    <Content Include="assets\index-7e7732e8.css" />
+    <Content Include="assets\index-a793e67a.js" />
     <Content Include="assets_bak\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets_bak\gis-logo-gris-ddf51f53.png" />
-    <Content Include="assets_bak\index-192abd50.js" />
-    <Content Include="assets_bak\index-46ff38eb.css" />
+    <Content Include="assets_bak\index-7e7732e8.css" />
+    <Content Include="assets_bak\index-ac45673c.js" />
     <Content Include="assets\GIS_BN.jpg" />
     <Content Include="Connected Services\ConversionMonedaService\CartasCredito.ConversionMonedaService.processResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -471,6 +471,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Reportes\" />
     <Folder Include="Uploads\" />
     <Folder Include="Views\DescargaSwift\" />
     <Folder Include="Views\Descargas\" />
