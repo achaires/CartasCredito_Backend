@@ -10,7 +10,7 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class AnalisisCartas : ReporteBase
 	{
-		public AnalisisCartas(DateTime fechaInicio, DateTime fechaFin, int empresaId) : base(fechaInicio, fechaFin, empresaId, "A", "R", "Análisis de Cartas de Crédito")
+		public AnalisisCartas(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Análisis de Cartas de Crédito")
 		{
 		}
 

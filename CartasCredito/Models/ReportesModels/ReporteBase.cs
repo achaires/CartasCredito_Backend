@@ -11,6 +11,7 @@ namespace CartasCredito.Models.ReportesModels
 		protected DateTime FechaInicio { get; set; }
 		protected DateTime FechaFin { get; set; }
 		protected int EmpresaId { get; set; }
+		protected DateTime fechaDivisa { get; set; }
 		protected string ColIni { get; set; }
 		protected string ColFin { get; set; }
 		protected ExcelPackage EPackage { get; set; }
@@ -18,7 +19,7 @@ namespace CartasCredito.Models.ReportesModels
 		protected Reporte ReporteResultado { get; set; }
 		protected string ReporteNombre { get; set; }
 		protected string ReporteFilename { get; set; }
-		protected ReporteBase(DateTime fi, DateTime ff, int eid, string colIni, string colFin, string reporteNombre)
+		protected ReporteBase(DateTime fi, DateTime ff, int eid, DateTime fd, string colIni, string colFin, string reporteNombre)
 		{
 			var curDate = DateTime.Now;
 			

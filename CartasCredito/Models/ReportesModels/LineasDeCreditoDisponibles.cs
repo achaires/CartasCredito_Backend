@@ -9,7 +9,7 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class LineasDeCreditoDisponibles : ReporteBase
 	{
-		public LineasDeCreditoDisponibles(DateTime fechaInicio, DateTime fechaFin, int empresaId) : base(fechaInicio, fechaFin, empresaId, "A", "R", "Líneas de Crédito Disponibles")
+		public LineasDeCreditoDisponibles(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Líneas de Crédito Disponibles")
 		{
 		}
 

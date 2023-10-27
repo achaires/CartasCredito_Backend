@@ -10,7 +10,7 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class TotalOutstanding : ReporteBase
 	{
-		public TotalOutstanding(DateTime fechaInicio, DateTime fechaFin, int empresaId) : base(fechaInicio, fechaFin, empresaId, "A", "R", "Total Outstanding")
+		public TotalOutstanding(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Total Outstanding")
 		{
 		}
 

@@ -10,8 +10,8 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class ComisionesPorTipoComision : ReporteBase
 	{
-		public ComisionesPorTipoComision(DateTime fechaInicio, DateTime fechaFin, int empresaId)
-			: base(fechaInicio, fechaFin, empresaId, "A", "R", "Comisiones por Tipo de Comisión")
+		public ComisionesPorTipoComision(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa)
+			: base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Comisiones por Tipo de Comisión")
 		{
 		}
 

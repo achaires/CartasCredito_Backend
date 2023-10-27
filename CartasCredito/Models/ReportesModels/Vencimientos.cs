@@ -10,7 +10,7 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class Vencimientos : ReporteBase
 	{
-		public Vencimientos(DateTime fechaInicio, DateTime fechaFin, int empresaId) : base(fechaInicio, fechaFin, empresaId, "A", "K", "Vencimientos")
+		public Vencimientos(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa, "A", "K", "Vencimientos")
 		{
 		}
 

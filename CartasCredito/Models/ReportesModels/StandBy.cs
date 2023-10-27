@@ -10,7 +10,7 @@ namespace CartasCredito.Models.ReportesModels
 {
 	public class StandBy : ReporteBase
 	{
-		public StandBy(DateTime fechaInicio, DateTime fechaFin, int empresaId) : base(fechaInicio, fechaFin, empresaId, "A","O", "Reporte de Cartas de Crédito Stand By")
+		public StandBy(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa, "A","O", "Reporte de Cartas de Crédito Stand By")
 		{
 		}
 

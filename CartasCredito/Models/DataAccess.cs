@@ -3168,8 +3168,8 @@ namespace CartasCredito.Models
 				int pix = 0;
 				SqlParameter[] @params = new SqlParameter[3];
 				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
-				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "cons_ReporteCartas", @params, out dt, 1000))
 				{
