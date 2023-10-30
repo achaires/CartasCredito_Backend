@@ -46,10 +46,20 @@ namespace CartasCredito.Models.ReportesModels
 			ESheet.Cells["B2:"+colFin+"2"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
 			ESheet.Cells["B2"].Value = ReporteNombre;
 
+			ESheet.Cells["B3:"+colFin+"3"].Style.Font.Size = 16;
+			ESheet.Cells["B3:"+colFin+"3"].Style.Font.Bold = true;
+			ESheet.Cells["B3:"+colFin+"3"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+			if(EmpresaId==0){
+				ESheet.Cells["B3"].Value = "Empresa: Todas";
+			}else{
+				var empresa = Empresa.GetById(EmpresaId);
+				ESheet.Cells["B3"].Value = "Empresa: " + empresa.Nombre;
+			}
+
 			ESheet.Cells["B4:"+colFin+"4"].Style.Font.Size = 16;
 			ESheet.Cells["B4:"+colFin+"4"].Style.Font.Bold = false;
 			ESheet.Cells["B4:"+colFin+"4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-			ESheet.Cells["B4"].Value = "Periodo " + FechaInicio.ToString("yyyy-MM-dd") + " - " + FechaFin.ToString("yyyy-MM-dd");
+			ESheet.Cells["B4"].Value = "Periodo " + FechaInicio.ToString("dd-MM-yyyy") + " Al " + FechaFin.ToString("dd-MM-yyyy");
 
 			/*
 			ESheet.Cells["B1:"+colFin+"1"].Merge = true;

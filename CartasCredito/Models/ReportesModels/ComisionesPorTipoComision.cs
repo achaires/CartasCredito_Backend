@@ -47,6 +47,7 @@ namespace CartasCredito.Models.ReportesModels
 
 				ESheet.Cells["B1:H1"].Merge = true;
 				ESheet.Cells["B2:H2"].Merge = true;
+				ESheet.Cells["B3:H3"].Merge = true;
 				ESheet.Cells["B4:H4"].Merge = true;
 
 				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));

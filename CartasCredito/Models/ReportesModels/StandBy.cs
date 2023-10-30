@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Drawing;
+using System.Drawing.Imaging;
+using File = System.IO.File;
 
 namespace CartasCredito.Models.ReportesModels
 {
@@ -49,8 +52,17 @@ namespace CartasCredito.Models.ReportesModels
 
 				ESheet.Cells["B1:O1"].Merge = true;
 				ESheet.Cells["B2:O2"].Merge = true;
+				ESheet.Cells["B3:O3"].Merge = true;
 				ESheet.Cells["B4:O4"].Merge = true;
 
+				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
+				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
+				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
+				{
+					imagen.Save(imgStream, ImageFormat.Jpeg);
+				}
+				var sheetLogo = ESheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
+				sheetLogo.SetPosition(20,650);
 
 				int row = 10;
 
@@ -71,15 +83,18 @@ namespace CartasCredito.Models.ReportesModels
 						ESheet.Cells[string.Format("B{0}", row)].Value = cartaCredito.NumCartaCredito;
 						ESheet.Cells[string.Format("C{0}", row)].Value = cartaCredito.Banco;
 						ESheet.Cells[string.Format("D{0}", row)].Value = cartaCredito.BancoCorresponsal;
-						ESheet.Cells[string.Format("E{0}", row)].Value = "Referencia Banco Confirmador";
+						//ESheet.Cells[string.Format("E{0}", row)].Value = "Referencia Banco Confirmador";
+						ESheet.Cells[string.Format("E{0}", row)].Value = cartaCredito.NumCartaCredito;
 						ESheet.Cells[string.Format("F{0}", row)].Value = cartaCredito.Empresa;
 						ESheet.Cells[string.Format("G{0}", row)].Value = cartaCredito.Proveedor;
 						ESheet.Cells[string.Format("H{0}", row)].Value = cartaCredito.CostoApertura;
-						ESheet.Cells[string.Format("I{0}", row)].Value = cartaCredito.FechaApertura;
-						ESheet.Cells[string.Format("J{0}", row)].Value = cartaCredito.FechaVencimiento;
-						ESheet.Cells[string.Format("K{0}", row)].Value = cartaCredito.TipoActivo;
+						ESheet.Cells[string.Format("I{0}", row)].Value = cartaCredito.FechaApertura.ToString("dd-MM-yyyy");
+						ESheet.Cells[string.Format("J{0}", row)].Value = cartaCredito.FechaVencimiento.ToString("dd-MM-yyyy");
+						//ESheet.Cells[string.Format("K{0}", row)].Value = cartaCredito.TipoActivo;
+						ESheet.Cells[string.Format("K{0}", row)].Value = cartaCredito.TipoCarta;
 						ESheet.Cells[string.Format("L{0}", row)].Value = "Tipo de Cobertura";
-						ESheet.Cells[string.Format("M{0}", row)].Value = "Carta A";
+						//ESheet.Cells[string.Format("M{0}", row)].Value = "Carta A";
+						ESheet.Cells[string.Format("M{0}", row)].Value = "A favor";
 						ESheet.Cells[string.Format("N{0}", row)].Value = cartaCredito.Moneda;
 						ESheet.Cells[string.Format("O{0}", row)].Value = CartaCredito.GetStatusText(cartaCredito.Estatus);
 
