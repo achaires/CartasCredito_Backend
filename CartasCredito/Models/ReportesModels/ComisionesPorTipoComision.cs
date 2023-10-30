@@ -11,7 +11,7 @@ namespace CartasCredito.Models.ReportesModels
 	public class ComisionesPorTipoComision : ReporteBase
 	{
 		public ComisionesPorTipoComision(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa)
-			: base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Comisiones por Tipo de Comisión")
+			: base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Reporte de Comisiones por Tipo de Comisión (USD)")
 		{
 		}
 
@@ -70,11 +70,23 @@ namespace CartasCredito.Models.ReportesModels
 						}
 					}
 					
-					var groupedComisiones = empresaCartasComisiones.GroupBy(ecc => ecc.ComisionId);
+					var groupedComisiones = empresaCartasComisiones.OrderBy(ecc => ecc.Comision).GroupBy(ecc => ecc.ComisionId);
 
-					ESheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre;
+					//validar que la empresa tenga comisiones>0
+					var hayComisiones = 0;
+					foreach (var comisionGroup in groupedComisiones)
+					{
+						foreach (var comision in comisionGroup)
+						{
+							if(comision.MontoPagado>0M){ hayComisiones++; }
+						}
+					}
+					//si la empresa tiene comisiones>0
+					if(hayComisiones>0){ ESheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre; }
 					var totalEmpresaProgramado = 0M;
 					var totalEmpresaPagado = 0M;
+					var valComision="uno";
+
 
 					foreach (var comisionGroup in groupedComisiones)
 					{
@@ -82,26 +94,31 @@ namespace CartasCredito.Models.ReportesModels
 
 						foreach (var comision in comisionGroup)
 						{
-							ESheet.Cells[string.Format("C{0}", row)].Value = comision.Comision;
-							ESheet.Cells[string.Format("D{0}", row)].Value = comision.NumCartaCredito;
-							ESheet.Cells[string.Format("E{0}", row)].Value = comision.Moneda;
+							if(comision.MontoPagado>0M){
+								if(valComision!=comision.Comision){
+									valComision=comision.Comision;
+									ESheet.Cells[string.Format("C{0}", row)].Value = comision.Comision;
+								}
+								ESheet.Cells[string.Format("D{0}", row)].Value = comision.NumCartaCredito;
+								ESheet.Cells[string.Format("E{0}", row)].Value = comision.Moneda;
 
-							ESheet.Cells[string.Format("F{0}", row)].Value = comision.Monto - comision.MontoPagado;
-							ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+								ESheet.Cells[string.Format("F{0}", row)].Value = comision.Monto - comision.MontoPagado;
+								ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 
-							ESheet.Cells[string.Format("G{0}", row)].Value = comision.MontoPagado;
-							ESheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+								ESheet.Cells[string.Format("G{0}", row)].Value = comision.MontoPagado;
+								ESheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 
-							ESheet.Cells[string.Format("H{0}", row)].Value = comision.EstatusCartaText;
+								ESheet.Cells[string.Format("H{0}", row)].Value = comision.EstatusCartaText;
 
-							row++;
+								row++;
 
-							totalEmpresaProgramado += (comision.Monto - comision.MontoPagado);
-							totalEmpresaPagado += comision.MontoPagado;
+								totalEmpresaProgramado += (comision.Monto - comision.MontoPagado);
+								totalEmpresaPagado += comision.MontoPagado;
+							}
 						}
 
 						//var rowFinal = row - 1;
-						row++;
+						//row++;
 
 						//Sheet.Cells[string.Format("C{0}:C{1}",rowOrigin,rowFinal)].Merge = true;
 					}
@@ -109,12 +126,14 @@ namespace CartasCredito.Models.ReportesModels
 					granTotalProgramado += totalEmpresaProgramado;
 					granTotalPagado += totalEmpresaPagado;
 
+					if(hayComisiones>0){ //si la empresa tiene comisiones>0
 					ESheet.Cells[string.Format("C{0}", row)].Value = "Total";
 					ESheet.Cells[string.Format("F{0}", row)].Value = totalEmpresaProgramado;
 					ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 					ESheet.Cells[string.Format("G{0}", row)].Value = totalEmpresaPagado;
 					ESheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 					row++;
+					}
 
 				}
 
