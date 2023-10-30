@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Drawing;
+using System.Drawing.Imaging;
+using File = System.IO.File;
 
 namespace CartasCredito.Models.ReportesModels
 {
@@ -45,6 +48,15 @@ namespace CartasCredito.Models.ReportesModels
 				ESheet.Cells["B1:H1"].Merge = true;
 				ESheet.Cells["B2:H2"].Merge = true;
 				ESheet.Cells["B4:H4"].Merge = true;
+
+				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
+				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
+				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
+				{
+					imagen.Save(imgStream, ImageFormat.Jpeg);
+				}
+				var sheetLogo = ESheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
+				sheetLogo.SetPosition(20,400);
 
 				int row = 10;
 				var granTotalProgramado = 0M;
