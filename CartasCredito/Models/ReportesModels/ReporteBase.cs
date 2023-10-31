@@ -59,7 +59,7 @@ namespace CartasCredito.Models.ReportesModels
 			ESheet.Cells["B4:"+colFin+"4"].Style.Font.Size = 16;
 			ESheet.Cells["B4:"+colFin+"4"].Style.Font.Bold = false;
 			ESheet.Cells["B4:"+colFin+"4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-			ESheet.Cells["B4"].Value = "Periodo " + FechaInicio.ToString("dd-MM-yyyy") + " Al " + FechaFin.ToString("dd-MM-yyyy");
+			ESheet.Cells["B4"].Value = "Periodo: Del " + FechaInicio.ToString("dd-MM-yyyy") + " Al " + FechaFin.ToString("dd-MM-yyyy");
 
 			/*
 			ESheet.Cells["B1:"+colFin+"1"].Merge = true;

@@ -13,7 +13,7 @@ namespace CartasCredito.Models.ReportesModels
 	public class AnalisisEjecutivo : ReporteBase
 	{
 		public AnalisisEjecutivo(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) 
-			: base (fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "P",  "Análisis Ejecutivo de Cartas de Crédito")
+			: base (fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "P",  "Reporte Análisis Ejecutivo de Cartas de Crédito")
 		{
 		}
 
