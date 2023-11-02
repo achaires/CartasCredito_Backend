@@ -79,10 +79,12 @@ namespace CartasCredito.Models.ReportesModels
 					foreach (var cartaCredito in empresaCartas)
 					{
 						var rowOrigin = row;
+						var bancoConfirmador=Banco.GetById(cartaCredito.BancoCorresponsalId);
 
 						ESheet.Cells[string.Format("B{0}", row)].Value = cartaCredito.NumCartaCredito;
 						ESheet.Cells[string.Format("C{0}", row)].Value = cartaCredito.Banco;
-						ESheet.Cells[string.Format("D{0}", row)].Value = cartaCredito.BancoCorresponsal;
+						//ESheet.Cells[string.Format("D{0}", row)].Value = cartaCredito.BancoCorresponsal;
+						ESheet.Cells[string.Format("D{0}", row)].Value = bancoConfirmador.Nombre;
 						//ESheet.Cells[string.Format("E{0}", row)].Value = "Referencia Banco Confirmador";
 						ESheet.Cells[string.Format("E{0}", row)].Value = cartaCredito.NumCartaCredito;
 						ESheet.Cells[string.Format("F{0}", row)].Value = cartaCredito.Empresa;
@@ -96,6 +98,7 @@ namespace CartasCredito.Models.ReportesModels
 						//ESheet.Cells[string.Format("M{0}", row)].Value = "Carta A";
 						ESheet.Cells[string.Format("M{0}", row)].Value = "A favor";
 						ESheet.Cells[string.Format("N{0}", row)].Value = cartaCredito.Moneda;
+						ESheet.Cells[string.Format("N{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 						ESheet.Cells[string.Format("O{0}", row)].Value = CartaCredito.GetStatusText(cartaCredito.Estatus);
 
 						row++;

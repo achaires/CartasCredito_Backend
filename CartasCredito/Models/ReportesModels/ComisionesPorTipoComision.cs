@@ -83,7 +83,7 @@ namespace CartasCredito.Models.ReportesModels
 						}
 					}
 					
-					var groupedComisiones = empresaCartasComisiones.OrderBy(ecc => ecc.Comision).GroupBy(ecc => ecc.ComisionId);
+					var groupedComisiones = empresaCartasComisiones.OrderBy(ecc => ecc.Comision).GroupBy(ecc => ecc.Comision);
 
 					//validar que la empresa tenga comisiones>0
 					var hayComisiones = 0;
@@ -98,13 +98,15 @@ namespace CartasCredito.Models.ReportesModels
 					if(hayComisiones>0){ ESheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre; }
 					var totalEmpresaProgramado = 0M;
 					var totalEmpresaPagado = 0M;
-					var valComision="uno";
+                    var valComisionGroup = "unog";
+                    var valComision="uno";
 
 
 					foreach (var comisionGroup in groupedComisiones)
 					{
-						//var rowOrigin = row;
-
+                        //var rowOrigin = row;
+						totalEmpresaProgramado = 0M;
+						totalEmpresaPagado = 0M;
 						foreach (var comision in comisionGroup)
 						{
 							if(comision.MontoPagado>0M){
@@ -128,29 +130,31 @@ namespace CartasCredito.Models.ReportesModels
 								totalEmpresaProgramado += (comision.Monto - comision.MontoPagado);
 								totalEmpresaPagado += comision.MontoPagado;
 							}
+
+							
+						}
+
+						if(valComisionGroup != comisionGroup.Key){ //si cambia la comison de comisionGroup
+							valComisionGroup = comisionGroup.Key;
+							ESheet.Cells[string.Format("E{0}", row)].Value = "Total";
+							ESheet.Cells[string.Format("F{0}", row)].Value = totalEmpresaProgramado;
+							ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+							ESheet.Cells[string.Format("G{0}", row)].Value = totalEmpresaPagado;
+							ESheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
+							row++;
+							row++;
 						}
 
 						//var rowFinal = row - 1;
 						//row++;
 
 						//Sheet.Cells[string.Format("C{0}:C{1}",rowOrigin,rowFinal)].Merge = true;
+						granTotalProgramado += totalEmpresaProgramado;
+						granTotalPagado += totalEmpresaPagado;
 					}
-
-					granTotalProgramado += totalEmpresaProgramado;
-					granTotalPagado += totalEmpresaPagado;
-
-					if(hayComisiones>0){ //si la empresa tiene comisiones>0
-					ESheet.Cells[string.Format("C{0}", row)].Value = "Total";
-					ESheet.Cells[string.Format("F{0}", row)].Value = totalEmpresaProgramado;
-					ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
-					ESheet.Cells[string.Format("G{0}", row)].Value = totalEmpresaPagado;
-					ESheet.Cells[string.Format("G{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
-					row++;
-					}
-
 				}
 
-				ESheet.Cells[string.Format("C{0}", row)].Value = "Gran Total";
+				ESheet.Cells[string.Format("E{0}", row)].Value = "Gran Total";
 				ESheet.Cells[string.Format("F{0}", row)].Value = granTotalProgramado;
 				ESheet.Cells[string.Format("F{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 				ESheet.Cells[string.Format("G{0}", row)].Value = granTotalPagado;
