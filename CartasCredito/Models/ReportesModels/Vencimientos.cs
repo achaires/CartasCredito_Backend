@@ -29,7 +29,8 @@ namespace CartasCredito.Models.ReportesModels
 					FechaFin = FechaFin,
 				};
 
-				var cartasCredito = CartaCredito.Filtrar(ccFiltro).Where(cc => cc.Consecutive<10).OrderBy(cc => cc.Moneda).ThenBy(cc => cc.FechaVencimiento);
+				//var cartasCredito = CartaCredito.Filtrar(ccFiltro).Where(cc => cc.Consecutive<10).OrderBy(cc => cc.Moneda).ThenBy(cc => cc.FechaVencimiento);
+				var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.Moneda).ThenBy(cc => cc.FechaVencimiento);
 				var monedas = Moneda.Get(1);
 
 				/*ESheet.Cells.Style.Font.Size = 10;
@@ -75,7 +76,7 @@ namespace CartasCredito.Models.ReportesModels
 					imagen.Save(imgStream, ImageFormat.Jpeg);
 				}
 				var sheetLogo = ESheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
-				sheetLogo.SetPosition(20,500);
+				sheetLogo.SetPosition(20,600);
 
 				int row = 10;
 

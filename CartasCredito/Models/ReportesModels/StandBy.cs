@@ -90,6 +90,7 @@ namespace CartasCredito.Models.ReportesModels
 						ESheet.Cells[string.Format("F{0}", row)].Value = cartaCredito.Empresa;
 						ESheet.Cells[string.Format("G{0}", row)].Value = cartaCredito.Proveedor;
 						ESheet.Cells[string.Format("H{0}", row)].Value = cartaCredito.CostoApertura;
+						ESheet.Cells[string.Format("H{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 						ESheet.Cells[string.Format("I{0}", row)].Value = cartaCredito.FechaApertura.ToString("dd-MM-yyyy");
 						ESheet.Cells[string.Format("J{0}", row)].Value = cartaCredito.FechaVencimiento.ToString("dd-MM-yyyy");
 						//ESheet.Cells[string.Format("K{0}", row)].Value = cartaCredito.TipoActivo;
@@ -98,7 +99,6 @@ namespace CartasCredito.Models.ReportesModels
 						//ESheet.Cells[string.Format("M{0}", row)].Value = "Carta A";
 						ESheet.Cells[string.Format("M{0}", row)].Value = "A favor";
 						ESheet.Cells[string.Format("N{0}", row)].Value = cartaCredito.Moneda;
-						ESheet.Cells[string.Format("N{0}", row)].Style.Numberformat.Format = "$ #,##0.00";
 						ESheet.Cells[string.Format("O{0}", row)].Value = CartaCredito.GetStatusText(cartaCredito.Estatus);
 
 						row++;
