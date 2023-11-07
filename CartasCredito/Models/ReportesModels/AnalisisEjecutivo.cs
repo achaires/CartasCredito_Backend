@@ -241,7 +241,7 @@ namespace CartasCredito.Models.ReportesModels
 
 				var proveedoresCat = Proveedor.Get(1);
 
-				var grupos = cartasCredito
+				/*var grupos = cartasCredito
 					.GroupBy(carta => carta.Empresa)
 					.Select(grupoEmpresa => new
 					{
@@ -263,8 +263,8 @@ namespace CartasCredito.Models.ReportesModels
 										CartasDeCredito = grupoMoneda.ToList()
 									}).ToList()
 							}).ToList()
-					}).ToList();
-				/*var grupos = cartasCredito
+					}).ToList();*/
+				var grupos = cartasCredito
 					.GroupBy(carta => carta.Empresa)
 					.Select(grupoEmpresa => new
 					{
@@ -282,11 +282,11 @@ namespace CartasCredito.Models.ReportesModels
 									{
 										grupoBanco.Key,
 										BancoId=grupoBanco.First().BancoId,
-										TotalMoneda = grupoMoneda.Sum(carta => carta.MontoOriginalLC),
-										CartasDeCredito = grupoMoneda.ToList()
+										TotalMoneda = grupoBanco.Sum(carta => carta.MontoOriginalLC),
+										CartasDeCredito = grupoBanco.ToList()
 									}).ToList()
 							}).ToList()
-					}).ToList();*/
+					}).ToList();
 
 				var granTotal = 0M;
 				var moneda1="";
@@ -294,11 +294,11 @@ namespace CartasCredito.Models.ReportesModels
 				var moneda3="";
 				var moneda4="";
 				var moneda5="";
-				var sumaMoneda1 = 0M;
-				var sumaMoneda2 = 0M;
-				var sumaMoneda3 = 0M;
-				var sumaMoneda4 = 0M;
-				var sumaMoneda5 = 0M;
+				var tipoCambioMoneda1 = 0M;
+				var tipoCambioMoneda2 = 0M;
+				var tipoCambioMoneda3 = 0M;
+				var tipoCambioMoneda4 = 0M;
+				var tipoCambioMoneda5 = 0M;
 
 				var divisasList = new List<int>();
 
@@ -308,11 +308,11 @@ namespace CartasCredito.Models.ReportesModels
 					var sumaTipoMoneda = 0M;
 					var tipoMoneda="";
 					var monedaId = 0;
-					foreach(var grupoBanco in grupoEmpresa.GruposBanco)
+					foreach (var grupoMoneda in grupoEmpresa.GruposMoneda)
 					{
-						foreach (var grupoMoneda in grupoBanco.GruposMoneda)
+						foreach(var grupoBanco in grupoMoneda.GruposBanco)
 						{
-							foreach (var carta in grupoMoneda.CartasDeCredito)
+							foreach (var carta in grupoBanco.CartasDeCredito)
 							{
 								TimeSpan diferencia = carta.FechaVencimiento.Subtract(carta.FechaApertura);
 								int cantidadDias = (int)diferencia.TotalDays;
@@ -354,57 +354,63 @@ namespace CartasCredito.Models.ReportesModels
 							//ESheet.Cells["I" + fila].Value = totalMonedaEnUsd;
 							//ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 
-							//suma totales de la moneda, descripcion de moneda y id moneda
-							monedaId=grupoMoneda.MonedaId;
-							//tipoMoneda=grupoMoneda.Key.Moneda;
-							tipoMoneda=grupoMoneda.Key;
-							sumaTipoMoneda += grupoMoneda.TotalMoneda;
-
-							// suma los totales por moneda
-							if(grupoMoneda.MonedaId==1){
-								//moneda1=grupoMoneda.Key.Moneda;
-								moneda1=grupoMoneda.Key;
-								sumaMoneda1 += grupoMoneda.TotalMoneda;
-							}else if(grupoMoneda.MonedaId==2){
-								//moneda2=grupoMoneda.Key.Moneda;
-								moneda2=grupoMoneda.Key;
-								sumaMoneda2 += grupoMoneda.TotalMoneda;
-							}else if(grupoMoneda.MonedaId==3){
-								//moneda3=grupoMoneda.Key.Moneda;
-								moneda3=grupoMoneda.Key;
-								sumaMoneda3 += grupoMoneda.TotalMoneda;
-							}else if(grupoMoneda.MonedaId==4){
-								//moneda4=grupoMoneda.Key.Moneda;
-								moneda4=grupoMoneda.Key;
-								sumaMoneda4 += grupoMoneda.TotalMoneda;
-							}else if(grupoMoneda.MonedaId==5){
-								//moneda5=grupoMoneda.Key.Moneda;
-								moneda5=grupoMoneda.Key;
-								sumaMoneda5 += grupoMoneda.TotalMoneda;
-							}
-
+							
 							//fila++;
 							fila++;
+							//suma totales de la moneda, descripcion de moneda y id moneda
+							sumaTipoMoneda += grupoBanco.TotalMoneda;
+						}
+						//suma totales de la moneda, descripcion de moneda y id moneda
+						monedaId=grupoMoneda.MonedaId;
+						//tipoMoneda=grupoMoneda.Key.Moneda;
+						tipoMoneda=grupoMoneda.Key;
+						//sumaTipoMoneda += grupoMoneda.TotalMoneda;
+						
+						ESheet.Cells["H" + fila].Value = "Total " + tipoMoneda;
+						ESheet.Cells["I" + fila].Value = sumaTipoMoneda;
+						ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+
+						fila++;
+						// Calcula y agrega fila de conversión a dólares
+						//var totalMonedaEnUsd = 0M; // ConversionUSD(grupoMoneda.MonedaId, grupoMoneda.TotalMoneda, fechaDivisa);
+						var totalMonedaEnUsd = ConversionUSD(monedaId, sumaTipoMoneda, fechaDivisa);
+						divisasList.Add(monedaId);
+						ESheet.Cells["H" + fila].Value = "Total USD";
+						ESheet.Cells["I" + fila].Value = totalMonedaEnUsd;
+						ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+						fila++;
+						fila++;
+
+						// suma los totales por moneda
+						if(grupoMoneda.MonedaId==1){
+							//moneda1=grupoMoneda.Key.Moneda;
+							moneda1=grupoMoneda.Key;
+							tipoCambioMoneda1 = 0;
+						}else if(grupoMoneda.MonedaId==2){
+							//moneda2=grupoMoneda.Key.Moneda;
+							moneda2=grupoMoneda.Key;
+							tipoCambioMoneda2 = 0;
+						}else if(grupoMoneda.MonedaId==3){
+							//moneda3=grupoMoneda.Key.Moneda;
+							moneda3=grupoMoneda.Key;
+							tipoCambioMoneda3 = 0;
+						}else if(grupoMoneda.MonedaId==4){
+							//moneda4=grupoMoneda.Key.Moneda;
+							moneda4=grupoMoneda.Key;
+							tipoCambioMoneda4 = 0;
+						}else if(grupoMoneda.MonedaId==5){
+							//moneda5=grupoMoneda.Key.Moneda;
+							moneda5=grupoMoneda.Key;
+							tipoCambioMoneda5 = 0;
 						}
 					}
-					ESheet.Cells["H" + fila].Value = "Total " + tipoMoneda;
+					/*ESheet.Cells["H" + fila].Value = "Total " + tipoMoneda;
 					ESheet.Cells["I" + fila].Value = sumaTipoMoneda;
-					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
-
-					fila++;
-					// Calcula y agrega fila de conversión a dólares
-					//var totalMonedaEnUsd = 0M; // ConversionUSD(grupoMoneda.MonedaId, grupoMoneda.TotalMoneda, fechaDivisa);
-					var totalMonedaEnUsd = ConversionUSD(monedaId, sumaTipoMoneda, fechaDivisa);
-					divisasList.Add(monedaId);
-					ESheet.Cells["H" + fila].Value = "Total USD";
-					ESheet.Cells["I" + fila].Value = totalMonedaEnUsd;
-					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
-					fila++;
-					fila++;
-
-					granTotal += grupoEmpresa.TotalEmpresa;
+					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";*/
 
 					
+
+					granTotal += grupoEmpresa.TotalEmpresa;
 				}
 
 				ESheet.Cells["H" + fila].Value = "GRAN TOTAL:";
@@ -414,31 +420,31 @@ namespace CartasCredito.Models.ReportesModels
 				if(moneda1 != ""){
 					fila++;
 					ESheet.Cells["H" + fila].Value = moneda1;
-					ESheet.Cells["I" + fila].Value = sumaMoneda1;
+					ESheet.Cells["I" + fila].Value = tipoCambioMoneda1;
 					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 				}
 				if(moneda2 != ""){
 					fila++;
 					ESheet.Cells["H" + fila].Value = moneda2;
-					ESheet.Cells["I" + fila].Value = sumaMoneda2;
+					ESheet.Cells["I" + fila].Value = tipoCambioMoneda2;
 					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 				}
 				if(moneda3 != ""){
 					fila++;
 					ESheet.Cells["H" + fila].Value = moneda3;
-					ESheet.Cells["I" + fila].Value = sumaMoneda3;
+					ESheet.Cells["I" + fila].Value = tipoCambioMoneda3;
 					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 				}
 				if(moneda4 != ""){
 					fila++;
 					ESheet.Cells["H" + fila].Value = moneda4;
-					ESheet.Cells["I" + fila].Value = sumaMoneda4;
+					ESheet.Cells["I" + fila].Value = tipoCambioMoneda4;
 					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 				}
 				if(moneda5 != ""){
 					fila++;
 					ESheet.Cells["H" + fila].Value = moneda5;
-					ESheet.Cells["I" + fila].Value = sumaMoneda5;
+					ESheet.Cells["I" + fila].Value = tipoCambioMoneda5;
 					ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
 				}
 
