@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Drawing;
+using System.Drawing.Imaging;
+using File = System.IO.File;
 
 namespace CartasCredito.Models.ReportesModels
 {
 	public class ComisionesCartasPorEstatus : ReporteBase
 	{
-		public ComisionesCartasPorEstatus(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Comisiones de Cartas de Crédito por Estatus")
+		public ComisionesCartasPorEstatus(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) : base(fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "R", "Reporte de Comisiones de Cartas de Crédito por Estatus")
 		{
 		}
 
@@ -20,7 +23,7 @@ namespace CartasCredito.Models.ReportesModels
 
 			try
 			{
-				ESheet.Cells.Style.Font.Size = 10;
+				/*ESheet.Cells.Style.Font.Size = 10;
 				ESheet.Cells["B4:G4"].Style.Font.Bold = true;
 
 				ESheet.Cells["B1:G1"].Style.Font.Size = 22;
@@ -36,7 +39,7 @@ namespace CartasCredito.Models.ReportesModels
 				ESheet.Cells["B4:G4"].Style.Font.Size = 16;
 				ESheet.Cells["B4:G4"].Style.Font.Bold = false;
 				ESheet.Cells["B4:G4"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-				ESheet.Cells["B4"].Value = "Periodo " + FechaInicio.ToString("yyyy-MM-dd") + " - " + FechaFin.ToString("yyyy-MM-dd");
+				ESheet.Cells["B4"].Value = "Periodo " + FechaInicio.ToString("yyyy-MM-dd") + " - " + FechaFin.ToString("yyyy-MM-dd");*/
 
 				ESheet.Cells["B9"].Value = "Comisión";
 				ESheet.Cells["C9"].Value = "Estatus Carta";
@@ -49,8 +52,17 @@ namespace CartasCredito.Models.ReportesModels
 
 				ESheet.Cells["B1:G1"].Merge = true;
 				ESheet.Cells["B2:G2"].Merge = true;
+				ESheet.Cells["B3:G3"].Merge = true;
 				ESheet.Cells["B4:G4"].Merge = true;
 
+				var imagen = Image.FromFile(HttpContext.Current.Server.MapPath(@"~/assets/GIS_BN.jpg"));
+				var imagenTempFile = new FileInfo(Path.ChangeExtension(Path.GetTempFileName(),".jpg"));
+				using (var imgStream = new FileStream(imagenTempFile.FullName, FileMode.Create))
+				{
+					imagen.Save(imgStream, ImageFormat.Jpeg);
+				}
+				var sheetLogo = ESheet.Drawings.AddPicture("GIS_BN.jpg", imagenTempFile);
+				sheetLogo.SetPosition(20,450);
 
 				// Fila inicial en excel
 				int fila = 10;
@@ -62,7 +74,8 @@ namespace CartasCredito.Models.ReportesModels
 					FechaFin = FechaFin,
 				};
 
-				var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
+				//var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
+				var cartasCredito = CartaCredito.Filtrar(ccFiltro).Where(cc => cc.Consecutive>1075 && cc.Consecutive<1085).OrderBy(cc => cc.FechaVencimiento);
 				var comisionesDeTodasLasCartas = new List<CartaCreditoComision>();
 
 				foreach (var cc in cartasCredito)
@@ -76,7 +89,7 @@ namespace CartasCredito.Models.ReportesModels
 				var tiposComisiones = TipoComision.Get(1);
 
 				var agrupadoPorTipoComision = tiposComisiones
-					.GroupJoin(comisionesDeTodasLasCartas, tipoComision => tipoComision.Id, comision => comision.ComisionId,
+					.GroupJoin(comisionesDeTodasLasCartas, tipoComision => tipoComision.Id, comision => comision.NumeroComision,
 						(tipoComision, comisionesDeTipo) => new {
 							TipoComision = tipoComision,
 							Comisiones = comisionesDeTipo.GroupBy(comision => comision.EstatusCartaId)
@@ -84,10 +97,21 @@ namespace CartasCredito.Models.ReportesModels
 
 				foreach (var tipoYComisionesPorEstatus in agrupadoPorTipoComision)
 				{
-					ESheet.Cells[string.Format("B{0}", fila)].Value = tipoYComisionesPorEstatus.TipoComision.Nombre;
+					var totalComisionProgramado = 0M;
+					var totalComisionPagado = 0M;
+					var hayComisiones = 0;
+					foreach (var comisionGroup in tipoYComisionesPorEstatus.Comisiones)
+					{
+						hayComisiones++;
+					}
+					if(hayComisiones>0){
+						ESheet.Cells[string.Format("B{0}", fila)].Value = tipoYComisionesPorEstatus.TipoComision.Nombre;
+					}
 
 					foreach (var comisionPorEstatus in tipoYComisionesPorEstatus.Comisiones)
 					{
+						totalComisionProgramado = 0M;
+						totalComisionPagado = 0M;
 						//Console.WriteLine($"Estatus: {comisionPorEstatus.Key}");
 						ESheet.Cells[string.Format("C{0}", fila)].Value = CartaCredito.GetStatusText(comisionPorEstatus.Key);
 
@@ -95,11 +119,24 @@ namespace CartasCredito.Models.ReportesModels
 						{
 							ESheet.Cells[string.Format("D{0}", fila)].Value = comision.Moneda;
 							ESheet.Cells[string.Format("E{0}", fila)].Value = comision.Monto;
+							ESheet.Cells[string.Format("E{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
 							ESheet.Cells[string.Format("F{0}", fila)].Value = comision.MontoPagado;
+							ESheet.Cells[string.Format("F{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
 							ESheet.Cells[string.Format("G{0}", fila)].Value = "MONTO USD";
+							fila++;
+							totalComisionProgramado += comision.Monto;
+							totalComisionPagado += comision.MontoPagado;
 						}
 
-						fila++;
+						if(hayComisiones>0){ //si tipo comision tiene comisiones>0
+							ESheet.Cells[string.Format("D{0}", fila)].Value = "Total";
+							ESheet.Cells[string.Format("E{0}", fila)].Value = totalComisionProgramado;
+							ESheet.Cells[string.Format("E{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+							ESheet.Cells[string.Format("F{0}", fila)].Value = totalComisionPagado;
+							ESheet.Cells[string.Format("F{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
+							fila++;
+							fila++;
+						}	
 					}
 				}
 
