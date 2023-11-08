@@ -75,7 +75,8 @@ namespace CartasCredito.Models.ReportesModels
 				};
 
 				//var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
-				var cartasCredito = CartaCredito.Filtrar(ccFiltro).Where(cc => cc.Consecutive>1075 && cc.Consecutive<1085).OrderBy(cc => cc.FechaVencimiento);
+				//var cartasCredito = CartaCredito.Filtrar(ccFiltro).Where(cc => cc.Consecutive>1075 && cc.Consecutive<1085).OrderBy(cc => cc.FechaVencimiento);
+				var cartasCredito = CartaCredito.Filtrar(ccFiltro).OrderBy(cc => cc.FechaVencimiento);
 				var comisionesDeTodasLasCartas = new List<CartaCreditoComision>();
 
 				foreach (var cc in cartasCredito)
