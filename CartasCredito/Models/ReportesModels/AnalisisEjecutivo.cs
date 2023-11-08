@@ -13,7 +13,7 @@ namespace CartasCredito.Models.ReportesModels
 	public class AnalisisEjecutivo : ReporteBase
 	{
 		public AnalisisEjecutivo(DateTime fechaInicio, DateTime fechaFin, int empresaId, DateTime fechaDivisa) 
-			: base (fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "P",  "Reporte Análisis Ejecutivo de Cartas de Crédito")
+			: base (fechaInicio, fechaFin, empresaId, fechaDivisa,"A", "P",  "Reporte de Análisis Ejecutivo de Cartas de Crédito")
 		{
 		}
 
@@ -299,17 +299,21 @@ namespace CartasCredito.Models.ReportesModels
 				var tipoCambioMoneda3 = 0M;
 				var tipoCambioMoneda4 = 0M;
 				var tipoCambioMoneda5 = 0M;
+				var sumaTipoMoneda = 0M;
+				var tipoMoneda="";
+				var monedaId = 0;
 
 				var divisasList = new List<int>();
 
 				foreach (var grupoEmpresa in grupos)
 				{
 					ESheet.Cells[string.Format("B{0}", fila)].Value = grupoEmpresa.Key;
-					var sumaTipoMoneda = 0M;
-					var tipoMoneda="";
-					var monedaId = 0;
+					
 					foreach (var grupoMoneda in grupoEmpresa.GruposMoneda)
 					{
+						sumaTipoMoneda=0M;
+						tipoMoneda="";
+						monedaId=0;
 						foreach(var grupoBanco in grupoMoneda.GruposBanco)
 						{
 							foreach (var carta in grupoBanco.CartasDeCredito)
@@ -327,7 +331,8 @@ namespace CartasCredito.Models.ReportesModels
 								ESheet.Cells[string.Format("G{0}", fila)].Value = carta.TipoActivo;
 								ESheet.Cells[string.Format("H{0}", fila)].Value = carta.Moneda;
 
-								ESheet.Cells[string.Format("I{0}", fila)].Value = carta.MontoOriginalLC;
+								//ESheet.Cells[string.Format("I{0}", fila)].Value = carta.MontoOriginalLC;
+								ESheet.Cells[string.Format("I{0}", fila)].Value = grupoBanco.TotalMoneda;
 								ESheet.Cells[string.Format("I{0}", fila)].Style.Numberformat.Format = "$ #,##0.00";
 
 								ESheet.Cells[string.Format("J{0}", fila)].Value = carta.MontoOriginalLC < 50000 ? "1" : "0";
