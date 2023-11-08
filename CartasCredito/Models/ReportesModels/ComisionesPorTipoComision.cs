@@ -89,11 +89,11 @@ namespace CartasCredito.Models.ReportesModels
 					var hayComisiones = 0;
 					foreach (var comisionGroup in groupedComisiones)
 					{
-						hayComisiones++;
-						/*foreach (var comision in comisionGroup)
+						//hayComisiones++;
+						foreach (var comision in comisionGroup)
 						{
 							if(comision.MontoPagado>0M){ hayComisiones++; }
-						}*/
+						}
 					}
 					//si la empresa tiene comisiones>0
 					if(hayComisiones>0){ ESheet.Cells[string.Format("B{0}", row)].Value = empresa.Nombre; }
@@ -135,7 +135,7 @@ namespace CartasCredito.Models.ReportesModels
 							
 						}
 
-						if(valComisionGroup != comisionGroup.Key){ //si cambia la comison de comisionGroup
+						if(valComisionGroup != comisionGroup.Key && totalEmpresaPagado>0){ //si cambia la comison de comisionGroup
 							valComisionGroup = comisionGroup.Key;
 							ESheet.Cells[string.Format("E{0}", row)].Value = "Total";
 							ESheet.Cells[string.Format("F{0}", row)].Value = totalEmpresaProgramado;
