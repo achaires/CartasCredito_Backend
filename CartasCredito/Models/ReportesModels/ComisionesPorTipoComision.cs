@@ -83,7 +83,7 @@ namespace CartasCredito.Models.ReportesModels
 						}
 					}
 					
-					var groupedComisiones = empresaCartasComisiones.OrderBy(ecc => ecc.Comision).GroupBy(ecc => ecc.Comision);
+					var groupedComisiones = empresaCartasComisiones.OrderBy(ecc => ecc.Comision).ThenBy(ecc => ecc.Moneda).GroupBy(ecc => ecc.Comision);
 
 					//validar que la empresa tenga comisiones>0
 					var hayComisiones = 0;
