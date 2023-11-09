@@ -381,8 +381,10 @@ namespace CartasCredito.Models.ReportesModels
 						var totalMonedaEnUsd = ConversionUSD(monedaId, sumaTipoMoneda, fechaDivisa);
 						divisasList.Add(monedaId);
 						ESheet.Cells["H" + fila].Value = "Total USD";
+						ESheet.Cells["H" + fila].Style.Font.Bold=true;
 						ESheet.Cells["I" + fila].Value = totalMonedaEnUsd;
 						ESheet.Cells["I" + fila].Style.Numberformat.Format = "$ #,##0.00";
+						ESheet.Cells["I" + fila].Style.Font.Bold=true;
 						fila++;
 						fila++;
 
