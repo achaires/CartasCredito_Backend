@@ -12,6 +12,7 @@ namespace CartasCredito.Models
 		public int EmpresaId { get; set; }
 		public int BancoId { get; set; }
 		public decimal Monto { get; set; }
+		public decimal MontoUSD { get; set; }
 		public string Cuenta { get; set; }
 		public bool Activo { get; set; }
 		public string CreadoPor { get; set; }

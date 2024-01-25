@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Web;
@@ -21,6 +22,7 @@ namespace CartasCredito.Models
 		//[JsonConverter(typeof(CustomDateTimeConverter))]
 		public DateTime? FechaPago { get; set; }
 		public decimal MontoPago { get; set; }
+		public string MontoPago_str { get; set; }
 		public decimal MontoPagado { get; set; }
 		public string RegistroPagoPor { get; set; }
 		public string CreadoPor { get; set; }
@@ -60,6 +62,7 @@ namespace CartasCredito.Models
 			Actualizado = null;
 			Eliminado = null;
 			PFEActivo = false;
+			MontoPago_str = "";
 		}
 
 		public static List<Pago> Get(DateTime dateStart, DateTime dateEnd, int activo = -1)
@@ -210,6 +213,7 @@ namespace CartasCredito.Models
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
 							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
 
+							item.MontoPago_str = item.MontoPago.ToString("C", CultureInfo.CurrentCulture);
 							res.Add(item);
 						}
 					}
@@ -319,6 +323,8 @@ namespace CartasCredito.Models
 
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
 							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
+
+							item.MontoPago_str = item.MontoPago.ToString("C", CultureInfo.CurrentCulture);
 
 							res.Add(item);
 						}

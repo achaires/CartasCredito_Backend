@@ -41,6 +41,8 @@ namespace CartasCredito.Models
 		public int EstatusCartaId { get; set; }
 		public string EstatusCartaText { get; set; }
 
+		public decimal MontoPagado_USD { get; set; }
+
 		public static List<CartaCreditoComision> GetByCartaCreditoId(string cartaCreditoId)
 		{
 			List<CartaCreditoComision> res = new List<CartaCreditoComision>();
@@ -97,6 +99,110 @@ namespace CartasCredito.Models
 							item.EstatusText = GetStatusText(item.Estatus);
 							item.EstatusClass = GetStatusClass(item.Estatus);
 
+							res.Add(item);
+						}
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Console.Write(ex);
+				res = new List<CartaCreditoComision>();
+
+				// Get stack trace for the exception with source file information
+				var st = new StackTrace(ex, true);
+				// Get the top stack frame
+				var frame = st.GetFrame(0);
+				// Get the line number from the stack frame
+				var line = frame.GetFileLineNumber();
+
+				var errorMsg = ex.ToString();
+			}
+
+			return res;
+		}
+
+		public static List<CartaCreditoComision> GetByCartaCreditoFromCarta(string cartaCreditoId)
+		{
+			List<CartaCreditoComision> res = new List<CartaCreditoComision>();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+
+				var dt = new System.Data.DataTable();
+				var errores = "";
+				if (da.Cons_ComisionesReporteFromCarta(cartaCreditoId, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						for (int i = 0; i < dt.Rows.Count; i++)
+						{
+							int idx = 0;
+							var row = dt.Rows[i];
+							var item = new CartaCreditoComision();
+
+							item.MonedaId = Int32.Parse(row[idx].ToString()); idx++;
+							item.MontoPagado = Decimal.Parse(row[idx].ToString()); idx++;
+							item.Monto = Decimal.Parse(row[idx].ToString()); idx++;
+							item.Moneda = row[idx].ToString(); idx++;
+							item.EstatusCartaId = Int32.Parse(row[idx].ToString()); idx++;
+							item.NumCartaCredito = row[idx].ToString(); idx++;
+							item.Comision = row[idx].ToString(); idx++;
+							item.EstatusCartaText = CartaCredito.GetStatusText(item.EstatusCartaId);
+							res.Add(item);
+						}
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				Console.Write(ex);
+				res = new List<CartaCreditoComision>();
+
+				// Get stack trace for the exception with source file information
+				var st = new StackTrace(ex, true);
+				// Get the top stack frame
+				var frame = st.GetFrame(0);
+				// Get the line number from the stack frame
+				var line = frame.GetFileLineNumber();
+
+				var errorMsg = ex.ToString();
+			}
+
+			return res;
+		}
+
+		public static List<CartaCreditoComision> GetByCartaCreditoFromPago(int id)
+		{
+			List<CartaCreditoComision> res = new List<CartaCreditoComision>();
+
+			try
+			{
+				DataAccess da = new DataAccess();
+
+				var dt = new System.Data.DataTable();
+				var errores = "";
+				if (da.Cons_ComisionesReporteFromPago(id, out dt, out errores))
+				{
+					if (dt.Rows.Count > 0)
+					{
+						for (int i = 0; i < dt.Rows.Count; i++)
+						{
+							int idx = 0;
+							var row = dt.Rows[i];
+							var item = new CartaCreditoComision();
+
+							item.MonedaId = Int32.Parse(row[idx].ToString()); idx++;
+							item.MontoPagado = Decimal.Parse(row[idx].ToString()); idx++;
+							item.Monto = Decimal.Parse(row[idx].ToString()); idx++;
+							item.Moneda = row[idx].ToString(); idx++;
+							item.EstatusCartaId = Int32.Parse(row[idx].ToString()); idx++;
+							item.NumCartaCredito = row[idx].ToString(); idx++;
+							item.Comision = row[idx].ToString(); idx++;
+							item.EstatusCartaText = CartaCredito.GetStatusText(item.EstatusCartaId);
 							res.Add(item);
 						}
 					}

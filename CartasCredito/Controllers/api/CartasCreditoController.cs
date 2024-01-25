@@ -37,7 +37,8 @@ namespace CartasCredito.Controllers.api
 			try
 			{
 				modelo.CreadoPor = usr.Id;
-				
+
+
 				if ( modelo.TipoCartaId == 17 )
 				{
 					rsp = CartaCredito.Insert(modelo);
@@ -82,7 +83,6 @@ namespace CartasCredito.Controllers.api
 			try
 			{
 				var m = CartaCredito.GetById(id);
-
 				/*
 				m.EmpresaId = modelo.EmpresaId;
 				m.Nombre = modelo.Nombre;
@@ -91,13 +91,78 @@ namespace CartasCredito.Controllers.api
 				*/
 
 				//rsp = CartaCredito.Update(modelo);
+				m.DocumentoANegociar = modelo.DocumentoANegociar;
+
+
 				if (m.TipoCartaId == 17)
 				{
-					rsp = CartaCredito.Update(modelo);
+					m.TipoActivoId = modelo.TipoActivoId;
+					m.ProyectoId = modelo.ProyectoId;
+					m.BancoId = modelo.BancoId;
+					m.ProveedorId = modelo.ProveedorId;
+					m.EmpresaId = modelo.EmpresaId;
+					m.AgenteAduanalId = modelo.AgenteAduanalId;
+					m.MonedaId = modelo.MonedaId;
+					m.TipoPago = modelo.TipoPago;
+					m.Responsable = modelo.Responsable;
+					m.CompradorId = modelo.CompradorId;
+					m.PorcentajeTolerancia = modelo.PorcentajeTolerancia;
+					m.NumOrdenCompra = modelo.NumOrdenCompra;
+					m.CostoApertura = modelo.CostoApertura;
+					m.MontoOrdenCompra = modelo.MontoOrdenCompra;
+					m.MontoOriginalLC = modelo.MontoOriginalLC;
+					m.FechaApertura = modelo.FechaApertura;
+					m.FechaLimiteEmbarque = modelo.FechaLimiteEmbarque;
+					m.FechaVencimiento = modelo.FechaVencimiento;
+					m.Incoterm = modelo.Incoterm;
+					m.EmbarquesParciales = modelo.EmbarquesParciales;
+					m.Transbordos = modelo.Transbordos;
+					m.PuntoEmbarque = modelo.PuntoEmbarque;
+					m.PuntoDesembarque = modelo.PuntoDesembarque;
+					m.DescripcionMercancia = modelo.DescripcionMercancia;
+					m.DescripcionCartaCredito = modelo.DescripcionCartaCredito;
+					m.PagoCartaAceptacion = modelo.PagoCartaAceptacion;
+					m.ConsignacionMercancia = modelo.ConsignacionMercancia;
+					m.ConsideracionesAdicionales = modelo.ConsideracionesAdicionales;
+					m.DiasParaPresentarDocumentos = modelo.DiasParaPresentarDocumentos;
+					m.DiasPlazoProveedor = modelo.DiasPlazoProveedor;
+					m.CondicionesPago = modelo.CondicionesPago;
+					m.NumeroPeriodos = modelo.NumeroPeriodos;
+					m.BancoCorresponsalId = modelo.BancoCorresponsalId;
+					m.SeguroPorCuenta = modelo.SeguroPorCuenta;
+					m.GastosComisionesCorresponsal = modelo.GastosComisionesCorresponsal;
+					m.ConfirmacionBancoNotificador = modelo.ConfirmacionBancoNotificador;
+					m.TipoEmision = modelo.TipoEmision;
+					rsp = CartaCredito.Update(m);
 				}
 				else
 				{
-					rsp = CartaCredito.UpdateStandBy(modelo);
+					m.TipoStandBy = modelo.TipoStandBy;
+					m.BancoId = modelo.BancoId;
+					m.EmpresaId = modelo.EmpresaId;
+					m.MonedaId = modelo.MonedaId;
+					m.CompradorId = modelo.CompradorId;
+					m.MontoOriginalLC = modelo.MontoOriginalLC;
+					m.FechaApertura = modelo.FechaApertura;
+					m.FechaLimiteEmbarque = modelo.FechaLimiteEmbarque;
+					m.FechaVencimiento = modelo.FechaVencimiento;
+					m.ConsideracionesReclamacion = modelo.ConsideracionesReclamacion;
+					m.ConsideracionesAdicionales = modelo.ConsideracionesAdicionales;
+					m.BancoCorresponsalId = modelo.BancoCorresponsalId;
+					m.TipoCoberturaId = modelo.TipoCoberturaId;
+					rsp = CartaCredito.UpdateStandBy(m);
+				}
+				
+				if(rsp.Flag == true)
+                {
+					RespuestaFormato delDocs = CartaCreditoDocumentoANegociar.Delete(m.Id);
+
+					foreach (CartaCreditoDocumentoANegociar item in m.DocumentoANegociar)
+					{
+						item.IdCartaCredito = m.Id;
+						item.IdDocumento = item.DocId;
+						item.Insert();
+					}
 				}
 			}
 			catch (Exception ex)

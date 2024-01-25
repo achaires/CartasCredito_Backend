@@ -47,8 +47,6 @@ namespace CartasCredito.Models
 		public static decimal GetRateEx(int monedaIdIn, int monedaIdOut, DateTime fecha)
 		{
 			var rateEx = 1M;
-
-
 			try
 			{
 				var monedaInDb = Moneda.GetById(monedaIdIn);
@@ -58,11 +56,11 @@ namespace CartasCredito.Models
 				var req = new ConversionMonedaService.processRequest();
 				var res = new ConversionMonedaService.processResponse();
 
-				var timeoutSpan = new TimeSpan(0, 0, 1);
+				/*var timeoutSpan = new TimeSpan(0, 0, 1);
 				clnt.Endpoint.Binding.CloseTimeout = timeoutSpan;
 				clnt.Endpoint.Binding.OpenTimeout = timeoutSpan;
 				clnt.Endpoint.Binding.ReceiveTimeout = timeoutSpan;
-				clnt.Endpoint.Binding.SendTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.SendTimeout = timeoutSpan;*/
 
 				req.process = new ConversionMonedaService.process();
 				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
@@ -87,6 +85,60 @@ namespace CartasCredito.Models
 			}
 
 			return rateEx;
+		}
+
+		public static decimal GetTipoDeCambio(string monedaIdIn, string monedaIdOut, DateTime fecha)
+		{
+			var rateEx = 1M;
+			try
+			{
+				var clnt = new ConversionMonedaService.BPELToolsClient();
+				var req = new ConversionMonedaService.processRequest();
+				var res = new ConversionMonedaService.processResponse();
+
+				/*var timeoutSpan = new TimeSpan(0, 0, 1);
+				clnt.Endpoint.Binding.CloseTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.OpenTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.ReceiveTimeout = timeoutSpan;
+				clnt.Endpoint.Binding.SendTimeout = timeoutSpan;*/
+
+				req.process = new ConversionMonedaService.process();
+				req.process.P_USER_CONVERSION_TYPE = "Financiero Venta";
+				req.process.P_CONVERSION_DATESpecified = true;
+				req.process.P_CONVERSION_DATE = fecha;
+				req.process.P_FROM_CURRENCY = monedaIdIn.Trim();
+				req.process.P_TO_CURRENCY = monedaIdOut.Trim();
+
+				res = clnt.process(req.process);
+
+				if (res.X_CONVERSION_RATE != null && res.X_MNS_ERROR == null)
+				{
+					rateEx = res.X_CONVERSION_RATE.Value;
+				}
+
+				Utility.Logger.Info("Conversion Rate " + res.X_CONVERSION_RATE.Value.ToString());
+			}
+			catch (Exception ex)
+			{
+				Utility.Logger.Error(ex.Message);
+				rateEx = -1;
+			}
+
+			return rateEx;
+		}
+
+		public static string ExcelColumnFromNumber(int column)
+		{
+			string columnString = "";
+			decimal columnNumber = column;
+			while (columnNumber > 0)
+			{
+				decimal currentLetterNumber = (columnNumber - 1) % 26;
+				char currentLetter = (char)(currentLetterNumber + 65);
+				columnString = currentLetter + columnString;
+				columnNumber = (columnNumber - (currentLetterNumber + 1)) / 26;
+			}
+			return columnString;
 		}
 	}
 }

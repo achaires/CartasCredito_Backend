@@ -36,6 +36,7 @@ namespace CartasCredito.Controllers.api
 
 			try
 			{
+
 				var cc = CartaCredito.GetById(model.CartaCreditoId);
 				var nuevoReg = new CartaCreditoComision();
 				nuevoReg.CartaCreditoId = model.CartaCreditoId;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:client="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" name="BPELTools" targetNamespace="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:client="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" name="BPELTools" targetNamespace="http://xmlns.oracle.com/CartaCredito/CartaCreditoTools/BPELTools" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation>
-    <abstractWSDL>http://srgismty2-1931:8001/soa-infra/services/CartaCredito/CartaCreditoTools!1.0/BPELTools.wsdl</abstractWSDL>
+    <abstractWSDL>http://10.200.3.137:8001/soa-infra/services/CartaCredito/CartaCreditoTools!1.1/BPELTools.wsdl</abstractWSDL>
   </wsdl:documentation>
   <plnk:partnerLinkType name="BPELTools">
     <plnk:role name="BPELToolsProvider" portType="client:BPELTools" />

@@ -1427,6 +1427,118 @@ namespace CartasCredito.Models
 		}
 		#endregion
 
+		#region CartaCreditoDocumentoANegociar
+		public Boolean Cons_CartaCreditoDocumentoANegociar(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@IdCartaCredito", id);
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_CartaCreditoDocumentoANegociar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Ins_CartaCreditoDocumentoANegociar(CartaCreditoDocumentoANegociar modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[4];
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@IdCartaCredito", modelo.IdCartaCredito); pix++;
+				@params[pix] = new SqlParameter("@IdDocumento", modelo.IdDocumento); pix++;
+				@params[pix] = new SqlParameter("@Copias", modelo.Copias); pix++;
+				@params[pix] = new SqlParameter("@Originales", modelo.Originales); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Ins_CartaCreditoDocumentoANegociar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean Del_CartaCreditoDocumentoANegociar_FromCartaCredito(string id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+
+				var pix = 0;
+
+				@params[pix] = new SqlParameter("@IdCartaCredito", id); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Del_CartaCreditoDocumentoANegociar_FromCartaCredito", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+		#endregion
+
 		#region Documentos
 		public Boolean Cons_Documentos(out DataTable dt, out String msgError, int activo = 0)
 		{
@@ -2762,7 +2874,7 @@ namespace CartasCredito.Models
 
 			try
 			{
-				SqlParameter[] @params = new SqlParameter[13];
+				SqlParameter[] @params = new SqlParameter[15];
 				int pix = 0;
 
 				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCartaId); pix++;
@@ -2778,6 +2890,8 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@ConsideracionesReclamacion", modelo.ConsideracionesReclamacion); pix++;
 				@params[pix] = new SqlParameter("@ConsideracionesAdicionales", modelo.ConsideracionesAdicionales); pix++;
 				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
+				@params[pix] = new SqlParameter("@BancoCorresponsalId", modelo.BancoCorresponsalId); pix++;
+				@params[pix] = new SqlParameter("@TipoCoberturaId", modelo.TipoCoberturaId); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "ins_CartaStandBy", @params, out dt, 1000))
 				{
@@ -2904,7 +3018,7 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[15];
+				SqlParameter[] @params = new SqlParameter[17];
 
 				@params[pix] = new SqlParameter("@Id", modelo.Id); pix++;
 				@params[pix] = new SqlParameter("@TipoCarta", modelo.TipoCartaId); pix++;
@@ -2922,6 +3036,8 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@Activo", modelo.Activo); pix++;
 				@params[pix] = new SqlParameter("@Estatus", modelo.Estatus); pix++;
 
+				@params[pix] = new SqlParameter("@BancoCorresponsalId", modelo.BancoCorresponsalId); pix++;
+				@params[pix] = new SqlParameter("@TipoCoberturaId", modelo.TipoCoberturaId); pix++;
 
 				if (!bd.ExecuteProcedure(conexion, "upd_CartaStandBy", @params, out dt, 1000))
 				{
@@ -3082,7 +3198,7 @@ namespace CartasCredito.Models
 			try
 			{
 				int pix = 0;
-				SqlParameter[] @params = new SqlParameter[8];
+				SqlParameter[] @params = new SqlParameter[12];
 				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
 				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
 				@params[pix] = new SqlParameter("@EmpresaId",model.EmpresaId);pix++;
@@ -3091,13 +3207,60 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@ProveedorId",model.ProveedorId);pix++;
 				@params[pix] = new SqlParameter("@TipoActivoId",model.TipoActivoId);pix++;
 				@params[pix] = new SqlParameter("@TipoCarta", model.TipoCarta);pix++;
+				/*@params[pix] = new SqlParameter("@FechaVencimientoInicio", model.FechaVencimientoInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimientoFin", model.FechaVencimientoFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
 
-				/*
 				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
-				*/
+				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;*/
 
 				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_CartasCreditoFiltrarReporte(CartasCreditoFiltrarDTO model, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[12];
+				@params[pix] = new SqlParameter("@Estatus", model.Estatus); pix++;
+				@params[pix] = new SqlParameter("@BancoId", model.BancoId); pix++;
+				@params[pix] = new SqlParameter("@EmpresaId", model.EmpresaId); pix++;
+				@params[pix] = new SqlParameter("@MonedaId", model.MonedaId); pix++;
+				@params[pix] = new SqlParameter("@NumCarta", model.NumCarta); pix++;
+				@params[pix] = new SqlParameter("@ProveedorId", model.ProveedorId); pix++;
+				@params[pix] = new SqlParameter("@TipoActivoId", model.TipoActivoId); pix++;
+				@params[pix] = new SqlParameter("@TipoCarta", model.TipoCarta); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimientoInicio", model.FechaVencimientoInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVencimientoFin", model.FechaVencimientoFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
+				@params[pix] = new SqlParameter("@FechaInicio", model.FechaInicio.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", model.FechaFin.ToString("yyyy-MM-dd HH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "cons_CartasCreditoFiltrar_v2", @params, out dt, 1000))
 				{
 					boolProcess = false;
 					msgError = bd._error.ToString();
@@ -3655,7 +3818,7 @@ namespace CartasCredito.Models
 				@params[pix] = new SqlParameter("@CreadoPor", modelo.CreadoPor); pix++;
 				@params[pix] = new SqlParameter("@NumReferencia", modelo.PagoId); pix++;
 
-				if (!bd.ExecuteProcedure(conexion, "ins_CartaCreditoComision", @params, out dt, 1000))
+				if (!bd.ExecuteProcedure(conexion, "ins_CartaCreditoComisionV2", @params, out dt, 1000))
 				{
 					boolProcess = false;
 					msgError = bd._error.ToString();
@@ -5400,6 +5563,575 @@ namespace CartasCredito.Models
 			{
 				boolProcess = false;
 				msgError = ex.ToString();
+			}
+
+			return boolProcess;
+		}
+		#endregion
+
+		#region CTM reportes
+		public Boolean ins_cat_TipoDeCambio(TipoDeCambio modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[8];
+				int pix = 0;
+				@params[0] = new SqlParameter("@Fecha", modelo.Fecha.ToString("yyyy-MM-dd"));
+				@params[1] = new SqlParameter("@MonedaOriginal", modelo.MonedaOriginal.ToUpper());
+				@params[2] = new SqlParameter("@MonedaNueva", modelo.MonedaNueva.ToUpper());
+				@params[3] = new SqlParameter("@ConversionStr", modelo.Conversion.ToString());
+
+				if (!bd.ExecuteProcedure(conexion, "ins_cat_TipoDeCambio", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (!dt.Rows[0][0].ToString().Equals("0"))
+					{
+						boolProcess = false;
+						msgError = dt.Rows[0][1].ToString();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				boolProcess = false;
+				msgError = ex.ToString();
+			}
+			return boolProcess;
+		}
+
+		public Boolean cons_TiposDeCambio_AlDia(TipoDeCambio modelo, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[0] = new SqlParameter("@Fecha", modelo.Fecha.ToString("yyyy-MM-dd"));
+				@params[1] = new SqlParameter("@MonedaOriginal", modelo.MonedaOriginal.ToUpper());
+				@params[2] = new SqlParameter("@MonedaNueva", modelo.MonedaNueva.ToUpper());
+
+				if (!bd.ExecuteProcedure(conexion, "cons_TiposDeCambio_AlDia", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ComisionesReporteFromCarta(string cartaCreditoId, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@CartaCreditoId", cartaCreditoId);
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ComisionesReporteFromCarta", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ComisionesReporteFromPago(int id, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				SqlParameter[] @params = new SqlParameter[1];
+				@params[0] = new SqlParameter("@Pago", id);
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ComisionesReporteFromPago", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteOutstanding(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteOutstanding", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteAnalisisEjecutivo(int empresaId, DateTime fechaInicio, DateTime fechaFin, DateTime fechaDivisa, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[4];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaDivisa", fechaDivisa.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteAnalisisEjecutivo", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteAnalisisCartas(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteAnalisisCartas", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		public Boolean Cons_ReporteComisiones(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteComisiones", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteComisionesMXP(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteComisionesMXP", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteResumen(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError, out DataTable dt2, out DataTable dt3)
+		{
+			bool boolProcess = true;
+			DataSet ds = new DataSet();
+			dt = new DataTable();
+			dt2 = new DataTable();
+			dt3 = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[6];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@mesAnterior", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@mesFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaDivisa", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteResumenCartas", @params, out ds, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					dt = ds.Tables[0];
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+                    }
+                    else
+                    {
+						dt2 = ds.Tables[1];
+						dt3 = ds.Tables[2];
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteComisionesEstatus(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteComisionesEstatus", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+		
+		public Boolean Cons_ReporteLineasCredito(int empresaId, DateTime fechaInicio, DateTime fechaFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[3];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteLineasCredito", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteVencimientos(int empresaId, DateTime fechaInicio, DateTime fechaFin, DateTime fechaVInicio, DateTime fechaVFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[5];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVInicio", fechaVInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVFin", fechaVFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteVencimientos", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteVencimientosPagos(int empresaId, DateTime fechaInicio, DateTime fechaFin, DateTime fechaVInicio, DateTime fechaVFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[5];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVInicio", fechaVInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVFin", fechaVFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteVencimientosPagos", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
+			}
+
+			return boolProcess;
+		}
+
+		public Boolean Cons_ReporteStandBy(int empresaId, DateTime fechaInicio, DateTime fechaFin, DateTime fechaVInicio, DateTime fechaVFin, out DataTable dt, out String msgError)
+		{
+			bool boolProcess = true;
+			dt = new DataTable();
+			msgError = string.Empty;
+
+			try
+			{
+				int pix = 0;
+				SqlParameter[] @params = new SqlParameter[5];
+				@params[pix] = new SqlParameter("@EmpresaId", empresaId); pix++;
+				@params[pix] = new SqlParameter("@FechaInicio", fechaInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaFin", fechaFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVInicio", fechaVInicio.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+				@params[pix] = new SqlParameter("@FechaVFin", fechaVFin.ToString("yyyy-MM-ddTHH:mm:ss")); pix++;
+
+				if (!bd.ExecuteProcedure(conexion, "Cons_ReporteStandBy", @params, out dt, 1000))
+				{
+					boolProcess = false;
+					msgError = bd._error.ToString();
+				}
+				else
+				{
+					if (dt.Rows.Count < 1)
+					{
+						boolProcess = false;
+						msgError = "No hay datos para mostrar";
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				boolProcess = false;
+				msgError = e.ToString();
 			}
 
 			return boolProcess;

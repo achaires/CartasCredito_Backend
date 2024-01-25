@@ -26,6 +26,10 @@ namespace CartasCredito.Models.DTOs
 		public DateTime FechaInicio { get; set; }
 		public DateTime FechaFin { get; set; }
 
+
+		public DateTime FechaVencimientoInicio { get; set; } = DateTime.Parse("1969-01-01");
+		public DateTime FechaVencimientoFin { get; set; } = DateTime.Parse("1969-01-01");
+
 		public CartasCreditoFiltrarDTO()
 		{
 			NumCarta = "";

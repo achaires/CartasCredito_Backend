@@ -267,6 +267,7 @@
     <Compile Include="Controllers\api\BitacoraMovimientosController.cs" />
     <Compile Include="Controllers\api\CartaCreditoComisionesController.cs" />
     <Compile Include="Controllers\api\CartasCreditoController.cs" />
+    <Compile Include="Controllers\api\TipoCambioController.cs" />
     <Compile Include="Controllers\api\ComisionesController.cs" />
     <Compile Include="Controllers\api\CompradoresController.cs" />
     <Compile Include="Controllers\api\ContactosController.cs" />
@@ -309,8 +310,13 @@
     <Compile Include="Models\AspNetRole.cs" />
     <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\AspNetUserProfile.cs" />
+    <Compile Include="Models\ReportesModels\ResumenCartasCredito.cs" />
+    <Compile Include="Models\ReportesModels\ComisionesCartasMXP.cs" />
+    <Compile Include="Models\ReportesModels\VencimientosPagos.cs" />
+    <Compile Include="Models\TipoDeCambio.cs" />
     <Compile Include="Models\Banco.cs" />
     <Compile Include="Models\BitacoraMovimiento.cs" />
+    <Compile Include="Models\CartaCreditoReporte.cs" />
     <Compile Include="Models\CartaCredito.cs" />
     <Compile Include="Models\CartaCreditoComision.cs" />
     <Compile Include="Models\Comision.cs" />
@@ -319,6 +325,7 @@
     <Compile Include="Models\CustomDateTimeConverter.cs" />
     <Compile Include="Models\DataAccess.cs" />
     <Compile Include="Models\Division.cs" />
+    <Compile Include="Models\CartaCreditoDocumentoANegociar.cs" />
     <Compile Include="Models\Documento.cs" />
     <Compile Include="Models\DTOs\BitacoraMovimientosFiltrarDTO.cs" />
     <Compile Include="Models\DTOs\CartaCreditoAdjuntarSwiftDTO.cs" />
@@ -377,8 +384,13 @@
   <ItemGroup>
     <Content Include="assets\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets\gis-logo-gris-ddf51f53.png" />
+    <Content Include="assets\index-06a2ecd9.js" />
+    <Content Include="assets\index-68a2d9d1.js" />
+    <Content Include="assets\index-84b69f5c.js" />
+    <Content Include="assets\index-b0b1c139.js" />
     <Content Include="assets\index-cee2c34d.css" />
     <Content Include="assets\index-130a0371.js" />
+    <Content Include="assets\index-f7f461ad.js" />
     <Content Include="assets_bak\cartas-login-bg-opt-22952870.png" />
     <Content Include="assets_bak\gis-logo-gris-ddf51f53.png" />
     <Content Include="assets_bak\index-7e7732e8.css" />

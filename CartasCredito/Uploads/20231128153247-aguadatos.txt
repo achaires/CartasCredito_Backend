@@ -1,0 +1,10 @@
+Lenguaje de programación: ASP .NET Core sobre C# (C Sharp)
+-Manejo de JSON para request y response de los Web Services
+Base de datos: MSSQL Server 2017
+-Pagos con Conekta
+Frontend:
+-HTML 5.2
+-Bootstrap 4
+-Javascript
+-CSS, LESS CSS
+-JQuery
