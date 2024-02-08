@@ -19,6 +19,8 @@ namespace CartasCredito.Models
 		public DateTime Creado { get; set; }
 		public DateTime? Actualizado { get; set; }
 		public DateTime? Eliminado { get; set; }
+		public string FechaAperturaStr { get; set; } 
+		public string FechaCierreStr { get; set; }
 
 		public Proyecto()
 		{
@@ -31,6 +33,8 @@ namespace CartasCredito.Models
 			Creado = DateTime.MinValue;
 			Actualizado = null;
 			Eliminado = null;
+			FechaAperturaStr = "";
+			FechaCierreStr = "";
 		}
 
 		public static List<Proyecto> Get(int activo = 1)
@@ -82,6 +86,9 @@ namespace CartasCredito.Models
 							{
 								item.Eliminado = null;
 							}
+
+							item.FechaAperturaStr = item.FechaApertura.ToString("yyyy-MM-dd");//"MM/dd/yyyy"
+							item.FechaCierreStr = item.FechaCierre.ToString("yyyy-MM-dd");
 
 							res.Add(item);
 						}

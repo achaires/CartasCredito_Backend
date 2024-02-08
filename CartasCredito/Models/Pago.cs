@@ -211,7 +211,14 @@ namespace CartasCredito.Models
 							item.ProveedorId = int.TryParse(row[idx].ToString(), out int proveedoridval) ? proveedoridval : 0; idx++;
 
 							item.EstatusText = Pago.GetStatusText(item.Estatus);
-							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
+							//item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
+
+							item.CartaCredito = new CartaCredito();
+							item.CartaCredito.Id = item.CartaCreditoId;
+							item.CartaCredito.NumCartaCredito = row[idx].ToString(); idx++;
+							item.CartaCredito.Moneda = row[idx].ToString(); idx++;
+							item.CartaCredito.Empresa = item.Empresa;
+							item.CartaCredito.Proveedor = item.Proveedor;
 
 							item.MontoPago_str = item.MontoPago.ToString("C", CultureInfo.CurrentCulture);
 							res.Add(item);
@@ -321,9 +328,15 @@ namespace CartasCredito.Models
 							item.EmpresaId = int.TryParse(row[idx].ToString(), out int empresaidval) ? empresaidval : 0; idx++;
 							item.ProveedorId = int.TryParse(row[idx].ToString(), out int proveedoridval) ? proveedoridval : 0; idx++;
 
-							item.EstatusText = Pago.GetStatusText(item.Estatus);
-							item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
+							item.CartaCredito = new CartaCredito();
+							item.CartaCredito.Id = item.CartaCreditoId;
+							item.CartaCredito.NumCartaCredito = row[idx].ToString(); idx++;
+							item.CartaCredito.Moneda = row[idx].ToString(); idx++;
+							item.CartaCredito.Empresa = item.Empresa;
+							item.CartaCredito.Proveedor = item.Proveedor;
 
+							item.EstatusText = Pago.GetStatusText(item.Estatus);
+							//item.CartaCredito = CartaCredito.GetById(item.CartaCreditoId);
 							item.MontoPago_str = item.MontoPago.ToString("C", CultureInfo.CurrentCulture);
 
 							res.Add(item);
